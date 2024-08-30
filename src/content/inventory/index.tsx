@@ -1,9 +1,12 @@
 import GetInventory from "../../hooks/inventory";
 import { InventoryList } from "../../hooks/inventory";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function InventoryContent() {
   const { inventory } = GetInventory();
+
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -94,67 +97,63 @@ export function InventoryContent() {
             </thead>
             <tbody>
               {inventory.map((item: InventoryList) => (
-                  <tr onClick={} key={item.id}>
-                    <td>
-                      <NavLink
-                        to={`/inventory/${item.id}`}
-                        className="p-4 flex items-center gap-3"
-                      >
-                        <p className="block font-sans text-sm antialiased font-bold leading-normal text-blue-gray-900">
-                          {item.refId}
-                        </p>
-                      </NavLink>
+                <tr
+                  onClick={() => {
+                    navigate(`/inventory/${item.id}`);
+                  }}
+                  key={item.id}
+                  className="cursor-pointer hover:bg-blue-gray-50 animate-pulse"
+                >
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-bold leading-normal text-blue-gray-900">
+                      {item.refId}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                      {item.inventoryName}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                      {item.inventoryTypeName}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <td className="w-max">
+                      <td className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
+                        <span className="">
+                          {item.isBorrowable ? "Yes" : "No"}
+                        </span>
+                      </td>
                     </td>
-                    <td>
-                      <NavLink
-                        to={`/inventory/${item.id}`}
-                        className="p-4 border-b border-blue-gray-50"
-                      >
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                          {item.inventoryName}
-                        </p>
-                      </NavLink>
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                        {item.inventoryTypeName}
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <td className="items-center">
+                      <p className="block font-sans text-sm antialiased font-normal leading-normal capitalize text-blue-gray-900">
+                        {item.description}
                       </p>
                     </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      <td className="w-max">
-                        <td className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
-                          <span className="">
-                            {item.isBorrowable ? "Yes" : "No"}
-                          </span>
-                        </td>
-                      </td>
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      <td className="items-center">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal capitalize text-blue-gray-900">
-                          {item.description}
-                        </p>
-                      </td>
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      <button
-                        className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                        type="button"
-                      >
-                        <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            className="w-4 h-4"
-                          >
-                            <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"></path>
-                          </svg>
-                        </span>
-                      </button>
-                    </td>
-                  </tr>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <button
+                      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                      type="button"
+                    >
+                      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          className="w-4 h-4"
+                        >
+                          <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"></path>
+                        </svg>
+                      </span>
+                    </button>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
