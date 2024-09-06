@@ -1,10 +1,9 @@
 import GetInventory from "../../hooks/inventory";
 import { InventoryList } from "../../hooks/inventory";
-import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export function InventoryContent() {
-  const { inventory } = GetInventory();
+  const { inventory, createInventory } = GetInventory();
 
   const navigate = useNavigate();
 
@@ -23,6 +22,7 @@ export function InventoryContent() {
                 <div className="relative h-10 w-full min-w-[200px]"></div>
               </div>
               <button
+                onClick={createInventory}
                 className="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
               >
@@ -102,7 +102,7 @@ export function InventoryContent() {
                     navigate(`/inventory/${item.id}`);
                   }}
                   key={item.id}
-                  className="cursor-pointer hover:bg-blue-gray-50 animate-pulse"
+                  className="cursor-pointer hover:bg-blue-gray-50"
                 >
                   <td className="p-4 border-b border-blue-gray-50">
                     <p className="block font-sans text-sm antialiased font-bold leading-normal text-blue-gray-900">

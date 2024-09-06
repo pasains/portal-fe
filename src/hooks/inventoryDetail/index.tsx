@@ -8,8 +8,11 @@ export type InventoryListDetail = {
   description: string;
   inventoryTypeName: string;
   isBorrowable: boolean;
+  condition: string;
   createdAt: Date;
   updatedAt: Date;
+  image: string;
+  quantity: number;
 };
 
 type Params = {

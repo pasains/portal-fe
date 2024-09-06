@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 export type InventoryList = {
   id: number;
@@ -55,7 +54,19 @@ export default function GetInventory() {
     fetchTitle();
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
+
+  const createInventory = () => {
+    fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventory/?createinventory`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Not Found");
+        }
+        return response.json();
+      })
+      .then((json) => setInventory(json));
+  };
   return {
     inventory,
+    createInventory,
   };
 }
