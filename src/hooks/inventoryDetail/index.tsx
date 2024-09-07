@@ -21,6 +21,8 @@ type Params = {
 
 export function GetInventoryDetail() {
   const { id } = useParams<Params>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [inventoryDetail, setInventoryDetail] = useState<InventoryListDetail>(
     {} as InventoryListDetail,
   );
@@ -29,6 +31,8 @@ export function GetInventoryDetail() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventory/${id}`,
@@ -37,14 +41,48 @@ export function GetInventoryDetail() {
           throw new Error("Network response was not ok");
         }
         const { data } = await response.json();
+        setLoading(false);
         console.log("Fetched Data:", data);
         setInventoryDetail(data);
-      } catch (error) {
-        console.error("Fetching error:", error);
+      } catch (err) {
+        setLoading(false);
+        setError(`Fetching error: ${err} `);
+        throw err;
       }
     };
+
     fetchData();
     return () => {};
   }, [id]);
-  return { inventoryDetail };
+
+  const updateData = async (id: string, formData: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/inventory/?editinventory?=${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update inventory");
+      }
+
+      const { data } = await response.json();
+      setLoading(false);
+      setInventoryDetail(data);
+    } catch (err) {
+      setLoading(false);
+      setError("Failed to update inventory");
+      throw err;
+    }
+  };
+
+  return { id, inventoryDetail, loading, error, updateData };
 }
