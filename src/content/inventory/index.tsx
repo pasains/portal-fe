@@ -1,9 +1,8 @@
-import GetInventory from "../../hooks/inventory";
-import { InventoryList } from "../../hooks/inventory";
+import useInventory, { InventoryList } from "../../hooks/inventory";
 import { useNavigate } from "react-router-dom";
 
 export function InventoryContent() {
-  const { inventory } = GetInventory();
+  const { inventory } = useInventory();
   const navigate = useNavigate();
 
   return (
@@ -12,7 +11,7 @@ export function InventoryContent() {
         <div className="relative mx-4 mt-4 overflow-hidden text-black bg-white rounded-none bg-clip-border">
           <div className="flex flex-col justify-between gap-8 mb-4 md:flex-row md:items-center">
             <div>
-              <h5 className="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-black">
+              <h5 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-black">
                 Inventory List
               </h5>
             </div>
@@ -100,7 +99,7 @@ export function InventoryContent() {
               {inventory.map((item: InventoryList) => (
                 <tr
                   onClick={() => {
-                    navigate(`/inventory/?editinventory=${item.id}`);
+                    navigate(`/inventory/${item.id}`);
                   }}
                   key={item.id}
                   className="cursor-pointer hover:bg-blue-gray-50"
@@ -138,7 +137,10 @@ export function InventoryContent() {
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
                     <button
-                      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                      onClick={() => {
+                        navigate(`/inventory/updateinventory/${item.id}`);
+                      }}
+                      className="relative z-0 h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       type="button"
                     >
                       <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">

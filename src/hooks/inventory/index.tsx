@@ -18,14 +18,15 @@ type InventoryRes = {
   data: InventoryList[];
 };
 
-export default function GetInventory() {
+export default function useInventory() {
   const [inventory, setInventory] = useState<InventoryList[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  // Function to gey all inventory list
+  // Function to get all inventory list
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -63,8 +64,8 @@ export default function GetInventory() {
   }, [REACT_APP_PORTAL_BE_URL]);
 
   const createInventory = async (formData: any) => {
-    console.log("SUSI WAS HERE");
     setLoading(true);
+    setSuccess(null);
     setError(null);
     try {
       console.log("SUSI 1 " + JSON.stringify(formData));
@@ -78,24 +79,28 @@ export default function GetInventory() {
           body: JSON.stringify(formData),
         },
       );
+      const data = await response.json();
+      console.log("SUSI + ", JSON.stringify(data.meta.message));
       if (!response.ok) {
         console.log(response);
-        throw new Error("Failed to create inventory");
+        setLoading(false);
+        setError(data.meta.message);
+      } else {
+        setSuccess(data.meta.message);
+        setLoading(false);
       }
-
-      const data = await response.json();
-      setLoading(false);
-      return data;
     } catch (err) {
       setLoading(false);
       setError("Failed to create inventory");
-      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
     inventory,
     createInventory,
+    success,
     loading,
     error,
   };

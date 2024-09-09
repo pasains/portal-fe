@@ -19,7 +19,7 @@ type Params = {
   id: string;
 };
 
-export function GetInventoryDetail() {
+export function useInventoryDetail() {
   const { id } = useParams<Params>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +48,8 @@ export function GetInventoryDetail() {
         setLoading(false);
         setError(`Fetching error: ${err} `);
         throw err;
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,34 +57,5 @@ export function GetInventoryDetail() {
     return () => {};
   }, [id]);
 
-  const updateData = async (id: string, formData: any) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory/?editinventory?=${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update inventory");
-      }
-
-      const { data } = await response.json();
-      setLoading(false);
-      setInventoryDetail(data);
-    } catch (err) {
-      setLoading(false);
-      setError("Failed to update inventory");
-      throw err;
-    }
-  };
-
-  return { id, inventoryDetail, loading, error, updateData };
+  return { id, inventoryDetail, loading, error };
 }

@@ -5,20 +5,21 @@ interface InventoryFormProps {
   initialData?: any;
   onSubmit: (formData: any) => void;
   isEditMode?: boolean;
+  isSubmitting?: any;
 }
 
 const InventoryForm: React.FC<InventoryFormProps> = ({
   initialData = {},
   onSubmit,
   isEditMode = false,
+  isSubmitting,
 }) => {
   const [formData, setFormData] = useState({
     inventoryName: "",
+    refId: "",
     description: "",
-    inventoryTypeId: "",
+    inventoryTypeId: undefined,
     isBorrowable: false,
-    image: "",
-    quantity: "",
   });
 
   useEffect(() => {
@@ -28,10 +29,13 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   }, [initialData, isEditMode]);
 
   const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    let finalValue = type == "number" ? +value : value;
+    console.log("SUSI 3", finalValue);
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: finalValue,
     });
   };
 
@@ -53,10 +57,10 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               color="orange"
               label="Inventory Name"
               type="text"
-              name="inventory name"
+              name="inventoryName"
               variant="outlined"
               size="md"
-              value={formData.inventoryName}
+              value={formData.inventoryName || ""}
               onChange={handleInputChange}
               required
             />
@@ -65,23 +69,22 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           <label>
             <Typography className="mb-2" variant="h6">
-              Quantity :
+              Ref Id :
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="Quantity"
-              type="number"
-              name="quantity"
+              label="RefId"
+              type="string"
+              name="refId"
               variant="outlined"
               size="md"
-              value={formData.quantity}
+              value={formData.refId || ""}
               onChange={handleInputChange}
               required
             />
           </label>
           <br />
-
           <label>
             <Typography className="mb-2" variant="h6">
               Description:
@@ -94,7 +97,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               name="description"
               variant="outlined"
               size="lg"
-              value={formData.description}
+              value={formData.description || ""}
               onChange={handleInputChange}
               required
             />
@@ -110,9 +113,9 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               color="orange"
               label="Inventory Type Id"
               type="number"
-              name="description"
+              name="inventoryTypeId"
               variant="outlined"
-              value={formData.inventoryTypeId}
+              value={formData.inventoryTypeId || undefined}
               onChange={handleInputChange}
               required
             />
@@ -125,7 +128,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
             </Typography>
             <input
               type="checkbox"
-              checked={formData.isBorrowable}
+              checked={formData.isBorrowable || false}
               onChange={(e) =>
                 setFormData({
                   ...formData,
@@ -135,23 +138,9 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
             />
           </label>
           <br />
-
-          <label>
-            <Typography className="mb-2" variant="h6">
-              Image URL:
-            </Typography>
-            <Input
-              type="url"
-              name="image"
-              label="Image URL"
-              value={formData.image}
-              onChange={handleInputChange}
-            />
-          </label>
-          <br />
         </section>
 
-        <Button type="submit">
+        <Button type="submit" disabled={isSubmitting}>
           {isEditMode ? "Update Inventory" : "Create Inventory"}
         </Button>
       </form>

@@ -1,4 +1,4 @@
-import UpdateInventoryContent from "../content/createInventory";
+import UpdateInventoryContent from "../content/updateInventory";
 import { Layout } from "../layout";
 
 export function UpdateInventoryInput() {

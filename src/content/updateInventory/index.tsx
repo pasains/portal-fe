@@ -1,26 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import InventoryForm from "../../container/inputFields";
-import { Typography } from "@material-tailwind/react";
-import { GetInventoryDetail } from "../../hooks/inventoryDetail";
+import { Alert, Typography } from "@material-tailwind/react";
+import { useInventoryUpdate } from "../../hooks/updateInventory";
+import TimedAlert from "../../container/alert";
 
-const UpdateInventoryContent = () => {
-  const { updateData, loading, error } = GetInventoryDetail();
+const UpdateInventoryContent = (id: any) => {
+  const { updateDataById, loading, error } = useInventoryUpdate();
 
-  const handleUpdateInventory = async (id:string, formData: any) => {
-    try {
-      const result = await updateData(id, formData);
-      console.log("Inventory updated successfully:", result);
-    } catch (err) {
-      console.error("Error updating inventory:", err);
-    }
+  const handleUpdateInventory = async (formData: any) => {
+    const result = await updateDataById(id, formData);
+    console.log(result);
   };
 
   return (
     <div>
-      <Typography className="py-10 text-center" variant="h3">Edit Inventory</Typography>
+      <Typography className="py-10 text-center" variant="h3">
+        Edit Inventory
+      </Typography>
       {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
+      {error && <TimedAlert message={error} duration={3000} color="red" />}
 
+      <InventoryForm
+        onSubmit={handleUpdateInventory}
+        initialData={true}
+        isEditMode={true}
+      />
     </div>
   );
 };

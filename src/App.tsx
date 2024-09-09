@@ -3,6 +3,7 @@ import { Inventory } from "./pages/inventory";
 import { Home } from "./pages/home";
 import { InventoryDetail } from "./pages/inventoryDetail";
 import { CreateInventoryInput } from "./pages/createInventory";
+import { UpdateInventoryInput } from "./pages/updateInventory";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
         <Route
           path="/inventory/createinventory"
           element={<CreateInventoryInput />}
+        />
+        <Route
+          path="/inventory/updateinventory/:id"
+          element={<UpdateInventoryInput />}
         />
       </Routes>
     </div>

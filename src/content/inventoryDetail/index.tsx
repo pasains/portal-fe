@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Button, Typography } from "@material-tailwind/react";
-import { GetInventoryDetail } from "../../hooks/inventoryDetail";
+import { useInventoryDetail } from "../../hooks/inventoryDetail";
 
 export function InventoryDetailContent() {
-  const { inventoryDetail } = GetInventoryDetail();
+  const { inventoryDetail } = useInventoryDetail();
   const createdAtDate = new Date(inventoryDetail.createdAt);
   useEffect(() => {
     console.log(`SUSI: + ${inventoryDetail.description}`);
