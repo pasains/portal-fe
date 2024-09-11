@@ -1,16 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InventoryForm from "../../container/inputFields";
 import { Alert, Typography } from "@material-tailwind/react";
 import { useInventoryUpdate } from "../../hooks/updateInventory";
 import TimedAlert from "../../container/alert";
+import { useInventoryDetail } from "../../hooks/inventoryDetail";
 
-const UpdateInventoryContent = (id: any) => {
+type Params = {
+  id: string;
+};
+
+const UpdateInventoryContent = () => {
   const { updateDataById, loading, error } = useInventoryUpdate();
+  const { id, inventoryDetail } = useInventoryDetail();
 
   const handleUpdateInventory = async (formData: any) => {
-    const result = await updateDataById(id, formData);
-    console.log(result);
+    if (id) {
+      const result = await updateDataById(id, formData);
+      console.log(result);
+    }
   };
+
+  useEffect(() => {
+    if (id) {
+      console.log("id", id);
+    }
+  }, [id]);
 
   return (
     <div>
@@ -22,7 +36,7 @@ const UpdateInventoryContent = (id: any) => {
 
       <InventoryForm
         onSubmit={handleUpdateInventory}
-        initialData={true}
+        initialData={inventoryDetail}
         isEditMode={true}
       />
     </div>

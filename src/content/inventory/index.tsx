@@ -137,8 +137,9 @@ export function InventoryContent() {
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
                         navigate(`/inventory/updateinventory/${item.id}`);
+                        e.stopPropagation(); // Stop the event from propagating to the parent
                       }}
                       className="relative z-0 h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       type="button"
