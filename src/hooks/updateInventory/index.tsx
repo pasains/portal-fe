@@ -26,7 +26,7 @@ export function useInventoryUpdate() {
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  const updateDataById = async (id: string, updatedData: any) => {
+  const updateInventory = async (id: any, formData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
@@ -38,28 +38,27 @@ export function useInventoryUpdate() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updatedData),
+          body: JSON.stringify(formData),
         },
       );
-
-      const result = await response.json();
-      console.log("Updated data:", result);
+      const data = await response.json();
       if (!response.ok) {
         console.log(response);
         setLoading(false);
-        setInvenntoryUpdate(result.data);
+        setError(data.meta.message);
       } else {
-        setSuccess(result.meta.message)
-        setLoading(false)
+        setSuccess(data.meta.message);
+        setLoading(false);
       }
+      console.log("Updated data:", data);
+      setInvenntoryUpdate(data);
     } catch (error: any) {
       setError(`Updating error: ${error}`);
       setLoading(false);
-      throw error;
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   };
 
-  return { id, inventoryUpdate, updateDataById, loading, error };
+  return { id, inventoryUpdate, success, updateInventory, loading, error };
 }

@@ -94,10 +94,7 @@ export function SidebarWithBurgerMenu() {
                   <NavLink to="/inventory" className="py-2">
                     Inventory List
                   </NavLink>
-                  <NavLink to="api/inventorygroup" className="py-2">
-                    Inventory Group
-                  </NavLink>
-                  <NavLink to="api/inventorytype" className="py-2">
+                  <NavLink to="/inventorytype" className="py-2">
                     Inventory Type
                   </NavLink>
                 </List>

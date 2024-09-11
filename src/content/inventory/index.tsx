@@ -1,9 +1,24 @@
+import { useState } from "react";
 import useInventory, { InventoryList } from "../../hooks/inventory";
 import { useNavigate } from "react-router-dom";
 
 export function InventoryContent() {
   const { inventory } = useInventory();
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const tableHead = [
+    "Reference Id",
+    "Inventory Name",
+    "Inventory Type Name",
+    "is Borrowowable?",
+    "Description",
+    "",
+  ];
+
+  const handleEditClick = (id: any) => {
+    setIsEditing(true);
+    navigate(`/inventory/updateinventory/${id}`);
+  };
 
   return (
     <div>
@@ -65,34 +80,16 @@ export function InventoryContent() {
           <table className="w-full text-left table-auto min-w-max">
             <thead>
               <tr>
-                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                    Reference Id
-                  </p>
-                </th>
-                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                    Inventory Name
-                  </p>
-                </th>
-                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                    Inventory Type Id
-                  </p>
-                </th>
-                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                    Avaliable
-                  </p>
-                </th>
-                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                    Description
-                  </p>
-                </th>
-                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70"></p>
-                </th>
+                {tableHead.map((head) => (
+                  <th
+                    key={head}
+                    className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50"
+                  >
+                    <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                      {head}
+                    </p>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -137,9 +134,8 @@ export function InventoryContent() {
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
                     <button
-                      onClick={() => {
-                        navigate(`/inventory/updateinventory/${item.id}`);
-                      }}
+                      onClick={() => handleEditClick(item.id)}
+                      disabled={isEditing}
                       className="relative z-0 h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       type="button"
                     >
