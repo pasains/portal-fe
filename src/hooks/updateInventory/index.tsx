@@ -15,7 +15,7 @@ export type InventoryListDetail = {
   quantity: number;
 };
 
-export function useInventoryUpdate() {
+export function useUpdateInventory() {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,19 +26,19 @@ export function useInventoryUpdate() {
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  const updateInventory = async (id: any, formData: any) => {
+  const updateInventory = async (id: any, inventoryData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory/updateinventory/${id}`,
+        `${REACT_APP_PORTAL_BE_URL}/api/inventory/update/${id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(inventoryData),
         },
       );
       const data = await response.json();

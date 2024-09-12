@@ -15,7 +15,7 @@ type InventoryTypeRes = {
   data: InventoryTypeList[];
 };
 
-export default function useInventoryType() {
+export default function useInventory() {
   const [inventoryType, setInventoryType] = useState<InventoryTypeList[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +57,7 @@ export default function useInventoryType() {
     fetchTitle();
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
+
 
   return {
     inventoryType,

@@ -3,7 +3,7 @@ import { Button, Input, Typography } from "@material-tailwind/react";
 
 interface InventoryFormProps {
   initialData?: any;
-  onSubmit: (formData: any) => void;
+  onSubmit: (inventoryData: any) => void;
   isEditMode?: boolean;
   isSubmitting?: any;
   success?: any;
@@ -16,7 +16,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   isSubmitting,
   success,
 }) => {
-  const [formData, setFormData] = useState({
+  const [inventoryData, setInventoryData] = useState({
     inventoryName: "",
     refId: "",
     description: "",
@@ -26,7 +26,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
   useEffect(() => {
     if (isEditMode && initialData) {
-      setFormData({
+      setInventoryData({
         inventoryName: initialData.inventoryName || "",
         refId: initialData.refId || "",
         description: initialData.description || "",
@@ -38,7 +38,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
   useEffect(() => {
     if (success) {
-      setFormData({
+      setInventoryData({
         inventoryName: "",
         refId: "",
         description: "",
@@ -53,15 +53,15 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     let finalValue = type == "number" ? +value : value;
     console.log("SUSI 3", finalValue);
 
-    setFormData({
-      ...formData,
+    setInventoryData({
+      ...inventoryData,
       [name]: finalValue,
     });
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(inventoryData);
   };
 
   return (
@@ -81,7 +81,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               variant="outlined"
               size="md"
               placeholder="Inventory Name"
-              value={formData.inventoryName || ""}
+              value={inventoryData.inventoryName || ""}
               onChange={handleInputChange}
               required
             />
@@ -101,7 +101,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               variant="outlined"
               size="md"
               placeholder="Ref Id"
-              value={formData.refId || ""}
+              value={inventoryData.refId || ""}
               onChange={handleInputChange}
               required
             />
@@ -120,7 +120,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               variant="outlined"
               size="lg"
               placeholder="Description"
-              value={formData.description || ""}
+              value={inventoryData.description || ""}
               onChange={handleInputChange}
               required
             />
@@ -139,7 +139,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               name="inventoryTypeId"
               variant="outlined"
               placeholder="Inventory Type Id"
-              value={formData.inventoryTypeId || undefined}
+              value={inventoryData.inventoryTypeId || undefined}
               onChange={handleInputChange}
               required
             />
@@ -153,10 +153,10 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
             <input
               type="checkbox"
               placeholder="is Borrowable?"
-              checked={formData.isBorrowable || false}
+              checked={inventoryData.isBorrowable || false}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setInventoryData({
+                  ...inventoryData,
                   isBorrowable: e.target.checked,
                 })
               }

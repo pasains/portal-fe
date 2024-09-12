@@ -1,32 +1,32 @@
 import React, { useState } from "react";
+import InventoryTypeForm from "../../container/inventoryTypeForm";
 import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../container/alert";
-import useCreateInventory from "../../hooks/createInventory";
-import InventoryForm from "../../container/inventoryForm";
-import useInventory from "../../hooks/inventory";
+import useCreateInventoryType from "../../hooks/createInventoryType";
 
-const CreateInventoryContent = () => {
-  const { createInventory, loading, error, success } = useInventory();
+const CreateInventoryTypeContent = () => {
+  const { createInventoryType, success, loading, error } =
+    useCreateInventoryType();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleCreateInventory = async (inventoryData: any) => {
+  const handleCreateInventoryType = async (inventoryTypeData: any) => {
     setIsSubmitting(true);
-    const result = await createInventory(inventoryData);
+    const result = await createInventoryType(inventoryTypeData);
     console.log(result);
-    console.log("SUSI ", inventoryData);
+    console.log("SUSI ", inventoryTypeData);
     setIsSubmitting(false);
   };
 
   return (
     <div>
       <Typography className="py-10 text-center" variant="h2">
-        Create New Inventory
+        Create New Inventory Type
       </Typography>
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <InventoryForm
-        onSubmit={handleCreateInventory}
+      <InventoryTypeForm
+        onSubmit={handleCreateInventoryType}
         isEditMode={false}
         isSubmitting={isSubmitting}
         success={success}
@@ -44,4 +44,4 @@ const CreateInventoryContent = () => {
   );
 };
 
-export default CreateInventoryContent;
+export default CreateInventoryTypeContent;

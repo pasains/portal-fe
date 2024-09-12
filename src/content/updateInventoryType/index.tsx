@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from "react";
-import InventoryForm from "../../container/inventoryForm";
 import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../container/alert";
-import { useInventoryDetail } from "../../hooks/inventoryDetail";
-import { useUpdateInventory } from "../../hooks/updateInventory";
+import { useUpdateInventoryType } from "../../hooks/updateInventoryType";
+import InventoryTypeForm from "../../container/inventoryTypeForm";
 
 type Params = {
   id: string;
 };
 
-const UpdateInventoryContent = () => {
-  const { updateInventory, loading, success, error } = useUpdateInventory();
-  const { id, inventoryDetail } = useInventoryDetail();
+const UpdateInventoryTypeContent = () => {
+  const {
+    updateInventoryType,
+    id,
+    inventoryTypeDetail,
+    loading,
+    success,
+    error,
+  } = useUpdateInventoryType();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleUpdateInventory = async (inventoryData: any) => {
+  const handleUpdateInventoryType = async (inventoryTypeData: any) => {
     setIsSubmitting(true);
     if (id) {
-      const result = await updateInventory(id, inventoryData);
+      const result = await updateInventoryType(id, inventoryTypeData);
       setIsSubmitting(false);
       console.log(result);
     }
@@ -32,14 +37,14 @@ const UpdateInventoryContent = () => {
   return (
     <div>
       <Typography className="py-10 text-center" variant="h3">
-        Update Inventory
+        Update Inventory Type
       </Typography>
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <InventoryForm
-        onSubmit={handleUpdateInventory}
-        initialData={inventoryDetail}
+      <InventoryTypeForm
+        onSubmit={handleUpdateInventoryType}
+        initialData={inventoryTypeDetail}
         isEditMode={true}
         isSubmitting={isSubmitting}
         success={success}
@@ -57,4 +62,4 @@ const UpdateInventoryContent = () => {
   );
 };
 
-export default UpdateInventoryContent;
+export default UpdateInventoryTypeContent;

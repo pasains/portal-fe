@@ -5,6 +5,8 @@ import { InventoryDetail } from "./pages/inventoryDetail";
 import { CreateInventoryInput } from "./pages/createInventory";
 import { UpdateInventoryInput } from "./pages/updateInventory";
 import { InventoryType } from "./pages/inventoryType";
+import { UpdateInventoryTypeInput } from "./pages/updateInventoryType";
+import { CreateInventoryTypeInput } from "./pages/createInventoryType";
 
 function App() {
   return (
@@ -14,13 +16,18 @@ function App() {
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/inventorytype" element={<InventoryType />} />
         <Route path="/inventory/:id" element={<InventoryDetail />} />
+        <Route path="/inventory/create" element={<CreateInventoryInput />} />
         <Route
-          path="/inventory/createinventory"
-          element={<CreateInventoryInput />}
+          path="/inventory/update/:id"
+          element={<UpdateInventoryInput />}
         />
         <Route
-          path="/inventory/updateinventory/:id"
-          element={<UpdateInventoryInput />}
+          path="/inventorytype/update/:id"
+          element={<UpdateInventoryTypeInput />}
+        />
+        <Route
+          path="/inventorytype/create"
+          element={<CreateInventoryTypeInput />}
         />
       </Routes>
     </div>

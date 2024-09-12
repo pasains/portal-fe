@@ -63,20 +63,20 @@ export default function useInventory() {
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
 
-  const createInventory = async (formData: any) => {
+  const createInventory = async (inventoryData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
     try {
-      console.log("SUSI 1 " + JSON.stringify(formData));
+      console.log("SUSI 1 " + JSON.stringify(inventoryData));
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory/createinventory`,
+        `${REACT_APP_PORTAL_BE_URL}/api/inventory/create`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(inventoryData),
         },
       );
       const data = await response.json();

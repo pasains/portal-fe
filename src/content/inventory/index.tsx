@@ -17,7 +17,7 @@ export function InventoryContent() {
 
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/inventory/updateinventory/${id}`);
+    navigate(`/inventory/update/${id}`);
   };
 
   return (
@@ -36,7 +36,7 @@ export function InventoryContent() {
               </div>
               <button
                 onClick={() => {
-                  navigate(`/inventory/createinventory`);
+                  navigate(`/inventory/create`);
                 }}
                 className="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
@@ -134,7 +134,10 @@ export function InventoryContent() {
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
                     <button
-                      onClick={() => handleEditClick(item.id)}
+                      onClick={(e) => {
+                        handleEditClick(item.id);
+                        e.stopPropagation(); // Stop the event from propagating to the parent
+                      }}
                       disabled={isEditing}
                       className="relative z-0 h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       type="button"
