@@ -1,5 +1,5 @@
 import CreateInventoryTypeContent from "../content/createInventoryType";
-import { Layout } from "../layout";
+import { Layout } from "../layout/page";
 
 export function CreateInventoryTypeInput() {
   return (

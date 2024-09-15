@@ -1,11 +1,11 @@
 import React from "react";
-import { InventoryContent } from "../content/inventory";
+import { BorrowingContent } from "../content/borrowing";
 import { Layout } from "../layout/page";
 
-export function Inventory() {
+export function Borrowing() {
   return (
     <Layout>
-      <InventoryContent />
+      <BorrowingContent />
     </Layout>
   );
 }

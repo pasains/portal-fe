@@ -9,7 +9,7 @@ export type InventoryList = {
   isBorrowable: boolean;
 };
 
-type InventoryRes = {
+type InventoryResponse = {
   meta: {
     message: string;
     status: string;
@@ -22,7 +22,8 @@ export default function useInventory() {
   const [inventory, setInventory] = useState<InventoryList[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [deleteId, setDeletId] = useState(null);
+  const [openAlert, setOpenAlert] = useState(false);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
@@ -39,7 +40,7 @@ export default function useInventory() {
           }
           return response.json();
         })
-        .then((json: InventoryRes) => {
+        .then((json: InventoryResponse) => {
           console.log("INVENTORY: " + json.data.length);
           for (let i = 0; i < json.data.length; i++) {
             console.log("INVENTORY_" + i + ": " + json.data[i].id);
@@ -63,44 +64,57 @@ export default function useInventory() {
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
 
-  const createInventory = async (inventoryData: any) => {
+  const deleteInventory = async (id: any) => {
     setLoading(true);
-    setSuccess(null);
     setError(null);
     try {
-      console.log("SUSI 1 " + JSON.stringify(inventoryData));
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory/create`,
+        `${REACT_APP_PORTAL_BE_URL}/api/inventory/delete/${id}`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "aplication/json",
           },
-          body: JSON.stringify(inventoryData),
         },
       );
-      const data = await response.json();
-      console.log("SUSI + ", JSON.stringify(data.meta.message));
+
+      const result = await response.json();
       if (!response.ok) {
         console.log(response);
         setLoading(false);
-        setError(data.meta.message);
-      } else {
-        setSuccess(data.meta.message);
-        setLoading(false);
+        setError(result.meta.message);
       }
-    } catch (err) {
+      console.log("Delete item", result);
+      setInventory((inventory) => inventory.filter((item) => item.id !== id));
+    } catch (error: any) {
+      setError(`Deleting error: ${error}`);
       setLoading(false);
-      setError("Failed to create inventory");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleDelete = (id: any) => {
+    setOpenAlert(true);
+    setDeletId(id);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteInventory(deleteId);
+    setOpenAlert(false);
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
   return {
     inventory,
-    createInventory,
-    success,
+    openAlert,
+    handleDelete,
+    handleConfirmDelete,
+    handleCloseAlert,
+    setInventory,
     loading,
     error,
   };

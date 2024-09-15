@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   IconButton,
   Typography,
@@ -130,13 +130,15 @@ export function SidebarWithBurgerMenu() {
                     <ListItemPrefix>
                       <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                     </ListItemPrefix>
-                    Borrowing
+                    <NavLink to="/borrowing" className="py-2">
+                      Borrowing
+                    </NavLink>
                   </ListItem>
                   <ListItem>
                     <ListItemPrefix>
                       <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                     </ListItemPrefix>
-                    Borrower
+                    Receiving
                   </ListItem>
                 </List>
               </AccordionBody>

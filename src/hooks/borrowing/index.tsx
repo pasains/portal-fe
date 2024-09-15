@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
 
-export type InventoryTypeList = {
+export type BorrowingProps = {
   id: number;
-  inventoryTypeName: string;
-  description: string;
+  borrowerId: number;
+  borrowingStatusId: number;
+  organizationId: number;
+  dueDate: Date;
+  specialInstruction: string;
 };
 
-type InventoryTypeResponse = {
+type BorrowingResponse = {
   meta: {
     message: string;
     status: string;
     dataType: string;
   };
-  data: InventoryTypeList[];
+  data: BorrowingProps[];
 };
 
-export default function useInventory() {
-  const [inventoryType, setInventoryType] = useState<InventoryTypeList[]>([]);
+export default function useBorrowing() {
+  const [borrowing, setBorrowing] = useState<BorrowingProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
@@ -28,7 +31,7 @@ export default function useInventory() {
     setLoading(true);
     setError(null);
     function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventorytype`)
+      fetch(`${REACT_APP_PORTAL_BE_URL}/api/borrowing`)
         .then((response) => {
           console.log(response);
           if (!response.ok) {
@@ -36,23 +39,22 @@ export default function useInventory() {
           }
           return response.json();
         })
-        .then((json: InventoryTypeResponse) => {
-          console.log("INVENTORY: " + json.data.length);
+        .then((json: BorrowingResponse) => {
           for (let i = 0; i < json.data.length; i++) {
-            console.log("INVENTORY_" + i + ": " + json.data[i].id);
+            console.log("BORROWING" + i + ": " + json.data[i].id);
           }
           if (Array.isArray(json.data)) {
             setLoading(false);
-            setInventoryType(json.data);
+            setBorrowing(json.data);
           } else {
             setLoading(false);
             console.error("Expected array, got:", json.data);
-            setInventoryType([]);
+            setBorrowing([]);
           }
         })
         .catch((error: any) => {
           setError(`Fetch error: ${error}`);
-          setInventoryType([]);
+          setBorrowing([]);
         });
     }
 
@@ -60,12 +62,12 @@ export default function useInventory() {
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
 
-  const deleteInventoryType = async (id: any) => {
+  const deleteBorrowing = async (id: any) => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/delete/${id}`,
+        `${REACT_APP_PORTAL_BE_URL}/api/borrowing/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -80,10 +82,8 @@ export default function useInventory() {
         setLoading(false);
         setError(result.meta.message);
       }
-      console.log("Delete item", result);
-      setInventoryType((inventoryType) =>
-        inventoryType.filter((item) => item.id !== id),
-      );
+      console.log(result);
+      setBorrowing((borrowing) => borrowing.filter((item) => item.id !== id));
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -98,7 +98,7 @@ export default function useInventory() {
   };
 
   const handleConfirmDelete = () => {
-    deleteInventoryType(deleteId);
+    deleteBorrowing(deleteId);
     setOpenAlert(false);
   };
 
@@ -107,12 +107,11 @@ export default function useInventory() {
   };
 
   return {
-    inventoryType,
+    borrowing,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-    setInventoryType,
     loading,
     error,
   };

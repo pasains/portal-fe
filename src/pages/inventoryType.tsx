@@ -1,6 +1,6 @@
 import React from "react";
-import { Layout } from "../layout";
 import { InventoryTypeContent } from "../content/inventoryType";
+import { Layout } from "../layout/page";
 
 export function InventoryType() {
   return (
