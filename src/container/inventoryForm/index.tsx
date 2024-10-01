@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Input,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
+import useInventoryType from "../../hooks/inventoryType";
 
 interface InventoryFormProps {
   initialData?: any;
@@ -16,12 +23,16 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   isSubmitting,
   success,
 }) => {
+  const { inventoryType, setInventoryType } = useInventoryType();
+  const [createNewInventoryType, setCreateNewInventoryType] = useState(false);
+  const [newInventoryTypeName, setInventoryTypeName] = useState("");
   const [inventoryData, setInventoryData] = useState({
     inventoryName: "",
     refId: "",
     description: "",
-    inventoryTypeId: undefined,
     isBorrowable: false,
+    inventoryTypeName: "",
+    descriptionInventoryType: "",
   });
 
   useEffect(() => {
@@ -30,8 +41,9 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryName: initialData.inventoryName || "",
         refId: initialData.refId || "",
         description: initialData.description || "",
-        inventoryTypeId: initialData.inventoryTypeId || undefined,
         isBorrowable: initialData.isBorrowable || false,
+        inventoryTypeName: initialData.inventoryTypeName || "",
+        descriptionInventoryType: initialData.descriptionInventoryType || "",
       });
     }
   }, [initialData, isEditMode]);
@@ -42,16 +54,25 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryName: "",
         refId: "",
         description: "",
-        inventoryTypeId: undefined,
+        inventoryTypeName: "",
+        descriptionInventoryType: "",
         isBorrowable: false,
       });
     }
   }, [success]);
 
-  const handleInputChange = (e: any) => {
-    const { name, value, type } = e.target;
+  const handleInputChange = (e: any): void => {
+    console.log(`ERROR_`, JSON.stringify(e));
+    if (!e.target || !("name" in e.target)) {
+      console.error("Event target does not have a 'name' property.");
+      return;
+    }
+    const { name, value, type } = e.target as
+      | HTMLInputElement
+      | HTMLSelectElement;
+
     let finalValue = type == "number" ? +value : value;
-    console.log("SUSI 3", finalValue);
+    console.log("INVENTORY 3", finalValue);
 
     setInventoryData({
       ...inventoryData,
@@ -62,6 +83,16 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
     onSubmit(inventoryData);
+
+    if (newInventoryTypeName.trim() === "") {
+      alert("Inventory type cannot be empty.");
+      return;
+    }
+
+    setInventoryType([]);
+
+    setInventoryTypeName("");
+    setCreateNewInventoryType(false);
   };
 
   return (
@@ -90,12 +121,12 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           <label>
             <Typography className="mb-2" variant="h6">
-              Ref Id :
+              Reference Id :
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="RefId"
+              label="Reference Id"
               type="string"
               name="refId"
               variant="outlined"
@@ -127,22 +158,81 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
           </label>
           <br />
 
-          <label>
+          <label htmlFor="inventoryTypeName">
             <Typography className="mb-2" variant="h6">
-              Inventory Type Id:
+              Inventory Type:
             </Typography>
-            <Input
+            <Select
+              id="inventoryTypeName"
               className="w-full"
               color="orange"
-              label="Inventory Type Id"
-              type="number"
-              name="inventoryTypeId"
               variant="outlined"
-              placeholder="Inventory Type Id"
-              value={inventoryData.inventoryTypeId || undefined}
+              size="lg"
+              label="Inventory Type Name"
+              placeholder="Inventory Type Name"
+              value={inventoryData.inventoryTypeName}
               onChange={handleInputChange}
-              required
-            />
+            >
+              <Option>Select Inventory Type</Option>
+              {inventoryType.map((type) => (
+                <Option key={type.id} value={type.inventoryTypeName}>
+                  {type.inventoryTypeName}
+                </Option>
+              ))}
+              <Option
+                value="create-new"
+                onClick={() => setCreateNewInventoryType(true)}
+              >
+                Create New Inventory Type
+              </Option>
+            </Select>
+
+            {createNewInventoryType && (
+              <form onSubmit={handleSubmit}>
+                <Typography className="pt-5 pb-2" variant="h6" color="orange">
+                  Create Inventory Type Name:
+                </Typography>
+                <div className="space-y-3">
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Inventory Type Name"
+                    type="text"
+                    name="inventoryTypeName"
+                    variant="outlined"
+                    placeholder="Inventory Type Name"
+                    value={inventoryData.inventoryTypeName || ""}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Description"
+                    type="text"
+                    name="descriptionInventoryType"
+                    variant="outlined"
+                    placeholder="Description"
+                    value={inventoryData.descriptionInventoryType || ""}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <div className="space-x-2">
+                    <Button size="sm" color="orange" type="submit">
+                      Add
+                    </Button>
+                    <Button
+                      size="sm"
+                      color="red"
+                      type="button"
+                      onClick={() => setCreateNewInventoryType(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            )}
           </label>
           <br />
 

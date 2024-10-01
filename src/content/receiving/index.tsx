@@ -4,37 +4,36 @@ import UpperTable from "../../container/upperTable";
 import { Typography } from "@material-tailwind/react";
 import { Pagination } from "../../container/pagination";
 import DeleteAlert from "../../container/deleteAlert";
-import useBorrowing, { BorrowingProps } from "../../hooks/borrowing";
+import useReceiving, { ReceivingProps } from "../../hooks/receiving";
 
-export function BorrowingContent() {
+export function ReceivingContent() {
   const {
-    borrowing,
+    receiving,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-  } = useBorrowing();
+  } = useReceiving();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
-    { titleHead: "Borrowing Id", accessor: "borrowingId" },
-    { titleHead: "Borrowing Status Id", accessor: "borrowingId" },
-    { titleHead: "Organization Id", accessor: "organizationId" },
-    { titleHead: "Due Date", accessor: "dueDate" },
-    { titleHead: "Special Instruction", accessor: "specialInstruction" },
+    { titleHead: "Receiving Id", accessor: "id" },
+    { titleHead: "User Id", accessor: "userId" },
+    { titleHead: "Notes", accessor: "notes" },
+    { titleHead: "Status", accessor: "status" },
     { titleHead: "" },
   ];
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/borrowing/update/${id}`);
+    navigate(`/receiving/update/${id}`);
   };
 
   return (
     <section>
       <UpperTable
-        pageTitle={"Borrowing List"}
-        createTitle={"CREATE BORROWING"}
-        createLink={`/borrowing/create`}
+        pageTitle={"Receiving List"}
+        createTitle={"CREATE RECEIVING"}
+        createLink={`/receiving/create`}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">
@@ -57,8 +56,8 @@ export function BorrowingContent() {
             </tr>
           </thead>
           <tbody>
-            {borrowing.map((item: BorrowingProps, index) => {
-              const isLast = index === borrowing.length - 1;
+            {receiving.map((item: ReceivingProps, index) => {
+              const isLast = index === receiving.length - 1;
               const classes = isLast
                 ? "py-3 px-4"
                 : "py-3 px-4 border-b border-blue-gray-50";
@@ -67,7 +66,7 @@ export function BorrowingContent() {
                 <tr
                   key={item.id}
                   onClick={() => {
-                    navigate(`/borrowing/${item.id}`);
+                    navigate(`/receiving/${item.id}`);
                   }}
                   className="cursor-pointer hover:bg-blue-gray-50"
                 >
@@ -77,7 +76,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerId}
+                      {item.id}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -86,7 +85,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowingStatusId}
+                      {item.userId}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -95,18 +94,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.organizationId}
-                    </Typography>
-                  </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {item.dueDate
-                        ? new Date(item.dueDate).toLocaleDateString()
-                        : "Invalid Date"}
+                      {item.notes}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -115,7 +103,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.specialInstruction}
+                      {item.status}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>

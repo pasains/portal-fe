@@ -5,9 +5,12 @@ import { Typography } from "@material-tailwind/react";
 import { Avatar } from "flowbite-react";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 import { SidebarWithBurgerMenu } from "../sidebar";
 
 const Heading: React.FC = () => {
+  const  users  = {id: 1, userName:"Weleh", role: "ADMIN"};
+  const navigate = useNavigate();
   return (
     <main className="bg-black w-full fixed top-0 z-9999">
       <main className="flex">
@@ -31,14 +34,17 @@ const Heading: React.FC = () => {
           </div>
           <div className="flex items-center gap-4">
             <Avatar
+              onClick={() => {
+                navigate(`/user/profile/${users.id}`);
+              }}
               img="https://docs.material-tailwind.com/img/face-2.jpg"
               alt="avatar"
               rounded={true}
             />
             <div>
-              <Typography variant="h6">Weleh</Typography>
+              <Typography variant="h6">{users.userName}</Typography>
               <Typography variant="small" className="font-normal">
-                Admin
+                {users.role}
               </Typography>
             </div>
           </div>

@@ -1,61 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Typography } from "@material-tailwind/react";
 
-interface InventoryTypeFormProps {
+interface ReceivingProps {
   initialData?: any;
-  onSubmit: (inventoryTypeData: any) => void;
+  onSubmit: (receivingData: any) => void;
   isEditMode?: boolean;
   isSubmitting?: any;
   success?: any;
 }
 
-const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
+const ReceivingForm: React.FC<ReceivingProps> = ({
   initialData = {},
   onSubmit,
   isEditMode = false,
   isSubmitting,
   success,
 }) => {
-  const [inventoryTypeData, setInventoryTypeData] = useState({
-    inventoryTypeName: "",
-    description: "",
-    gorupId: undefined,
+  const [receivingData, setReceivingData] = useState({
+    userId: undefined,
+    notes: "",
+    status: "",
   });
 
   useEffect(() => {
     if (isEditMode && initialData) {
-      setInventoryTypeData({
-        inventoryTypeName: initialData.inventoryTypeName || "",
-        description: initialData.description || "",
-        gorupId: initialData.gorupId || undefined,
+      setReceivingData({
+        userId: initialData.userId,
+        notes: initialData.notes,
+        status: initialData.status,
       });
     }
   }, [initialData, isEditMode]);
 
   useEffect(() => {
     if (success) {
-      setInventoryTypeData({
-        inventoryTypeName: "",
-        description: "",
-        gorupId: undefined,
+      setReceivingData({
+        userId: undefined,
+        notes: "",
+        status: "",
       });
     }
   }, [success]);
 
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
-    let finalValue = type === "number" ? +value : value;
+    let finalValue = type == "number" ? +value : value;
     console.log("SUSI 3", finalValue);
 
-    setInventoryTypeData({
-      ...inventoryTypeData,
+    setReceivingData({
+      ...receivingData,
       [name]: finalValue,
     });
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(inventoryTypeData);
+    onSubmit(receivingData);
   };
 
   return (
@@ -64,18 +64,18 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
         <section className="p-5 mb-10 items-center border border-b rounded-lg">
           <label>
             <Typography className="mb-2" variant="h6">
-              Inventory Type Name :
+              User Id
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="Inventory Type Name"
-              type="text"
-              name="inventoryTypeName"
+              label="User Id"
+              type="number"
+              name="userId"
               variant="outlined"
               size="md"
-              placeholder="Inventory Type Name"
-              value={inventoryTypeData.inventoryTypeName || ""}
+              placeholder="User Id"
+              value={receivingData.userId || undefined}
               onChange={handleInputChange}
               required
             />
@@ -84,18 +84,38 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
 
           <label>
             <Typography className="mb-2" variant="h6">
-              Description:
+              Notes
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="Description"
+              label="Notes"
               type="text"
-              name="description"
+              name="notes"
+              variant="outlined"
+              size="md"
+              placeholder="Notes"
+              value={receivingData.notes || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <br />
+
+          <label>
+            <Typography className="mb-2" variant="h6">
+              Status
+            </Typography>
+            <Input
+              className="w-full"
+              color="orange"
+              label="Status"
+              type="text"
+              name="status"
               variant="outlined"
               size="lg"
-              placeholder="Description"
-              value={inventoryTypeData.description || ""}
+              placeholder="Status"
+              value={receivingData.status || ""}
               onChange={handleInputChange}
               required
             />
@@ -104,11 +124,11 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
         </section>
 
         <Button type="submit" disabled={isSubmitting}>
-          {isEditMode ? "Update Inventory Type" : "Create Inventory Type"}
+          {isEditMode ? "Update Receiving" : "Create Receiving"}
         </Button>
       </form>
     </div>
   );
 };
 
-export default InventoryTypeForm;
+export default ReceivingForm;
