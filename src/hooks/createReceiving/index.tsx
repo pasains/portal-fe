@@ -1,31 +1,29 @@
 import { useState } from "react";
 
-export default function useCreateInventory() {
+export default function useCreateReceiving() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  const createInventory = async (inventoryData: any) => {
+  const createReceiving = async (receivingData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
-
     try {
-      console.log("INVENTORY_1" + JSON.stringify(inventoryData));
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory/create`,
+        `${REACT_APP_PORTAL_BE_URL}/api/receiving/create`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(inventoryData),
+          body: JSON.stringify(receivingData),
         },
       );
       const data = await response.json();
-      console.log("INVENTORY_2", JSON.stringify(data.meta.message));
+      console.log("RECEIVING + ", JSON.stringify(data.meta.message));
       if (!response.ok) {
         console.log(response);
         setLoading(false);
@@ -36,14 +34,14 @@ export default function useCreateInventory() {
       }
     } catch (err) {
       setLoading(false);
-      setError("Failed to create inventory");
+      setError("Failed to create receiving");
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    createInventory,
+    createReceiving,
     success,
     loading,
     error,

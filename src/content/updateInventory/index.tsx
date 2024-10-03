@@ -5,10 +5,6 @@ import TimedAlert from "../../container/alert";
 import { useInventoryDetail } from "../../hooks/inventoryDetail";
 import { useUpdateInventory } from "../../hooks/updateInventory";
 
-type Params = {
-  id: string;
-};
-
 const UpdateInventoryContent = () => {
   const { updateInventory, loading, success, error } = useUpdateInventory();
   const { id, inventoryDetail } = useInventoryDetail();

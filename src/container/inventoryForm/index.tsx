@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Typography } from "@material-tailwind/react";
+
+import {
+  Button,
+  Input,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
+import useInventoryType from "../../hooks/inventoryType";
 
 interface InventoryFormProps {
   initialData?: any;
@@ -16,12 +24,27 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   isSubmitting,
   success,
 }) => {
+  const { inventoryType, setInventoryType } = useInventoryType();
+  const [inventoryTypeList, setInventoryTypeList] = useState<
+    {
+      id: number;
+      inventoryTypeName: string;
+      description: string;
+      displayName: string;
+      showCreateNew: boolean;
+    }[]
+  >();
+  const [createNewInventoryType, setCreateNewInventoryType] = useState(false);
+  const [newInventoryTypeName, setInventoryTypeName] = useState("");
+  const [newDescription, setDescription] = useState("");
   const [inventoryData, setInventoryData] = useState({
     inventoryName: "",
     refId: "",
     description: "",
-    inventoryTypeId: undefined,
     isBorrowable: false,
+    inventoryTypeName: "",
+    inventoryTypeId: undefined,
+    descriptionInventoryType: "",
   });
 
   useEffect(() => {
@@ -30,8 +53,10 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryName: initialData.inventoryName || "",
         refId: initialData.refId || "",
         description: initialData.description || "",
-        inventoryTypeId: initialData.inventoryTypeId || undefined,
         isBorrowable: initialData.isBorrowable || false,
+        inventoryTypeName: initialData.inventoryTypeName || "",
+        inventoryTypeId: initialData.inventoryTypeId || undefined,
+        descriptionInventoryType: initialData.descriptionInventoryType || "",
       });
     }
   }, [initialData, isEditMode]);
@@ -42,27 +67,81 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryName: "",
         refId: "",
         description: "",
-        inventoryTypeId: undefined,
         isBorrowable: false,
+        inventoryTypeName: "",
+        inventoryTypeId: undefined,
+        descriptionInventoryType: "",
       });
     }
   }, [success]);
 
-  const handleInputChange = (e: any) => {
-    const { name, value, type } = e.target;
-    let finalValue = type == "number" ? +value : value;
-    console.log("SUSI 3", finalValue);
+  useEffect(() => {
+    console.log(`DATA_`, inventoryData);
+  }, [inventoryData]);
 
-    setInventoryData({
-      ...inventoryData,
-      [name]: finalValue,
-    });
+  const handleInputChange = (e: any): void => {
+    const {
+      name,
+      value,
+      type = "text",
+    } = e.target as HTMLInputElement | HTMLSelectElement;
+
+    let finalValue = type === "number" ? +value : value;
+    console.log("INVENTORY 3", finalValue);
+
+    if (name === "inventoryTypeName") {
+      const data = inventoryType.find((element) => element.id == finalValue);
+      setInventoryData({
+        ...inventoryData,
+        inventoryTypeId: data?.id as any,
+        inventoryTypeName: data?.inventoryTypeName as any,
+        descriptionInventoryType: data?.description as any,
+      });
+    } else {
+      setInventoryData({
+        ...inventoryData,
+        [name]: finalValue,
+      });
+    }
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(inventoryData);
+
+    if (newInventoryTypeName && newDescription) {
+      const newInventoryTypeId = undefined;
+
+      setInventoryType((prevData) => ({
+        ...prevData,
+        inventoryTypeId: newInventoryTypeId,
+        inventoryTypeName: newInventoryTypeName,
+        description: newDescription,
+      }));
+
+      setInventoryTypeList([]);
+    }
+
+    setCreateNewInventoryType(false);
   };
+
+  useEffect(() => {
+    const data = inventoryType.map((type) => ({
+      id: type.id,
+      inventoryTypeName: type.inventoryTypeName,
+      displayName: type.inventoryTypeName,
+      description: type.description,
+      showCreateNew: false,
+    }));
+    data.push({
+      id: 0,
+      inventoryTypeName: "",
+      displayName: "Create Inventory Type Name",
+      description: "",
+      showCreateNew: true,
+    });
+    setInventoryTypeList([...data]);
+  }, [inventoryType]);
 
   return (
     <div className="w-[520px] mx-auto items-center">
@@ -90,12 +169,12 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           <label>
             <Typography className="mb-2" variant="h6">
-              Ref Id :
+              Reference Id :
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="RefId"
+              label="Reference Id"
               type="string"
               name="refId"
               variant="outlined"
@@ -127,22 +206,86 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
           </label>
           <br />
 
-          <label>
+          <label htmlFor="inventoryTypeName">
             <Typography className="mb-2" variant="h6">
-              Inventory Type Id:
+              Inventory Type:
             </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="Inventory Type Id"
-              type="number"
-              name="inventoryTypeId"
-              variant="outlined"
-              placeholder="Inventory Type Id"
-              value={inventoryData.inventoryTypeId || undefined}
-              onChange={handleInputChange}
-              required
-            />
+            {inventoryTypeList && (
+              <Select
+                className="w-full"
+                color="orange"
+                variant="outlined"
+                size="lg"
+                label="Inventory Type Name"
+                placeholder="Inventory Type Name"
+                onChange={(e) => {
+                  handleInputChange({
+                    target: {
+                      name: "inventoryTypeName",
+                      value: e,
+                      type: "text",
+                    },
+                  });
+                }}
+              >
+                {inventoryTypeList.map((type) => (
+                  <Option
+                    key={type.id}
+                    value={type.id.toString()}
+                    onClick={() => {
+                      setCreateNewInventoryType(type.showCreateNew);
+                    }}
+                  >
+                    {type.displayName}
+                  </Option>
+                ))}
+              </Select>
+            )}
+            {createNewInventoryType && (
+              <form onSubmit={handleSubmit}>
+                <Typography className="pt-5 pb-2" variant="h6" color="orange">
+                  Create Inventory Type Name:
+                </Typography>
+                <div className="space-y-3">
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Inventory Type Name"
+                    type="text"
+                    name="inventoryTypeName"
+                    variant="outlined"
+                    size="md"
+                    placeholder="Inventory Type Name"
+                    value={inventoryData.inventoryTypeName}
+                    onChange={(e) =>
+                      setInventoryData((prevData) => ({
+                        ...prevData,
+                        inventoryTypeName: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Description"
+                    type="text"
+                    name="descriptionInventoryType"
+                    variant="outlined"
+                    size="md"
+                    placeholder="Description"
+                    value={inventoryData.descriptionInventoryType}
+                    onChange={(e) =>
+                      setInventoryData((prevData) => ({
+                        ...prevData,
+                        descriptionInventoryType: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+              </form>
+            )}
           </label>
           <br />
 

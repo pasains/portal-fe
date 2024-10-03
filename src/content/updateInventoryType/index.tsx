@@ -4,9 +4,6 @@ import TimedAlert from "../../container/alert";
 import { useUpdateInventoryType } from "../../hooks/updateInventoryType";
 import InventoryTypeForm from "../../container/inventoryTypeForm";
 
-type Params = {
-  id: string;
-};
 
 const UpdateInventoryTypeContent = () => {
   const {

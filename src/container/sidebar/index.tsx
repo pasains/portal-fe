@@ -29,6 +29,8 @@ import {
 export function SidebarWithBurgerMenu() {
   const [open, setOpen] = React.useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const  users  = {id: 1};
 
   const handleOpen = (value: number) => {
     setOpen(open === value ? 0 : value);
@@ -138,13 +140,19 @@ export function SidebarWithBurgerMenu() {
                     <ListItemPrefix>
                       <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                     </ListItemPrefix>
-                    Receiving
+                    <NavLink to="/receiving" className="py-2">
+                      Receiving
+                    </NavLink>
                   </ListItem>
                 </List>
               </AccordionBody>
             </Accordion>
             <hr className="my-2 border-black-50" />
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                navigate(`/user/profile/${users.id}`);
+              }}
+            >
               <ListItemPrefix>
                 <UserCircleIcon className="h-5 w-5" />
               </ListItemPrefix>

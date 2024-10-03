@@ -5,8 +5,10 @@ module.exports = withMT({
   theme: {
     extend: {
       zIndex: {
-        '9999': '9999',
-      }
+        0: "0",
+        1: "1",
+        9999: "9999",
+      },
     },
   },
   plugins: [],

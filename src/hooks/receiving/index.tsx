@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 
-export type InventoryTypeList = {
+export type ReceivingProps = {
   id: number;
-  inventoryTypeName: string;
-  description: string;
+  userId: number;
+  notes: string;
+  status: string;
 };
 
-type InventoryTypeResponse = {
+type ReceivingResponse = {
   meta: {
     message: string;
     status: string;
     dataType: string;
   };
-  data: InventoryTypeList[];
+  data: ReceivingProps[];
 };
 
-export default function useInventoryType() {
-  const [inventoryType, setInventoryType] = useState<InventoryTypeList[]>([]);
+export default function useReceiving() {
+  const [receiving, setReceiving] = useState<ReceivingProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
@@ -28,7 +29,7 @@ export default function useInventoryType() {
     setLoading(true);
     setError(null);
     function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventorytype`)
+      fetch(`${REACT_APP_PORTAL_BE_URL}/api/receiving`)
         .then((response) => {
           console.log(response);
           if (!response.ok) {
@@ -36,23 +37,22 @@ export default function useInventoryType() {
           }
           return response.json();
         })
-        .then((json: InventoryTypeResponse) => {
-          console.log("INVENTORY: " + json.data.length);
+        .then((json: ReceivingResponse) => {
           for (let i = 0; i < json.data.length; i++) {
-            console.log("INVENTORY_" + i + ": " + json.data[i].id);
+            console.log("RECEIVING" + i + ": " + json.data[i].id);
           }
           if (Array.isArray(json.data)) {
             setLoading(false);
-            setInventoryType(json.data);
+            setReceiving(json.data);
           } else {
             setLoading(false);
             console.error("Expected array, got:", json.data);
-            setInventoryType([]);
+            setReceiving([]);
           }
         })
         .catch((error: any) => {
           setError(`Fetch error: ${error}`);
-          setInventoryType([]);
+          setReceiving([]);
         });
     }
 
@@ -60,12 +60,12 @@ export default function useInventoryType() {
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
 
-  const deleteInventoryType = async (id: any) => {
+  const deleteReceiving = async (id: any) => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/delete/${id}`,
+        `${REACT_APP_PORTAL_BE_URL}/api/receiving/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -80,10 +80,8 @@ export default function useInventoryType() {
         setLoading(false);
         setError(result.meta.message);
       }
-      console.log("Delete item", result);
-      setInventoryType((inventoryType) =>
-        inventoryType.filter((item) => item.id !== id),
-      );
+      console.log(result);
+      setReceiving((borrowing) => borrowing.filter((item) => item.id !== id));
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -98,7 +96,7 @@ export default function useInventoryType() {
   };
 
   const handleConfirmDelete = () => {
-    deleteInventoryType(deleteId);
+    deleteReceiving(deleteId);
     setOpenAlert(false);
   };
 
@@ -107,12 +105,11 @@ export default function useInventoryType() {
   };
 
   return {
-    inventoryType,
+    receiving,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-    setInventoryType,
     loading,
     error,
   };
