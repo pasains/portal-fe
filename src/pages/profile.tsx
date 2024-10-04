@@ -1,11 +1,11 @@
 import React from "react";
-import { InventoryContent } from "../content/inventory";
+import { ProfileContent } from "../content/profile";
 import { Layout } from "../layout/page";
 
-export function Inventory() {
+export function Profile() {
   return (
     <Layout>
-      <InventoryContent />
+      <ProfileContent />
     </Layout>
   );
 }

@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
 
-export type InventoryList = {
+export type InventoryTypeList = {
   id: number;
-  inventoryName: string;
-  refId: string;
-  description: string;
   inventoryTypeName: string;
-  isBorrowable: boolean;
+  description: string;
 };
 
-type InventoryResponse = {
+type InventoryTypeResponse = {
   meta: {
     message: string;
     status: string;
     dataType: string;
   };
-  data: InventoryList[];
+  data: InventoryTypeList[];
 };
 
 export default function useInventory() {
-  const [inventory, setInventory] = useState<InventoryList[]>([]);
+  const [inventoryType, setInventoryType] = useState<InventoryTypeList[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
@@ -27,12 +24,11 @@ export default function useInventory() {
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  // Function to get all inventory list
   useEffect(() => {
     setLoading(true);
     setError(null);
     function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventory`)
+      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventorytype`)
         .then((response) => {
           console.log(response);
           if (!response.ok) {
@@ -40,23 +36,23 @@ export default function useInventory() {
           }
           return response.json();
         })
-        .then((json: InventoryResponse) => {
+        .then((json: InventoryTypeResponse) => {
           console.log("INVENTORY: " + json.data.length);
           for (let i = 0; i < json.data.length; i++) {
             console.log("INVENTORY_" + i + ": " + json.data[i].id);
           }
           if (Array.isArray(json.data)) {
             setLoading(false);
-            setInventory(json.data);
+            setInventoryType(json.data);
           } else {
             setLoading(false);
             console.error("Expected array, got:", json.data);
-            setInventory([]);
+            setInventoryType([]);
           }
         })
         .catch((error: any) => {
           setError(`Fetch error: ${error}`);
-          setInventory([]);
+          setInventoryType([]);
         });
     }
 
@@ -64,12 +60,12 @@ export default function useInventory() {
     return () => {};
   }, [REACT_APP_PORTAL_BE_URL]);
 
-  const deleteInventory = async (id: any) => {
+  const deleteInventoryType = async (id: any) => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory/delete/${id}`,
+        `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -85,7 +81,9 @@ export default function useInventory() {
         setError(result.meta.message);
       }
       console.log("Delete item", result);
-      setInventory((inventory) => inventory.filter((item) => item.id !== id));
+      setInventoryType((inventoryType) =>
+        inventoryType.filter((item) => item.id !== id),
+      );
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -100,7 +98,7 @@ export default function useInventory() {
   };
 
   const handleConfirmDelete = () => {
-    deleteInventory(deleteId);
+    deleteInventoryType(deleteId);
     setOpenAlert(false);
   };
 
@@ -109,12 +107,12 @@ export default function useInventory() {
   };
 
   return {
-    inventory,
+    inventoryType,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-    setInventory,
+    setInventoryType,
     loading,
     error,
   };

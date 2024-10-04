@@ -1,26 +1,24 @@
-import { useState } from "react";
-import useInventory, { InventoryList } from "../../hooks/inventory";
+import useInventoryType, { InventoryTypeList } from "../../hooks/inventoryType";
+import { Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import UpperTable from "../../container/upperTable";
-import { Chip, Typography } from "@material-tailwind/react";
 import { Pagination } from "../../container/pagination";
+import { useState } from "react";
 import DeleteAlert from "../../container/deleteAlert";
 
-export function InventoryContent() {
+export function InventoryTypeContent() {
   const {
-    inventory,
+    inventoryType,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-  } = useInventory();
+  } = useInventoryType();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
-    { titleHead: "Reference Id", accessor: "refId" },
-    { titleHead: "Inventory Name", accessor: "inventoryName" },
+    { titleHead: "Inventory Type Id", accessor: "inventoryTypeId" },
     { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
-    { titleHead: "is Borrowable?", accessor: "isBorrowable" },
     { titleHead: "Description", accessor: "description" },
     { titleHead: "" },
   ];
@@ -32,9 +30,9 @@ export function InventoryContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory List"}
-        createTitle={"CREATE INVENTORY"}
-        createLink={`/inventory/create`}
+        pageTitle={"Inventory Type"}
+        createTitle={"CREATE INVENTORY TYPE"}
+        createLink={`/inventorytype/create`}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">
@@ -57,39 +55,24 @@ export function InventoryContent() {
             </tr>
           </thead>
           <tbody>
-            {inventory.map((item: InventoryList, index) => {
-              const isLast = index === inventory.length - 1;
+            {inventoryType.map((item: InventoryTypeList, index) => {
+              const isLast = index === inventoryType.length - 1;
               const classes = isLast
-                ? "py-3 px-4"
-                : "py-3 px-4 border-b border-blue-gray-50";
+                ? "px-4 py-3"
+                : "px-4 py-3 border-b border-blue-gray-50";
 
               return (
-                <tr
-                  key={item.id}
-                  onClick={() => {
-                    navigate(`/inventory/${item.id}`);
-                  }}
-                  className="cursor-pointer hover:bg-blue-gray-50"
-                >
+                <tr key={item.id}>
                   <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.refId}
+                      {item.id}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {item.inventoryName}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -97,15 +80,6 @@ export function InventoryContent() {
                     >
                       {item.inventoryTypeName}
                     </Typography>
-                  </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
-                    <Chip
-                      size="sm"
-                      variant="ghost"
-                      value={item.isBorrowable ? "Yes" : "No"}
-                      color={item.isBorrowable ? "green" : "red"}
-                      className="w-fit items-center mx-auto"
-                    />
                   </td>
                   <td className={classes}>
                     <Typography

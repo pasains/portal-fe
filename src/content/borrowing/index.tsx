@@ -1,40 +1,40 @@
 import { useState } from "react";
-import useInventory, { InventoryList } from "../../hooks/inventory";
 import { useNavigate } from "react-router-dom";
 import UpperTable from "../../container/upperTable";
-import { Chip, Typography } from "@material-tailwind/react";
+import { Typography } from "@material-tailwind/react";
 import { Pagination } from "../../container/pagination";
 import DeleteAlert from "../../container/deleteAlert";
+import useBorrowing, { BorrowingProps } from "../../hooks/borrowing";
 
-export function InventoryContent() {
+export function BorrowingContent() {
   const {
-    inventory,
+    borrowing,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-  } = useInventory();
+  } = useBorrowing();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
-    { titleHead: "Reference Id", accessor: "refId" },
-    { titleHead: "Inventory Name", accessor: "inventoryName" },
-    { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
-    { titleHead: "is Borrowable?", accessor: "isBorrowable" },
-    { titleHead: "Description", accessor: "description" },
+    { titleHead: "Borrowing Id", accessor: "borrowingId" },
+    { titleHead: "Borrowing Status Id", accessor: "borrowingId" },
+    { titleHead: "Organization Id", accessor: "organizationId" },
+    { titleHead: "Due Date", accessor: "dueDate" },
+    { titleHead: "Special Instruction", accessor: "specialInstruction" },
     { titleHead: "" },
   ];
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/inventory/update/${id}`);
+    navigate(`/borrowing/update/${id}`);
   };
 
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory List"}
-        createTitle={"CREATE INVENTORY"}
-        createLink={`/inventory/create`}
+        pageTitle={"Borrowing List"}
+        createTitle={"CREATE BORROWING"}
+        createLink={`/borrowing/create`}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">
@@ -57,8 +57,8 @@ export function InventoryContent() {
             </tr>
           </thead>
           <tbody>
-            {inventory.map((item: InventoryList, index) => {
-              const isLast = index === inventory.length - 1;
+            {borrowing.map((item: BorrowingProps, index) => {
+              const isLast = index === borrowing.length - 1;
               const classes = isLast
                 ? "py-3 px-4"
                 : "py-3 px-4 border-b border-blue-gray-50";
@@ -67,7 +67,7 @@ export function InventoryContent() {
                 <tr
                   key={item.id}
                   onClick={() => {
-                    navigate(`/inventory/${item.id}`);
+                    navigate(`/borrowing/${item.id}`);
                   }}
                   className="cursor-pointer hover:bg-blue-gray-50"
                 >
@@ -77,7 +77,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.refId}
+                      {item.borrowerId}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -86,7 +86,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryName}
+                      {item.borrowingStatusId}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -95,17 +95,17 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryTypeName}
+                      {item.organizationId}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
-                    <Chip
-                      size="sm"
-                      variant="ghost"
-                      value={item.isBorrowable ? "Yes" : "No"}
-                      color={item.isBorrowable ? "green" : "red"}
-                      className="w-fit items-center mx-auto"
-                    />
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.dueDate.toLocaleDateString()}
+                    </Typography>
                   </td>
                   <td className={classes}>
                     <Typography
@@ -113,7 +113,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.description}
+                      {item.specialInstruction}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -178,4 +178,4 @@ export function InventoryContent() {
       </div>
     </section>
   );
-}
+};
