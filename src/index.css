@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.custom-select::marker {
+  content: none !important;
+}

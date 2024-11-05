@@ -18,9 +18,9 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
   PowerIcon,
+  EnvelopeIcon,
 } from "@heroicons/react/24/solid";
 import {
-  ChevronRightIcon,
   ChevronDownIcon,
   Bars3Icon,
   XMarkIcon,
@@ -29,6 +29,8 @@ import {
 export function SidebarWithBurgerMenu() {
   const [open, setOpen] = React.useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const users = { id: 1 };
 
   const handleOpen = (value: number) => {
     setOpen(open === value ? 0 : value);
@@ -97,6 +99,9 @@ export function SidebarWithBurgerMenu() {
                   <NavLink to="/inventorytype" className="py-2">
                     Inventory Type
                   </NavLink>
+                  <NavLink to="/inventorygroup" className="py-2">
+                    Inventory Group
+                  </NavLink>
                 </List>
               </AccordionBody>
             </Accordion>
@@ -120,35 +125,40 @@ export function SidebarWithBurgerMenu() {
                     <ShoppingBagIcon className="h-5 w-5" />
                   </ListItemPrefix>
                   <Typography color="black" className="mr-auto font-normal">
-                    Transaction
+                    Borrow
                   </Typography>
                 </AccordionHeader>
               </ListItem>
               <AccordionBody className="py-1">
-                <List className="p-0">
-                  <ListItem>
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    <NavLink to="/borrowing" className="py-2">
-                      Borrowing
-                    </NavLink>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Receiving
-                  </ListItem>
+                <List className="p-2">
+                  <NavLink to="/borrowing" className="py-2">
+                    Borrowing
+                  </NavLink>
+                  <NavLink to="/borrower" className="py-2">
+                    Borrower
+                  </NavLink>
+                  <NavLink to="/organization" className="py-2">
+                    Organization
+                  </NavLink>
                 </List>
               </AccordionBody>
             </Accordion>
             <hr className="my-2 border-black-50" />
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                navigate(`/user/profile/${users.id}`);
+              }}
+            >
               <ListItemPrefix>
                 <UserCircleIcon className="h-5 w-5" />
               </ListItemPrefix>
               Profile
+            </ListItem>
+            <ListItem>
+              <ListItemPrefix>
+                <EnvelopeIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              Message
             </ListItem>
             <ListItem>
               <ListItemPrefix>

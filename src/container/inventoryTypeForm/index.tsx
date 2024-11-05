@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Typography } from "@material-tailwind/react";
+import { Button, Input, Typography, Textarea } from "@material-tailwind/react";
 
 interface InventoryTypeFormProps {
   initialData?: any;
@@ -44,7 +44,7 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
 
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
-    let finalValue = type == "number" ? +value : value;
+    let finalValue = type === "number" ? +value : value;
     console.log("SUSI 3", finalValue);
 
     setInventoryTypeData({
@@ -86,15 +86,12 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
             <Typography className="mb-2" variant="h6">
               Description:
             </Typography>
-            <Input
+            <Textarea
               className="w-full"
               color="orange"
               label="Description"
-              type="text"
-              name="description"
               variant="outlined"
-              size="lg"
-              placeholder="Description"
+              name="description"
               value={inventoryTypeData.description || ""}
               onChange={handleInputChange}
               required
