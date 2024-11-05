@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { SidebarWithBurgerMenu } from "../sidebar";
 
 const Heading: React.FC = () => {
-  const  users  = {id: 1, userName:"Weleh", role: "ADMIN"};
+  const  users  = {id: 1, userName:"Mecinsusi", role: "ADMIN"};
   const navigate = useNavigate();
   return (
     <main className="bg-black w-full fixed top-0 z-9999">
