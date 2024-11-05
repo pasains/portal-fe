@@ -1,43 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Typography, Textarea } from "@material-tailwind/react";
+import { Button, Input, Typography } from "@material-tailwind/react";
 
-interface InventoryTypeFormProps {
+interface InventoryGroupProps {
   initialData?: any;
-  onSubmit: (inventoryTypeData: any) => void;
+  onSubmit: (inventoryGroupData: any) => void;
   isEditMode?: boolean;
   isSubmitting?: any;
   success?: any;
 }
 
-const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
+const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
   initialData = {},
   onSubmit,
   isEditMode = false,
   isSubmitting,
   success,
 }) => {
-  const [inventoryTypeData, setInventoryTypeData] = useState({
-    inventoryTypeName: "",
-    description: "",
-    gorupId: undefined,
+  const [inventoryGroupData, setInventoryGroupData] = useState({
+    inventoryId: undefined,
+    inventoryTypeId: undefined,
   });
 
   useEffect(() => {
     if (isEditMode && initialData) {
-      setInventoryTypeData({
-        inventoryTypeName: initialData.inventoryTypeName || "",
-        description: initialData.description || "",
-        gorupId: initialData.gorupId || undefined,
+      setInventoryGroupData({
+        inventoryId: initialData.inventoryId,
+        inventoryTypeId: initialData.inventoryTypeId,
       });
     }
   }, [initialData, isEditMode]);
 
   useEffect(() => {
     if (success) {
-      setInventoryTypeData({
-        inventoryTypeName: "",
-        description: "",
-        gorupId: undefined,
+      setInventoryGroupData({
+        inventoryId: undefined,
+        inventoryTypeId: undefined,
       });
     }
   }, [success]);
@@ -45,17 +42,17 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
     let finalValue = type === "number" ? +value : value;
-    console.log("SUSI 3", finalValue);
+    console.log("Inventory Group", finalValue);
 
-    setInventoryTypeData({
-      ...inventoryTypeData,
+    setInventoryGroupData({
+      ...inventoryGroupData,
       [name]: finalValue,
     });
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(inventoryTypeData);
+    onSubmit(inventoryGroupData);
   };
 
   return (
@@ -64,18 +61,18 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
         <section className="p-5 mb-10 items-center border border-b rounded-lg">
           <label>
             <Typography className="mb-2" variant="h6">
-              Inventory Type Name :
+              Inventory Id:
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="Inventory Type Name"
-              type="text"
-              name="inventoryTypeName"
+              label="Inventory Id"
+              type="number"
+              name="inventoryId"
               variant="outlined"
               size="md"
-              placeholder="Inventory Type Name"
-              value={inventoryTypeData.inventoryTypeName || ""}
+              placeholder="User Id"
+              value={inventoryGroupData.inventoryId || undefined}
               onChange={handleInputChange}
               required
             />
@@ -84,15 +81,18 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
 
           <label>
             <Typography className="mb-2" variant="h6">
-              Description:
+              Inventory Type Id:
             </Typography>
-            <Textarea
+            <Input
               className="w-full"
               color="orange"
-              label="Description"
+              label="Inventory Type Id"
+              type="number"
+              name="inventoryTypeId"
               variant="outlined"
-              name="description"
-              value={inventoryTypeData.description || ""}
+              size="md"
+              placeholder="Inventory Type Id"
+              value={inventoryGroupData.inventoryTypeId || ""}
               onChange={handleInputChange}
               required
             />
@@ -101,11 +101,11 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
         </section>
 
         <Button type="submit" disabled={isSubmitting}>
-          {isEditMode ? "Update Inventory Type" : "Create Inventory Type"}
+          {isEditMode ? "Update Inventory Group" : "Create Inventory Group"}
         </Button>
       </form>
     </div>
   );
 };
 
-export default InventoryTypeForm;
+export default InventoryGroupForm;

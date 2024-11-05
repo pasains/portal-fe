@@ -6,8 +6,10 @@ import {
   Typography,
   Select,
   Option,
+  Textarea,
+  Checkbox,
 } from "@material-tailwind/react";
-import useInventoryType from "../../hooks/inventoryType";
+import useInventoryType from "../../hooks/inventoryType/inventoryTypeList";
 
 interface InventoryFormProps {
   initialData?: any;
@@ -24,7 +26,19 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   isSubmitting,
   success,
 }) => {
-  const { inventoryType, setInventoryType } = useInventoryType();
+  const [inventoryData, setInventoryData] = useState({
+    inventoryName: "",
+    refId: "",
+    description: "",
+    condition: "",
+    note: "",
+    isBorrowable: false,
+    inventoryTypeName: "",
+    inventoryTypeId: 0,
+    descriptionInventoryType: "",
+    url: "",
+    currentQuantity: 0,
+  });
   const [inventoryTypeList, setInventoryTypeList] = useState<
     {
       id: number;
@@ -34,18 +48,10 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
       showCreateNew: boolean;
     }[]
   >();
+  const { inventoryType, setInventoryType } = useInventoryType();
+  const [currentQuantity, setCurrentQuantity] = useState<number | string>(0);
   const [createNewInventoryType, setCreateNewInventoryType] = useState(false);
-  const [newInventoryTypeName, setInventoryTypeName] = useState("");
-  const [newDescription, setDescription] = useState("");
-  const [inventoryData, setInventoryData] = useState({
-    inventoryName: "",
-    refId: "",
-    description: "",
-    isBorrowable: false,
-    inventoryTypeName: "",
-    inventoryTypeId: undefined,
-    descriptionInventoryType: "",
-  });
+  const totalQuantity = currentQuantity;
 
   useEffect(() => {
     if (isEditMode && initialData) {
@@ -53,10 +59,14 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryName: initialData.inventoryName || "",
         refId: initialData.refId || "",
         description: initialData.description || "",
+        condition: initialData.condition || "",
+        note: initialData.note || "",
         isBorrowable: initialData.isBorrowable || false,
         inventoryTypeName: initialData.inventoryTypeName || "",
         inventoryTypeId: initialData.inventoryTypeId || undefined,
         descriptionInventoryType: initialData.descriptionInventoryType || "",
+        url: initialData.url || "",
+        currentQuantity: initialData.currentQuantity || 0,
       });
     }
   }, [initialData, isEditMode]);
@@ -67,16 +77,20 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryName: "",
         refId: "",
         description: "",
+        condition: "",
+        note: "",
         isBorrowable: false,
         inventoryTypeName: "",
-        inventoryTypeId: undefined,
+        inventoryTypeId: 0,
         descriptionInventoryType: "",
+        url: "",
+        currentQuantity: 0,
       });
     }
   }, [success]);
 
   useEffect(() => {
-    console.log(`DATA_`, inventoryData);
+    console.log(`INVENTORY_DATA_`, inventoryData);
   }, [inventoryData]);
 
   const handleInputChange = (e: any): void => {
@@ -87,7 +101,9 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     } = e.target as HTMLInputElement | HTMLSelectElement;
 
     let finalValue = type === "number" ? +value : value;
-    console.log("INVENTORY 3", finalValue);
+    if (value === "" || Number(value) >= 0) {
+      setCurrentQuantity(value); // Store as string for now to allow empty inputs
+    }
 
     if (name === "inventoryTypeName") {
       const data = inventoryType.find((element) => element.id == finalValue);
@@ -109,19 +125,31 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     e.preventDefault();
     onSubmit(inventoryData);
 
-    if (newInventoryTypeName && newDescription) {
-      const newInventoryTypeId = undefined;
-
+    if (
+      initialData.inventoryTypeName &&
+      inventoryData.descriptionInventoryType
+    ) {
       setInventoryType((prevData) => ({
         ...prevData,
-        inventoryTypeId: newInventoryTypeId,
-        inventoryTypeName: newInventoryTypeName,
-        description: newDescription,
+        inventoryTypeId: undefined,
+        inventoryTypeName: inventoryData.inventoryTypeName,
+        description: inventoryData.descriptionInventoryType,
       }));
 
       setInventoryTypeList([]);
     }
+    const parsedCurrentQuantity = Number(currentQuantity);
 
+    if (isNaN(parsedCurrentQuantity)) {
+      alert("Please enter a valid current quantity.");
+      return;
+    }
+
+    // totalQuantity is the same as currentQuantity for new inventory
+    const totalQuantity = parsedCurrentQuantity;
+    console.log(`TOTAL_QUANTITY`, totalQuantity);
+
+    setCurrentQuantity(0);
     setCreateNewInventoryType(false);
   };
 
@@ -146,7 +174,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   return (
     <div className="w-[520px] mx-auto items-center">
       <form onSubmit={handleSubmit}>
-        <section className="p-5 mb-10 items-center border border-b rounded-lg">
+        <section className="p-5 mb-10 my-auto items-center border border-b rounded-lg">
           <label>
             <Typography className="mb-2" variant="h6">
               Inventory Name :
@@ -159,7 +187,6 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               name="inventoryName"
               variant="outlined"
               size="md"
-              placeholder="Inventory Name"
               value={inventoryData.inventoryName || ""}
               onChange={handleInputChange}
               required
@@ -179,27 +206,97 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
               name="refId"
               variant="outlined"
               size="md"
-              placeholder="Ref Id"
               value={inventoryData.refId || ""}
               onChange={handleInputChange}
               required
             />
           </label>
           <br />
+
           <label>
             <Typography className="mb-2" variant="h6">
               Description:
             </Typography>
-            <Input
+            <Textarea
               className="w-full"
               color="orange"
               label="Description"
-              type="text"
+              variant="outlined"
               name="description"
+              value={inventoryData.description || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <br />
+
+          <label>
+            <Typography className="mb-2" variant="h6">
+              Condition:
+            </Typography>
+            <Textarea
+              className="w-full"
+              color="orange"
+              label="Condition"
+              variant="outlined"
+              name="condition"
+              value={inventoryData.condition || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <br />
+
+          <label>
+            <Typography className="mb-2" variant="h6">
+              Note:
+            </Typography>
+            <Textarea
+              className="w-full"
+              color="orange"
+              label="Note"
+              variant="outlined"
+              name="note"
+              value={inventoryData.note || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <br />
+
+          <label>
+            <Typography className="mb-2" variant="h6">
+              Image URL:
+            </Typography>
+            <Input
+              className="w-full"
+              color="orange"
+              label="Image URL"
+              type="url"
+              name="url"
               variant="outlined"
               size="lg"
-              placeholder="Description"
-              value={inventoryData.description || ""}
+              value={inventoryData.url || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <br />
+
+          <label>
+            <Typography className="mb-2" variant="h6">
+              Quantity:
+            </Typography>
+            <Input
+              className="w-full"
+              color="orange"
+              label="Quantity"
+              type="number"
+              name="currentQuantity"
+              variant="outlined"
+              min={0}
+              size="lg"
+              value={inventoryData.currentQuantity || ""}
               onChange={handleInputChange}
               required
             />
@@ -208,16 +305,38 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           <label htmlFor="inventoryTypeName">
             <Typography className="mb-2" variant="h6">
-              Inventory Type:
+              Inventory Type Name:
             </Typography>
             {inventoryTypeList && (
               <Select
+                selected={() => {
+                  const data = inventoryTypeList.find(
+                    (item) =>
+                      item.displayName == inventoryData.inventoryTypeName,
+                  );
+                  if (data == undefined) {
+                    return;
+                  }
+                  return (
+                    <Option
+                      key={data.id}
+                      value={data.id.toString() || ""}
+                      className="custom-select bg-white hover:bg-white"
+                      onClick={() => {
+                        setCreateNewInventoryType(data.showCreateNew);
+                      }}
+                    >
+                      {data?.displayName.trim() || ""}
+                    </Option>
+                  );
+                }}
                 className="w-full"
                 color="orange"
                 variant="outlined"
                 size="lg"
                 label="Inventory Type Name"
-                placeholder="Inventory Type Name"
+                name="inventoryTypeName"
+                value={inventoryData.inventoryTypeName || ""}
                 onChange={(e) => {
                   handleInputChange({
                     target: {
@@ -236,7 +355,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                       setCreateNewInventoryType(type.showCreateNew);
                     }}
                   >
-                    {type.displayName}
+                    {type.displayName || ""}
                   </Option>
                 ))}
               </Select>
@@ -254,9 +373,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                     type="text"
                     name="inventoryTypeName"
                     variant="outlined"
-                    size="md"
-                    placeholder="Inventory Type Name"
-                    value={inventoryData.inventoryTypeName}
+                    size="lg"
+                    value={inventoryData.inventoryTypeName || ""}
                     onChange={(e) =>
                       setInventoryData((prevData) => ({
                         ...prevData,
@@ -265,16 +383,13 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                     }
                     required
                   />
-                  <Input
+                  <Textarea
                     className="w-full"
                     color="orange"
                     label="Description"
-                    type="text"
-                    name="descriptionInventoryType"
                     variant="outlined"
-                    size="md"
-                    placeholder="Description"
-                    value={inventoryData.descriptionInventoryType}
+                    name="descriptionInventoryType"
+                    value={inventoryData.descriptionInventoryType || ""}
                     onChange={(e) =>
                       setInventoryData((prevData) => ({
                         ...prevData,
@@ -289,13 +404,13 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
           </label>
           <br />
 
-          <label className="flex">
+          <label>
             <Typography className="mr-2" variant="h6">
               Is Borrowable?:
             </Typography>
-            <input
+            <Checkbox
               type="checkbox"
-              placeholder="is Borrowable?"
+              label="Please fill this check box if the item is borrowable"
               checked={inventoryData.isBorrowable || false}
               onChange={(e) =>
                 setInventoryData({
@@ -308,7 +423,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
           <br />
         </section>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button className="mb-10" type="submit" disabled={isSubmitting}>
           {isEditMode ? "Update Inventory" : "Create Inventory"}
         </Button>
       </form>
