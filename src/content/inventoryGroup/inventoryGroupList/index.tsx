@@ -1,24 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useInventoryGroup, { InventoryGroupProps } from "../../../hooks/inventoryGroup/inventoryGroupList";
+import useInventoryGroup, {
+  InventoryGroupProps,
+} from "../../../hooks/inventoryGroup/inventoryGroupList";
 import UpperTable from "../../../container/upperTable";
 import { Typography } from "@material-tailwind/react";
 import DeleteAlert from "../../../container/deleteAlert";
 import { Pagination } from "../../../container/pagination";
-
-export type InventoryGroupList = {
-  inventoryId: number;
-  inventoryTypeId: number;
-};
-
-type InventoryGroupResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: InventoryGroupProps[];
-};
 
 export function InventoryGroupContent() {
   const {
@@ -43,7 +31,7 @@ export function InventoryGroupContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory Group List"}
+        pageTitle={"Inventory Group"}
         createTitle={"CREATE INVENTORY GROUP"}
         createLink={`/inventorygroup/create`}
       />
@@ -76,9 +64,9 @@ export function InventoryGroupContent() {
 
               return (
                 <tr
-                  key={item.inventoryId}
+                  key={item.id}
                   onClick={() => {
-                    navigate(`/inventorygroup/${item.inventoryId}`);
+                    navigate(`/inventorygroup/${item.id}`);
                   }}
                   className="cursor-pointer hover:bg-blue-gray-50"
                 >
@@ -88,7 +76,7 @@ export function InventoryGroupContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryId}
+                      {item.inventoryGroupName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -97,14 +85,14 @@ export function InventoryGroupContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryTypeId}
+                      {item.description}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={`${classes}`}>
                     <div className="mx-auto text-center">
                       <button
                         onClick={(e) => {
-                          handleEditClick(item.inventoryId);
+                          handleEditClick(item.id);
                           e.stopPropagation(); // Stop the event from propagating to the parent
                         }}
                         disabled={isEditing}
@@ -125,7 +113,7 @@ export function InventoryGroupContent() {
                       </button>
                       <button
                         onClick={(e) => {
-                          handleDelete(item.inventoryId);
+                          handleDelete(item.id);
                           e.stopPropagation(); // Stop the event from propagating to the parent
                         }}
                         className="relative z-9999 h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"

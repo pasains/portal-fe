@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
 export type InventoryGroupProps = {
-  inventoryId: number;
-  inventoryTypeId: string;
+  id: number;
+  inventoryGroupName: string;
+  description: string;
 };
 
 type InventoryGroupResponse = {
@@ -82,7 +83,7 @@ export default function useInventoryGroup() {
       }
       console.log(result);
       setInventoryGroup((item) =>
-        item.filter((item) => item.inventoryId !== id),
+        item.filter((item) => item.id !== id),
       );
     } catch (error: any) {
       setError(`Deleting error: ${error}`);

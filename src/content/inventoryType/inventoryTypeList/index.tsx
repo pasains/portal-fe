@@ -70,7 +70,7 @@ export function InventoryTypeContent() {
                   }}
                   className="cursor-pointer hover:bg-blue-gray-50"
                 >
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -79,7 +79,7 @@ export function InventoryTypeContent() {
                       {item.inventoryTypeName}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -88,7 +88,7 @@ export function InventoryTypeContent() {
                       {item.description}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={`${classes}`}>
                     <div className="mx-auto text-center">
                       <button
                         onClick={(e) => {

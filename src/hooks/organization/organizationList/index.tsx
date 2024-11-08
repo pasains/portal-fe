@@ -8,7 +8,7 @@ export type OrganizationProps = {
   note: string;
 };
 
-type InventoryTypeResponse = {
+type OrganizationResponse = {
   meta: {
     message: string;
     status: string;
@@ -38,7 +38,7 @@ export default function useOrganization() {
           }
           return response.json();
         })
-        .then((json: InventoryTypeResponse) => {
+        .then((json: OrganizationResponse) => {
           console.log("ORGANIZATION_1: " + json.data.length);
           for (let i = 0; i < json.data.length; i++) {
             console.log("ORGANIZATION_2" + i + ": " + json.data[i].id);
@@ -83,7 +83,9 @@ export default function useOrganization() {
         setError(result.meta.message);
       }
       console.log("Delete item", result);
-      setOrganization((organization) => organization.filter((item) => item.id !== id));
+      setOrganization((organization) =>
+        organization.filter((item) => item.id !== id),
+      );
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);

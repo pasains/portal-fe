@@ -74,7 +74,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
 
   //Console log the data
   useEffect(() => {
-    console.log(`DATAAA_`, borrowingData);
+    console.log(`DATA_1`, borrowingData);
   }, [borrowingData]);
 
   //  Get data for edit mode and clean data for initial
@@ -126,6 +126,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
 
   //Handle input
   const handleInputChange = (e: any) => {
+    console.log(`E_ ${JSON.stringify(e)}`);
     const { name, value, type } = e.target as
       | HTMLInputElement
       | HTMLSelectElement;
@@ -145,10 +146,12 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           identityCard: data?.identityCard as any,
           identityNumber: data?.identityNumber as any,
           phoneNumber: data?.phoneNumber as any,
-          organizationName: data?.organizationName as any,
-          address: data?.address as any,
-          organizationStatus: data?.organizationStatus as any,
-          note: data?.note as any,
+          organizationName: data?.borrowerOrganizationRel
+            .organizationName as any,
+          address: data?.borrowerOrganizationRel.address as any,
+          organizationStatus: data?.borrowerOrganizationRel
+            .organizationStatus as any,
+          note: data?.borrowerOrganizationRel.note as any,
         });
 
         // Check if borrower has an associated organization
@@ -158,22 +161,32 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
             (element) => element.id == data.organizationId,
           );
           // If organization exists, update organization related fields
+
           if (organizationData) {
-            setBorrowingData({
-              ...borrowingData,
-              organizationId: organizationData?.id as any,
-              organizationName: organizationData?.organizationName as any,
-              address: organizationData?.address as any,
-              organizationStatus: organizationData?.organizationStatus as any,
-              note: organizationData?.note as any,
+            console.log(`ORG_DATA ${JSON.stringify(organizationData)}`);
+            handleInputChange({
+              target: {
+                name: "organizationName",
+                value: organizationData.id.toString(),
+                type: "text",
+              },
             });
-            setIsLocked(true);
+            //setBorrowingData({
+            //  ...borrowingData,
+            //  organizationId: organizationData?.id as any,
+            //  organizationName: organizationData?.organizationName as any,
+            //  address: organizationData?.address as any,
+            //  organizationStatus: organizationData?.organizationStatus as any,
+            //  note: organizationData?.note as any,
+            //});
+            //setIsLocked(true);
           }
         }
       }
     } else if (name === "organizationName") {
       // Handle organization change manually if needed
       const data = organization.find((element) => element.id == finalValue);
+      console.log(`ORG_DATA_2 ${JSON.stringify(data)}`);
       setBorrowingData({
         ...borrowingData,
         organizationId: data?.id as any,
@@ -273,10 +286,10 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           identityCard: type.identityCard,
           identityNumber: type.identityNumber,
           phoneNumber: type.phoneNumber,
-          organizationName: type.organizationName,
-          address: type.address,
-          organizationStatus: type.organizationStatus,
-          note: type.organizationStatus,
+          organizationName: type.borrowerOrganizationRel.organizationName,
+          address: type.borrowerOrganizationRel.address,
+          organizationStatus: type.borrowerOrganizationRel.organizationStatus,
+          note: type.borrowerOrganizationRel.note,
           displayName: type.borrowerName,
           showCreateNew: false,
         }))
@@ -448,7 +461,6 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                 variant="outlined"
                 size="lg"
                 disabled={isLocked}
-                value={borrowingData.organizationName}
                 label="Organization Name"
                 name="organizationName"
                 onChange={(e) => {

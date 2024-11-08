@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 
+type BorrowerOrganization = {
+  organizationName: string;
+  address: string;
+  organizationStatus: string;
+  note: string;
+};
+
 export type BorrowerProps = {
   id: number;
   borrowerName: string;
   identityCard: string;
   identityNumber: string;
   phoneNumber: string;
-  organizationName: string;
   organizationId: number;
-  address: string;
-  organizationStatus: string;
-  note: string;
+  borrowerOrganizationRel: BorrowerOrganization;
 };
 
 type InventoryTypeResponse = {

@@ -18,6 +18,8 @@ import { CreateInventoryGroup } from "./pages/inventoryGroup/createInventoryGrou
 import { UpdatedBorrower } from "./pages/borrower/updateBorrower";
 import DeleteAlert from "./container/deleteAlert";
 import { InventoryTypeDetail } from "./pages/inventoryType/inventoryTypeDetail";
+import { InventoryGroupDetail } from "./pages/inventoryGroup/inventoryGroupDetail";
+import { OrganizationDetail } from "./pages/organization/organizationDetail";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route index={true} element={<Inventory />} />
         </Route>
         <Route path="/inventorytype/:id" element={<InventoryTypeDetail />} />
+        <Route path="/inventorygroup/:id" element={<InventoryGroupDetail />} />
+        <Route path="/organization/:id" element={<OrganizationDetail />} />
         <Route path="/borrowing" element={<Borrowing />} />
         <Route path="/inventorygroup" element={<InventoryGroup />} />
         <Route path="/borrower" element={<Borrower />} />
