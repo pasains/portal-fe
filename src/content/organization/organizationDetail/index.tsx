@@ -1,31 +1,27 @@
-import { Chip, Typography } from "@material-tailwind/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Typography } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
-import useInventory from "../../../hooks/inventory/inventoryList";
-import { useInventoryTypeDetail } from "../../../hooks/inventoryType/inventoryTypeDetail";
+import { useOrganizationDetail } from "../../../hooks/organization/organizationDetail";
+import useOrganization from "../../../hooks/organization/organizationList";
 
-export function InventoryTypeDetailContent() {
-  const { inventoryTypeDetail, id, inventoryItems } = useInventoryTypeDetail();
-  const { handleDelete } = useInventory();
+export function OrganizationDetailContent() {
+  const { id, organizationDetail, organizationList } = useOrganizationDetail();
+  const { handleDelete } = useOrganization();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
-    { titleHead: "Inventory Name", accessor: "inventoryName" },
-    { titleHead: "Reference Id", accessor: "refId" },
-    { titleHead: "Description", accessor: "description" },
-    { titleHead: "isBorrowable", accessor: "isBorrowable" },
-    { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
+    { titleHead: "Borrower Name", accessor: "borrowerName" },
+    { titleHead: "Identity Card", accessor: "identityCard" },
+    { titleHead: "Identity Number", accessor: "identityNumber" },
+    { titleHead: "Phone Number", accessor: "phoneNumber" },
     { titleHead: "" },
   ];
-  const handleEditClick = (inventoryTypeId: any) => {
+  const handleEditClick = (borrowerId: number) => {
     setIsEditing(true);
-    navigate(`/inventory/update/${inventoryTypeId}`);
+    navigate(`/borrower/update/${borrowerId}`);
   };
-  console.log(`INVENTORY_TYPE_ID`, id);
-  console.log(`Inventory type detail`, inventoryTypeDetail);
-  console.log(`Inventory items`, inventoryItems);
 
   return (
     <div>
@@ -33,9 +29,9 @@ export function InventoryTypeDetailContent() {
         <section>
           <div>
             <UpperTable
-              pageTitle={`List of Inventory: ${inventoryTypeDetail.inventoryTypeName}`}
-              createTitle={"CREATE INVENTORY"}
-              createLink={`/inventory/create`}
+              pageTitle={`List of Organization: ${organizationDetail.organizationName}`}
+              createTitle={"CREATE BORROWER"}
+              createLink={`/borrower/create`}
             />
             <div className="h-full w-full overflow-scroll">
               <table className="w-full min-w-max table-auto text-left">
@@ -58,15 +54,15 @@ export function InventoryTypeDetailContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {inventoryItems.map((items) => (
+                  {organizationList.map((items) => (
                     <tr key={items.id}>
-                      <td className={`px-4 py-3`}>
+                      <td className={`px-4 py-3 `}>
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.inventoryName}
+                          {items.borrowerName}
                         </Typography>
                       </td>
                       <td className={`px-4 py-3 bg-blue-gray-50/50`}>
@@ -75,39 +71,28 @@ export function InventoryTypeDetailContent() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.refId}
+                          {items.identityCard}
                         </Typography>
                       </td>
-                      <td className={`px-4 py-3`}>
+                      <td className={`px-4 py-3 `}>
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.description}
+                          {items.identityNumber}
                         </Typography>
                       </td>
                       <td className={`px-4 py-3 bg-blue-gray-50/50`}>
-                        <Chip
-                          size="sm"
-                          variant="ghost"
-                          value={items.isBorrowable ? "Yes" : "No"}
-                          color={items.isBorrowable ? "green" : "red"}
-                          className="w-fit"
-                        />
-                      </td>
-                      <td className={`px-4 py-3`}>
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.inventoryTypeName}
+                          {items.phoneNumber}
                         </Typography>
                       </td>
-                      <td
-                        className={`px-4 py-3 border-b border-blu-gray-50 bg-blue-gray-50/50`}
-                      >
+                      <td className={`px-4 py-3 border-b border-blu-gray-50`}>
                         <div className="mx-auto text-center">
                           <button
                             onClick={(e) => {

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography } from "@material-tailwind/react";
-import useBorrowing, { BorrowingProps } from "../../../hooks/borrowing/borrowingList";
+import { Chip, Typography } from "@material-tailwind/react";
+import useBorrowing, {
+  BorrowingProps,
+  Status,
+} from "../../../hooks/borrowing/borrowingList";
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
@@ -17,11 +20,15 @@ export function BorrowingContent() {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
-    { titleHead: "Borrowing Id", accessor: "borrowingId" },
-    { titleHead: "Borrowing Status Id", accessor: "borrowingId" },
-    { titleHead: "Organization Id", accessor: "organizationId" },
-    { titleHead: "Due Date", accessor: "dueDate" },
+    { titleHead: "Borrower Name", accessor: "borrowerName" },
+    { titleHead: "Organization Name", accessor: "organizationName" },
+    { titleHead: "Address", accessor: "address" },
+    { titleHead: "Identity Card", accessor: "identityCard" },
+    { titleHead: "Identity Number", accessor: "identityNumber" },
+    { titleHead: "Phone Number", accessor: "phoneNumber" },
+    { titleHead: "Status", accessor: "status" },
     { titleHead: "Special Instruction", accessor: "specialInstruction" },
+    { titleHead: "Due Date", accessor: "dueDate" },
     { titleHead: "" },
   ];
   const handleEditClick = (id: any) => {
@@ -77,7 +84,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerId}
+                      {item.borrowerIdRel.borrowerName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -86,7 +93,10 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowingStatusId}
+                      {
+                        item.borrowerIdRel.borrowerOrganizationRel
+                          .organizationName
+                      }
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -95,10 +105,55 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.organizationId}
+                      {item.borrowerIdRel.borrowerOrganizationRel.address}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.borrowerIdRel.identityCard}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.borrowerIdRel.identityNumber}
+                    </Typography>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.borrowerIdRel.phoneNumber}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Chip
+                      size="sm"
+                      variant="ghost"
+                      value={item.status === Status.DONE ? "DONE" : "PENDING"}
+                      color={item.status === Status.DONE ? "green" : "red"}
+                      className="w-fit items-center mx-auto"
+                    ></Chip>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.specialInstruction}
+                    </Typography>
+                  </td>
+                  <td className={`${classes}`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -107,15 +162,6 @@ export function BorrowingContent() {
                       {item.dueDate
                         ? new Date(item.dueDate).toLocaleDateString()
                         : "Invalid Date"}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {item.specialInstruction}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>

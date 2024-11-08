@@ -1,16 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const UpperTable = ({ pageTitle, createTitle, createLink }: any) => {
+const UpperTable = ({
+  pageTitle,
+  description,
+  createTitle,
+  createLink,
+}: any) => {
   const navigate = useNavigate();
   return (
     <div className="relative z-0 flex flex-col w-full h-full text-black bg-white shadow-md bg-clip-border">
       <div className="relative mx-4 mt-5 overflow-hidden text-black bg-white rounded-none bg-clip-border">
         <div className="flex flex-col justify-between gap-8 mb-5 md:flex-row md:items-center">
           <div>
-            <h5 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-black">
+            <h1 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-black">
               {pageTitle}
-            </h5>
+            </h1>
+            <p className="">{description}</p>
           </div>
           <div className="flex w-full gap-2 shrink-0 md:w-max">
             <div className="w-full md:w-72">
@@ -58,7 +64,7 @@ const UpperTable = ({ pageTitle, createTitle, createLink }: any) => {
           </div>
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 export default UpperTable;

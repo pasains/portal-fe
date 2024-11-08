@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
-import useBorrower, { BorrowerProps } from "../../../hooks/borrower/borrowersList";
+import useBorrower, {
+  BorrowerProps,
+} from "../../../hooks/borrower/borrowersList";
 import UpperTable from "../../../container/upperTable";
 import DeleteAlert from "../../../container/deleteAlert";
 import { Pagination } from "../../../container/pagination";
@@ -21,8 +23,9 @@ export function BorrowerContent() {
     { titleHead: "Identity Card", accessor: "identityCard" },
     { titleHead: "identity Number", accessor: "identityNumber" },
     { titleHead: "Phone Number", accessor: "phoneNumber" },
-    { titleHead: "Oragnization Name", accessor: "organizationName" },
+    { titleHead: "Organization Name", accessor: "organizationName" },
     { titleHead: "Address", accessor: "address" },
+    { titleHead: "Organization Status", accessor: "organizationStatus" },
     { titleHead: "" },
   ];
   const handleEditClick = (id: any) => {
@@ -96,7 +99,7 @@ export function BorrowerContent() {
                       {item.identityNumber}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -111,16 +114,25 @@ export function BorrowerContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.organizationName}
+                      {item.borrowerOrganizationRel.organizationName}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.address}
+                      {item.borrowerOrganizationRel.address}
+                    </Typography>
+                  </td>
+                  <td className={`${classes}`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.borrowerOrganizationRel.organizationStatus}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>

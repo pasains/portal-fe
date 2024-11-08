@@ -1,30 +1,31 @@
 import { Chip, Typography } from "@material-tailwind/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import useInventory from "../../../hooks/inventory/inventoryList";
-import { useInventoryTypeDetail } from "../../../hooks/inventoryType/inventoryTypeDetail";
+import { useInventoryGroupDetail } from "../../../hooks/inventoryGroup/inventoryGroupDetail";
 
-export function InventoryTypeDetailContent() {
-  const { inventoryTypeDetail, id, inventoryItems } = useInventoryTypeDetail();
+export function InventoryGroupDetailContent() {
+  const { inventoryGroupDetail, id, inventoryItems } =
+    useInventoryGroupDetail();
   const { handleDelete } = useInventory();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Reference Id", accessor: "refId" },
+    { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "Description", accessor: "description" },
     { titleHead: "isBorrowable", accessor: "isBorrowable" },
-    { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "" },
   ];
-  const handleEditClick = (inventoryTypeId: any) => {
+  const handleEditClick = (inventoryGroupId: any) => {
     setIsEditing(true);
-    navigate(`/inventory/update/${inventoryTypeId}`);
+    navigate(`/inventory/update/${inventoryGroupId}`);
   };
-  console.log(`INVENTORY_TYPE_ID`, id);
-  console.log(`Inventory type detail`, inventoryTypeDetail);
+  console.log(`INVENTORY_Group_ID`, id);
+  console.log(`Inventory group detail`, inventoryGroupDetail);
   console.log(`Inventory items`, inventoryItems);
 
   return (
@@ -33,7 +34,7 @@ export function InventoryTypeDetailContent() {
         <section>
           <div>
             <UpperTable
-              pageTitle={`List of Inventory: ${inventoryTypeDetail.inventoryTypeName}`}
+              pageTitle={`List of Inventory: ${inventoryGroupDetail.inventoryGroupName}`}
               createTitle={"CREATE INVENTORY"}
               createLink={`/inventory/create`}
             />
@@ -60,7 +61,7 @@ export function InventoryTypeDetailContent() {
                 <tbody>
                   {inventoryItems.map((items) => (
                     <tr key={items.id}>
-                      <td className={`px-4 py-3`}>
+                      <td className={`px-4 py-3 `}>
                         <Typography
                           variant="small"
                           color="blue-gray"
@@ -78,7 +79,16 @@ export function InventoryTypeDetailContent() {
                           {items.refId}
                         </Typography>
                       </td>
-                      <td className={`px-4 py-3`}>
+                      <td className={`px-4 py-3 `}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {items.inventoryTypeName}
+                        </Typography>
+                      </td>
+                      <td className={`px-4 py-3 bg-blue-gray-50/50`}>
                         <Typography
                           variant="small"
                           color="blue-gray"
@@ -87,7 +97,7 @@ export function InventoryTypeDetailContent() {
                           {items.description}
                         </Typography>
                       </td>
-                      <td className={`px-4 py-3 bg-blue-gray-50/50`}>
+                      <td className={`px-4 py-3 `}>
                         <Chip
                           size="sm"
                           variant="ghost"
@@ -95,15 +105,6 @@ export function InventoryTypeDetailContent() {
                           color={items.isBorrowable ? "green" : "red"}
                           className="w-fit"
                         />
-                      </td>
-                      <td className={`px-4 py-3`}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {items.inventoryTypeName}
-                        </Typography>
                       </td>
                       <td
                         className={`px-4 py-3 border-b border-blu-gray-50 bg-blue-gray-50/50`}

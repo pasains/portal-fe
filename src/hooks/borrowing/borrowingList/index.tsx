@@ -1,12 +1,31 @@
 import { useEffect, useState } from "react";
 
+export enum Status {
+  DONE = "DONE",
+  PENDING = "PENDING",
+}
+type BorrowerOrganization = {
+  organizationName: string;
+  address: string;
+};
+
+type BorrowerIdRel = {
+  borrowerName: string;
+  identityCard: string;
+  identityNumber: string;
+  phoneNumber: string;
+  borrowerOrganizationRel: BorrowerOrganization;
+};
+
 export type BorrowingProps = {
   id: number;
   borrowerId: number;
-  borrowingStatusId: number;
-  organizationId: number;
   dueDate: Date;
+  status: string;
   specialInstruction: string;
+  borrowerIdRel: BorrowerIdRel;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type BorrowingResponse = {
@@ -26,6 +45,7 @@ export default function useBorrowing() {
   const [openAlert, setOpenAlert] = useState(false);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  console.log(`${REACT_APP_PORTAL_BE_URL}`);
 
   useEffect(() => {
     setLoading(true);
@@ -42,6 +62,9 @@ export default function useBorrowing() {
         .then((json: BorrowingResponse) => {
           for (let i = 0; i < json.data.length; i++) {
             console.log("BORROWING" + i + ": " + json.data[i].id);
+            console.log(
+              `BORROWING_DATA ${json.data.map((items) => items.borrowerIdRel.borrowerOrganizationRel.organizationName)}`,
+            );
           }
           if (Array.isArray(json.data)) {
             setLoading(false);

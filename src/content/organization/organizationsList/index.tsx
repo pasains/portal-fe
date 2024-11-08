@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
-import useOrganization, { OrganizationProps } from "../../../hooks/organization/organizationList";
+import useOrganization, {
+  OrganizationProps,
+} from "../../../hooks/organization/organizationList";
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
@@ -65,6 +67,9 @@ export function OrganizationContent() {
               return (
                 <tr
                   key={item.id}
+                  onClick={() => {
+                    navigate(`/organization/${item.id}`);
+                  }}
                   className="cursor-pointer hover:bg-blue-gray-50"
                 >
                   <td className={classes}>
@@ -94,7 +99,7 @@ export function OrganizationContent() {
                       {item.organizationStatus}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -103,7 +108,7 @@ export function OrganizationContent() {
                       {item.note}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <div className="mx-auto text-center">
                       <button
                         onClick={(e) => {
