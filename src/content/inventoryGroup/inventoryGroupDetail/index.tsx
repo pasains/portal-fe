@@ -1,10 +1,10 @@
 import { Chip, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import useInventory from "../../../hooks/inventory/inventoryList";
 import { useInventoryGroupDetail } from "../../../hooks/inventoryGroup/inventoryGroupDetail";
+import UpperTableDetail from "../../../container/upperTableDetail";
 
 export function InventoryGroupDetailContent() {
   const { inventoryGroupDetail, id, inventoryItems } =
@@ -33,8 +33,12 @@ export function InventoryGroupDetailContent() {
       {id && (
         <section>
           <div>
-            <UpperTable
-              pageTitle={`List of Inventory: ${inventoryGroupDetail.inventoryGroupName}`}
+            <UpperTableDetail
+              pageTitle={`Inventory list`}
+              titleName="Inventory Group Name :"
+              name={inventoryGroupDetail.inventoryGroupName}
+              titleDescription="Description :"
+              description={inventoryGroupDetail.description}
               createTitle={"CREATE INVENTORY"}
               createLink={`/inventory/create`}
             />

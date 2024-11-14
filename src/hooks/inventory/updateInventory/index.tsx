@@ -6,6 +6,7 @@ export type InventoryListDetail = {
   inventoryName: string;
   refId: string;
   description: string;
+  note: string;
   inventoryTypeName: string;
   isBorrowable: boolean;
   condition: string;

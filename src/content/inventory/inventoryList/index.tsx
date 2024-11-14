@@ -34,7 +34,8 @@ export function InventoryContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory List"}
+        pageTitle={"Inventory list"}
+        description="List of inventory."
         createTitle={"CREATE INVENTORY"}
         createLink={`/inventory/create`}
       />
@@ -48,7 +49,7 @@ export function InventoryContent() {
                   className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                 >
                   <Typography
-                    variant="small"
+                    variant="h6"
                     color="blue-gray"
                     className="font-semibold leading-none opacity-70"
                   >

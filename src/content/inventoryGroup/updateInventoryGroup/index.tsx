@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
-import { useUpdateBorrower } from "../../../hooks/borrower/updateBorrower";
 import TimedAlert from "../../../container/alert";
-import BorrowerForm from "../../../container/borrowerForm";
-import { useBorrowerDetail } from "../../../hooks/borrower/borrowerDetail";
+import { useUpdateInventoryGroup } from "../../../hooks/inventoryGroup/updateInventoryGroup";
+import InventoryGroupForm from "../../../container/inventoryGroupForm";
 
-const UpdateBorrowerContent = () => {
-  const { updateBorrower, loading, success, error } = useUpdateBorrower();
-  const { id, borrowerDetail } = useBorrowerDetail();
+const UpdateInventoryGroupContent = () => {
+  const {
+    updateInventoryGroup,
+    id,
+    inventoryGroupDetail,
+    loading,
+    success,
+    error,
+  } = useUpdateInventoryGroup();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleUpdateBorrower = async (borrowerData: any) => {
+  const handleUpdateInventoryGroup = async (inventoryTypeData: any) => {
     setIsSubmitting(true);
     if (id) {
-      const result = await updateBorrower(id, borrowerData);
+      const result = await updateInventoryGroup(id, inventoryTypeData);
       setIsSubmitting(false);
       console.log(result);
     }
@@ -28,14 +33,14 @@ const UpdateBorrowerContent = () => {
   return (
     <div>
       <Typography className="py-10 text-center" variant="h3">
-        Update Borrower
+        Update Inventory Group
       </Typography>
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <BorrowerForm
-        onSubmit={handleUpdateBorrower}
-        initialData={borrowerDetail}
+      <InventoryGroupForm
+        onSubmit={handleUpdateInventoryGroup}
+        initialData={inventoryGroupDetail}
         isEditMode={true}
         isSubmitting={isSubmitting}
         success={success}
@@ -53,4 +58,4 @@ const UpdateBorrowerContent = () => {
   );
 };
 
-export default UpdateBorrowerContent;
+export default UpdateInventoryGroupContent;

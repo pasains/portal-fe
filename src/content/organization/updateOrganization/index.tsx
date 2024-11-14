@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import { useUpdateOrganization } from "../../../hooks/organization/updateOrganization";
 import TimedAlert from "../../../container/alert";
-import InventoryTypeForm from "../../../container/inventoryTypeForm";
+import OrganizationForm from "../../../container/organizationForm";
+import { useOrganizationDetail } from "../../../hooks/organization/organizationDetail";
 
-const UpdateOrganization = () => {
-  const { updateOrganization, id, organizationDetail, loading, success, error } =
+const UpdateOrganizationContent = () => {
+  const { updateOrganization, loading, success, error } =
     useUpdateOrganization();
+  const { id, organizationDetail } = useOrganizationDetail();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleUpdateOrganization = async (organizationData: any) => {
@@ -32,7 +34,7 @@ const UpdateOrganization = () => {
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <InventoryTypeForm
+      <OrganizationForm
         onSubmit={handleUpdateOrganization}
         initialData={organizationDetail}
         isEditMode={true}
@@ -52,5 +54,4 @@ const UpdateOrganization = () => {
   );
 };
 
-export default UpdateOrganization;
-
+export default UpdateOrganizationContent;

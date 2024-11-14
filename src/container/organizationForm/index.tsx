@@ -146,7 +146,7 @@ const OrganizationForm: React.FC<OrganizationProps> = ({
         </section>
 
         <Button type="submit" disabled={isSubmitting}>
-          {isEditMode ? "Update Borrower" : "Create Borrower"}
+          {isEditMode ? "Update Organization" : "Create Organization"}
         </Button>
       </form>
     </div>

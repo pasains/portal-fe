@@ -24,6 +24,7 @@ export default function useInventory() {
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
+  const [checkedItem, setCheckedItem] = useState<number[]>([]);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
@@ -41,16 +42,13 @@ export default function useInventory() {
           return response.json();
         })
         .then((json: InventoryResponse) => {
-          console.log("INVENTORY: " + json.data.length);
-          for (let i = 0; i < json.data.length; i++) {
-            console.log("INVENTORY_" + i + ": " + json.data[i].id);
-          }
+          for (let i = 0; i < json.data.length; i++) {}
           if (Array.isArray(json.data)) {
             setLoading(false);
             setInventory(json.data);
           } else {
             setLoading(false);
-            console.error("Expected array, got:", json.data);
+            console.error("Expected array inventory, got:", json.data);
             setInventory([]);
           }
         })
@@ -108,9 +106,18 @@ export default function useInventory() {
     setOpenAlert(false);
   };
 
+  const handleCheck = (id: number) => {
+    setCheckedItem((prevChecked) =>
+      prevChecked.includes(id)
+        ? prevChecked.filter((id) => id !== id)
+        : [...prevChecked, id],
+    );
+  };
+
   return {
     inventory,
     openAlert,
+    handleCheck,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,

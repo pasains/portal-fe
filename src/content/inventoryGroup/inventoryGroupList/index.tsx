@@ -19,8 +19,8 @@ export function InventoryGroupContent() {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
-    { titleHead: "Inventory Id", accessor: "id" },
-    { titleHead: "Inventory Type Id", accessor: "id" },
+    { titleHead: "Inventory Group Name", accessor: "inventoryGroupName" },
+    { titleHead: "Description", accessor: "description" },
     { titleHead: "" },
   ];
   const handleEditClick = (id: any) => {
@@ -31,8 +31,9 @@ export function InventoryGroupContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory Group"}
+        pageTitle={"Inventory group list"}
         createTitle={"CREATE INVENTORY GROUP"}
+        description="List of inventory group."
         createLink={`/inventorygroup/create`}
       />
       <div className="h-full w-full overflow-scroll">
@@ -45,7 +46,7 @@ export function InventoryGroupContent() {
                   className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                 >
                   <Typography
-                    variant="small"
+                    variant="h6"
                     color="blue-gray"
                     className="font-semibold leading-none opacity-70"
                   >

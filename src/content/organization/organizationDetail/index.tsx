@@ -1,10 +1,10 @@
 import { Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import { useOrganizationDetail } from "../../../hooks/organization/organizationDetail";
 import useOrganization from "../../../hooks/organization/organizationList";
+import UpperTableDetail from "../../../container/upperTableDetail";
 
 export function OrganizationDetailContent() {
   const { id, organizationDetail, organizationList } = useOrganizationDetail();
@@ -28,8 +28,16 @@ export function OrganizationDetailContent() {
       {id && (
         <section>
           <div>
-            <UpperTable
-              pageTitle={`List of Organization: ${organizationDetail.organizationName}`}
+            <UpperTableDetail
+              pageTitle={`Borrower list`}
+              titleName="Organization Name :"
+              name={organizationDetail.organizationName}
+              titleAddress="Address :"
+              address={organizationDetail.address}
+              titleStatus="Organization Status :"
+              status={organizationDetail.organizationStatus}
+              titleNote="Note :"
+              note={organizationDetail.note}
               createTitle={"CREATE BORROWER"}
               createLink={`/borrower/create`}
             />
@@ -43,7 +51,7 @@ export function OrganizationDetailContent() {
                         className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                       >
                         <Typography
-                          variant="small"
+                          variant="h6"
                           color="blue-gray"
                           className="font-semibold leading-none opacity-70"
                         >

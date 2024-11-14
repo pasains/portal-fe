@@ -1,32 +1,30 @@
 import React, { useState } from "react";
 import { Typography } from "@material-tailwind/react";
-import useCreateInventoryGroup from "../../../hooks/inventoryGroup/createInventoryGroup";
+import BorrowerForm from "../../../container/borrowerForm";
 import TimedAlert from "../../../container/alert";
-import InventoryGroupForm from "../../../container/inventoryGroupForm";
+import useCreateBorrower from "../../../hooks/borrower/createBorrower";
 
-const CreateInventoryGroupContent = () => {
-  const { createInventoryGroup, loading, error, success } =
-    useCreateInventoryGroup();
+const CreateBorrowerContent = () => {
+  const { createBorrower, success, loading, error } = useCreateBorrower();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handelCreateInventoryGroup = async (inventoryGroupForm: any) => {
+  const handleCreateBorrower = async (borrowerData: any) => {
     setIsSubmitting(true);
-    const result = await createInventoryGroup(inventoryGroupForm);
+    const result = await createBorrower(borrowerData);
     console.log(result);
-    console.log("INVENTORY GROUP ", inventoryGroupForm);
     setIsSubmitting(false);
   };
 
   return (
     <div>
       <Typography className="py-10 text-center" variant="h2">
-        Create New Inventory Group
+        Create New Borrower
       </Typography>
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <InventoryGroupForm
-        onSubmit={handelCreateInventoryGroup}
+      <BorrowerForm
+        onSubmit={handleCreateBorrower}
         isEditMode={false}
         isSubmitting={isSubmitting}
         success={success}
@@ -44,4 +42,4 @@ const CreateInventoryGroupContent = () => {
   );
 };
 
-export default CreateInventoryGroupContent;
+export default CreateBorrowerContent;
