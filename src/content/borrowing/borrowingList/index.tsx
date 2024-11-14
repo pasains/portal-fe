@@ -39,7 +39,8 @@ export function BorrowingContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Borrowing List"}
+        pageTitle={"Borrowing list"}
+        description="List of borrowing."
         createTitle={"CREATE BORROWING"}
         createLink={`/borrowing/create`}
       />
@@ -53,7 +54,7 @@ export function BorrowingContent() {
                   className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                 >
                   <Typography
-                    variant="small"
+                    variant="h6"
                     color="blue-gray"
                     className="font-semibold leading-none opacity-70"
                   >

@@ -17,15 +17,15 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
   success,
 }) => {
   const [inventoryGroupData, setInventoryGroupData] = useState({
-    inventoryId: undefined,
-    inventoryTypeId: undefined,
+    inventoryGroupName: "",
+    description: "",
   });
 
   useEffect(() => {
     if (isEditMode && initialData) {
       setInventoryGroupData({
-        inventoryId: initialData.inventoryId,
-        inventoryTypeId: initialData.inventoryTypeId,
+        inventoryGroupName: initialData.inventoryGroupName,
+        description: initialData.description,
       });
     }
   }, [initialData, isEditMode]);
@@ -33,8 +33,8 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
   useEffect(() => {
     if (success) {
       setInventoryGroupData({
-        inventoryId: undefined,
-        inventoryTypeId: undefined,
+        inventoryGroupName: "",
+        description: "",
       });
     }
   }, [success]);
@@ -61,18 +61,17 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
         <section className="p-5 mb-10 items-center border border-b rounded-lg">
           <label>
             <Typography className="mb-2" variant="h6">
-              Inventory Id:
+              Inventory Group Name :
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="Inventory Id"
-              type="number"
-              name="inventoryId"
+              label="Inventory Group Name"
+              type="text"
+              name="inventoryGroupName"
               variant="outlined"
               size="md"
-              placeholder="User Id"
-              value={inventoryGroupData.inventoryId || undefined}
+              value={inventoryGroupData.inventoryGroupName || ""}
               onChange={handleInputChange}
               required
             />
@@ -81,18 +80,18 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
 
           <label>
             <Typography className="mb-2" variant="h6">
-              Inventory Type Id:
+              Description :
             </Typography>
             <Input
               className="w-full"
               color="orange"
-              label="Inventory Type Id"
-              type="number"
-              name="inventoryTypeId"
+              label="Description"
+              type="text"
+              name="description"
               variant="outlined"
               size="md"
-              placeholder="Inventory Type Id"
-              value={inventoryGroupData.inventoryTypeId || ""}
+              placeholder="Description"
+              value={inventoryGroupData.description || ""}
               onChange={handleInputChange}
               required
             />

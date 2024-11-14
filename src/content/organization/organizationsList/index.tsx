@@ -33,7 +33,8 @@ export function OrganizationContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Organization List"}
+        pageTitle={"Organization list"}
+        description="List of organization."
         createTitle={"CREATE ORGANIZATION"}
         createLink={`/organization/create`}
       />
@@ -47,7 +48,7 @@ export function OrganizationContent() {
                   className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                 >
                   <Typography
-                    variant="small"
+                    variant="h6"
                     color="blue-gray"
                     className="font-semibold leading-none opacity-70"
                   >

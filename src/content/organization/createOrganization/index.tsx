@@ -1,32 +1,31 @@
 import React, { useState } from "react";
 import { Typography } from "@material-tailwind/react";
-import useCreateInventoryGroup from "../../../hooks/inventoryGroup/createInventoryGroup";
+import OrganizationForm from "../../../container/organizationForm";
 import TimedAlert from "../../../container/alert";
-import InventoryGroupForm from "../../../container/inventoryGroupForm";
+import useCreateOrganization from "../../../hooks/organization/createOrganization";
 
-const CreateInventoryGroupContent = () => {
-  const { createInventoryGroup, loading, error, success } =
-    useCreateInventoryGroup();
+const CreateOrganizationContent = () => {
+  const { createOrganization, success, loading, error } =
+    useCreateOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handelCreateInventoryGroup = async (inventoryGroupForm: any) => {
+  const handleCreateOrganization = async (organizationData: any) => {
     setIsSubmitting(true);
-    const result = await createInventoryGroup(inventoryGroupForm);
+    const result = await createOrganization(organizationData);
     console.log(result);
-    console.log("INVENTORY GROUP ", inventoryGroupForm);
     setIsSubmitting(false);
   };
 
   return (
     <div>
       <Typography className="py-10 text-center" variant="h2">
-        Create New Inventory Group
+        Create Organization
       </Typography>
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <InventoryGroupForm
-        onSubmit={handelCreateInventoryGroup}
+      <OrganizationForm
+        onSubmit={handleCreateOrganization}
         isEditMode={false}
         isSubmitting={isSubmitting}
         success={success}
@@ -44,4 +43,4 @@ const CreateInventoryGroupContent = () => {
   );
 };
 
-export default CreateInventoryGroupContent;
+export default CreateOrganizationContent;

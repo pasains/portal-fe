@@ -1,28 +1,72 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const UpperTable = ({
+const UpperTableDetail = ({
   pageTitle,
+  titleName,
+  titleDescription,
+  titleAddress,
+  address,
+  titleStatus,
+  titleNote,
   description,
+  name,
+  status,
+  note,
   createTitle,
   createLink,
 }: any) => {
   const navigate = useNavigate();
   return (
     <div className="relative z-0 flex flex-col w-full h-full text-black bg-white shadow-md bg-clip-border">
-      <div className="relative mx-4 my-6 overflow-hidden text-black bg-white rounded-none bg-clip-border">
-        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
-          <div className="space-y-2">
-            <h1 className="font-semibold leading-snug tracking-normal text-slate-800 w-full text-xl max-w-lg lg:max-w-2xl lg:text-3xl">
+      <div className="relative mx-4 my-5 overflow-hidden text-black bg-white rounded-none bg-clip-border">
+        <div className="flex flex-col justify-between gap-8 md:flex-row ">
+          <div className="space-y-1">
+            <h1 className="font-semibold leading-snug tracking-normal text-slate-800 mb-2 w-full text-xl max-w-lg lg:max-w-2xl lg:text-3xl">
               {pageTitle}
             </h1>
             <h2>
-              <p className="font-light leading-snug tracking-normal text-slate-800 mx-auto w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
-                {description}
+              <p className="font-bold leading-snug tracking-normal text-slate-800 w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                {titleName}{" "}
+                <span className="font-light leading-snug tracking-normal uppercase text-slate-800 mx-auto w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                  {name}
+                </span>
               </p>
             </h2>
+            <h3>
+              <p className="font-bold leading-snug tracking-normal text-slate-800 w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                {titleDescription}{" "}
+                <span className="font-light leading-snug tracking-normal text-slate-800 mx-auto w-72 text-sm max-w-xs lg:max-w-md lg:text-lg">
+                  {description}
+                </span>
+              </p>
+            </h3>
+            <h3>
+              <p className="font-bold leading-snug tracking-normal text-slate-800 w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                {titleAddress}{" "}
+                <span className="font-light leading-snug tracking-normal uppercase text-slate-800 mx-auto w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                  {address}
+                </span>
+              </p>
+            </h3>
+            <h4>
+              <p className="font-bold leading-snug tracking-normal text-slate-800 w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                {titleStatus}{" "}
+                <span className="font-light leading-snug tracking-normal text-slate-800 mx-auto w-72 text-sm max-w-xs lg:max-w-md lg:text-lg">
+                  {status}
+                </span>
+              </p>
+            </h4>
+            <h5>
+              <p className="font-bold leading-snug tracking-normal text-slate-800 w-full text-sm max-w-xs lg:max-w-md lg:text-lg">
+                {titleNote}{" "}
+                <span className="font-light leading-snug tracking-normal text-slate-800 mx-auto w-72 text-sm max-w-xs lg:max-w-md lg:text-lg">
+                  {note}
+                </span>
+              </p>
+            </h5>
           </div>
-          <div className="flex flex-row h-10 w-full gap-3 shrink-0 md:w-max">
+          <div className="flex flex-col h-10 pt-2 items-end w-full gap-3 shrink-0 md:w-max">
             <button
               onClick={() => {
                 navigate(createLink);
@@ -68,4 +112,4 @@ const UpperTable = ({
     </div>
   );
 };
-export default UpperTable;
+export default UpperTableDetail;

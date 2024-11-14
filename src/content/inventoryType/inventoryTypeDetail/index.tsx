@@ -1,10 +1,10 @@
 import { Chip, Typography } from "@material-tailwind/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import useInventory from "../../../hooks/inventory/inventoryList";
 import { useInventoryTypeDetail } from "../../../hooks/inventoryType/inventoryTypeDetail";
+import UpperTableDetail from "../../../container/upperTableDetail";
 
 export function InventoryTypeDetailContent() {
   const { inventoryTypeDetail, id, inventoryItems } = useInventoryTypeDetail();
@@ -32,8 +32,12 @@ export function InventoryTypeDetailContent() {
       {id && (
         <section>
           <div>
-            <UpperTable
-              pageTitle={`List of Inventory: ${inventoryTypeDetail.inventoryTypeName}`}
+            <UpperTableDetail
+              pageTitle={`Inventory list`}
+              titleName={`Inventory Type Name :`}
+              name={inventoryTypeDetail.inventoryTypeName}
+              titleDescription={`Description :`}
+              description={inventoryTypeDetail.description}
               createTitle={"CREATE INVENTORY"}
               createLink={`/inventory/create`}
             />
@@ -47,7 +51,7 @@ export function InventoryTypeDetailContent() {
                         className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                       >
                         <Typography
-                          variant="small"
+                          variant="h6"
                           color="blue-gray"
                           className="font-semibold leading-none opacity-70"
                         >

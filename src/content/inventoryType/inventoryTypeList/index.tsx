@@ -25,13 +25,14 @@ export function InventoryTypeContent() {
   ];
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/inventory/update/${id}`);
+    navigate(`/inventorytype/update/${id}`);
   };
 
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory Type"}
+        pageTitle={"Inventory type list"}
+        description="List of inventory type."
         createTitle={"CREATE INVENTORY TYPE"}
         createLink={`/inventorytype/create`}
       />
@@ -45,7 +46,7 @@ export function InventoryTypeContent() {
                   className="border-b border-blue-gray-100 bg-blue-gray-50 py-5 px-4"
                 >
                   <Typography
-                    variant="small"
+                    variant="h6"
                     color="blue-gray"
                     className="font-semibold leading-none opacity-70"
                   >

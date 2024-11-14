@@ -36,7 +36,8 @@ export function BorrowerContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Borrower List"}
+        pageTitle={"Borrower list"}
+        description="List of borrower."
         createTitle={"CREATE BORROWER"}
         createLink={`/borrower/create`}
       />

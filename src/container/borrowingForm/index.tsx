@@ -18,6 +18,22 @@ interface BorrowingProps {
   success?: any;
 }
 
+type BorrowingData = {
+  borrowerId: number;
+  borrowerName: string;
+  identityCard: string;
+  identityNumber: string;
+  phoneNumber: string;
+  status: string;
+  organizationId: number | undefined;
+  organizationName: string;
+  address: string;
+  organizationStatus: string;
+  note: string;
+  dueDate: Date | undefined;
+  specialInstruction: string;
+};
+
 const BorrowingForm: React.FC<BorrowingProps> = ({
   initialData = {},
   onSubmit,
@@ -25,19 +41,19 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
   isSubmitting,
   success,
 }) => {
-  const [borrowingData, setBorrowingData] = useState({
+  const [borrowingData, setBorrowingData] = useState<BorrowingData>({
     borrowerId: 0,
     borrowerName: "",
     identityCard: "",
     identityNumber: "",
     phoneNumber: "",
     status: "",
-    organizationId: 0,
+    organizationId: undefined,
     organizationName: "",
     address: "",
     organizationStatus: "",
     note: "",
-    dueDate: Date,
+    dueDate: undefined,
     specialInstruction: "",
   });
   const [borrowerList, setBorrowerList] = useState<
@@ -72,9 +88,45 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
   const [createNewOrganization, setCreateNewOrganization] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
+  const emptiedBorrower = () => {
+    setBorrowingData({
+      borrowerId: 0,
+      borrowerName: "",
+      identityCard: "",
+      identityNumber: "",
+      status: "",
+      phoneNumber: "",
+      organizationId: borrowingData.organizationId,
+      organizationName: borrowingData.organizationName,
+      address: borrowingData.address,
+      organizationStatus: borrowingData.organizationStatus,
+      note: borrowingData.note,
+      dueDate: undefined,
+      specialInstruction: "",
+    });
+  };
+
+  const emptiedOrganization = () => {
+    setBorrowingData({
+      borrowerId: borrowingData.borrowerId,
+      borrowerName: borrowingData.borrowerName,
+      identityCard: borrowingData.identityCard,
+      identityNumber: borrowingData.identityNumber,
+      status: borrowingData.status,
+      phoneNumber: borrowingData.phoneNumber,
+      organizationId: 0,
+      organizationName: "",
+      address: "",
+      organizationStatus: "",
+      note: "",
+      dueDate: undefined,
+      specialInstruction: "",
+    });
+  };
+
   //Console log the data
   useEffect(() => {
-    console.log(`DATA_1`, borrowingData);
+    console.log(`BORROWING_DATA: `, borrowingData);
   }, [borrowingData]);
 
   //  Get data for edit mode and clean data for initial
@@ -113,20 +165,14 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
         address: "",
         organizationStatus: "",
         note: "",
-        dueDate: Date,
+        dueDate: undefined,
         specialInstruction: "",
       });
     }
   }, [success]);
 
-  //Console log the data
-  useEffect(() => {
-    console.log(`DATA_`, borrowingData);
-  }, [borrowingData]);
-
   //Handle input
   const handleInputChange = (e: any) => {
-    console.log(`E_ ${JSON.stringify(e)}`);
     const { name, value, type } = e.target as
       | HTMLInputElement
       | HTMLSelectElement;
@@ -152,41 +198,16 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           organizationStatus: data?.borrowerOrganizationRel
             .organizationStatus as any,
           note: data?.borrowerOrganizationRel.note as any,
+          organizationId: data?.organizationId as any,
         });
 
-        // Check if borrower has an associated organization
         if (data?.organizationId) {
-          // Find organization details
-          const organizationData = organization.find(
-            (element) => element.id == data.organizationId,
-          );
-          // If organization exists, update organization related fields
-
-          if (organizationData) {
-            console.log(`ORG_DATA ${JSON.stringify(organizationData)}`);
-            handleInputChange({
-              target: {
-                name: "organizationName",
-                value: organizationData.id.toString(),
-                type: "text",
-              },
-            });
-            //setBorrowingData({
-            //  ...borrowingData,
-            //  organizationId: organizationData?.id as any,
-            //  organizationName: organizationData?.organizationName as any,
-            //  address: organizationData?.address as any,
-            //  organizationStatus: organizationData?.organizationStatus as any,
-            //  note: organizationData?.note as any,
-            //});
-            //setIsLocked(true);
-          }
+          setIsLocked(true);
         }
       }
     } else if (name === "organizationName") {
       // Handle organization change manually if needed
       const data = organization.find((element) => element.id == finalValue);
-      console.log(`ORG_DATA_2 ${JSON.stringify(data)}`);
       setBorrowingData({
         ...borrowingData,
         organizationId: data?.id as any,
@@ -256,6 +277,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
         // If organization exists, update the data
         setOrganization((prevData) => ({
           ...prevData,
+          organizationId: borrowingData.organizationId,
           organizationName: borrowingData.organizationName,
           address: borrowingData.address,
           organizationStatus: borrowingData.organizationStatus,
@@ -362,6 +384,10 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                     key={type.id}
                     value={type.id.toString()}
                     onClick={() => {
+                      if (type.showCreateNew) {
+                        emptiedBorrower();
+                        setIsLocked(false);
+                      }
                       setCreateNewBorrower(type.showCreateNew);
                     }}
                   >
@@ -456,12 +482,34 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
             </Typography>
             {organizationList && (
               <Select
+                selected={() => {
+                  const data = organizationList.find(
+                    (item) =>
+                      item.displayName == borrowingData.organizationName,
+                  );
+                  if (data == undefined) {
+                    return;
+                  }
+                  return (
+                    <Option
+                      key={data.id}
+                      value={data.id.toString() || ""}
+                      className="custom-select bg-gray-200 hover:bg-white"
+                      onClick={() => {
+                        setCreateNewOrganization(data.showCreateNew);
+                      }}
+                    >
+                      {data?.displayName.trim() || ""}
+                    </Option>
+                  );
+                }}
                 className="w-full"
                 color="orange"
                 variant="outlined"
                 size="lg"
                 disabled={isLocked}
                 label="Organization Name"
+                value={borrowingData.organizationName || ""}
                 name="organizationName"
                 onChange={(e) => {
                   handleInputChange({
@@ -478,6 +526,9 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                     key={type.id}
                     value={type.id.toString()}
                     onClick={() => {
+                      if (type.showCreateNew) {
+                        emptiedOrganization();
+                      }
                       setCreateNewOrganization(type.showCreateNew);
                     }}
                   >
@@ -499,6 +550,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                     type="text"
                     name="organizationName"
                     variant="outlined"
+                    value={borrowingData.organizationName || ""}
                     size="lg"
                     onChange={(e) =>
                       setBorrowingData((prevData) => ({
@@ -595,7 +647,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
               variant="outlined"
               size="md"
               placeholder="Due Date"
-              value={borrowingData.dueDate.toString() || ""}
+              value={borrowingData?.dueDate?.toString() || ""}
               onChange={handleInputChange}
               required
             />

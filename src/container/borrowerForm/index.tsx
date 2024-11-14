@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Input,
+  Typography,
+  Select,
+  Option,
+  Textarea,
+} from "@material-tailwind/react";
+import useOrganization from "../../hooks/organization/organizationList";
 
 interface BorrowerProps {
   initialData?: any;
@@ -8,6 +16,17 @@ interface BorrowerProps {
   isSubmitting?: any;
   success?: any;
 }
+type BorrowerData = {
+  borrowerName: string;
+  identityCard: string;
+  identityNumber: string;
+  phoneNumber: string;
+  organizationId: number | undefined;
+  organizationName: string;
+  address: string;
+  organizationStatus: string;
+  note: string;
+};
 
 const BorrowerForm: React.FC<BorrowerProps> = ({
   initialData = {},
@@ -16,7 +35,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
   isSubmitting,
   success,
 }) => {
-  const [borrowerData, setBorrowerData] = useState({
+  const [borrowerData, setBorrowerData] = useState<BorrowerData>({
     borrowerName: "",
     identityCard: "",
     identityNumber: "",
@@ -27,6 +46,20 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
     organizationStatus: "",
     note: "",
   });
+
+  const [organizationList, setOrganizationList] = useState<
+    {
+      id: number;
+      organizationName: string;
+      address: string;
+      organizationStatus: string;
+      note: string;
+      displayName: string;
+      showCreateNew: boolean;
+    }[]
+  >();
+  const { organization, setOrganization } = useOrganization();
+  const [createNewOrganization, setCreateNewOrganization] = useState(false);
 
   useEffect(() => {
     if (isEditMode && initialData) {
@@ -51,7 +84,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
         identityCard: "",
         identityNumber: "",
         phoneNumber: "",
-        organizationId: undefined,
+        organizationId: 0,
         organizationName: "",
         address: "",
         organizationStatus: "",
@@ -60,20 +93,78 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
     }
   }, [success]);
 
+  useEffect(() => {
+    console.log(`BORROWER_DATA_`, borrowerData);
+  }, [borrowerData]);
+
   const handleInputChange = (e: any) => {
-    const { name, value, type } = e.target;
+    const { name, value, type } = e.target as
+      | HTMLInputElement
+      | HTMLSelectElement;
     let finalValue = type === "number" ? +value : value;
 
-    setBorrowerData({
-      ...borrowerData,
-      [name]: finalValue,
-    });
+    if (name === "organizationName") {
+      const data = organization.find((element) => element.id == finalValue);
+      setBorrowerData({
+        ...borrowerData,
+        organizationId: data?.id as any,
+        organizationName: data?.organizationName as any,
+        address: data?.address as any,
+        organizationStatus: data?.organizationStatus as any,
+        note: data?.note as any,
+      });
+    } else {
+      setBorrowerData({
+        ...borrowerData,
+        [name]: finalValue,
+      });
+    }
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(borrowerData);
+
+    if (
+      initialData.organizationName &&
+      borrowerData.address &&
+      borrowerData.organizationStatus &&
+      borrowerData.note
+    ) {
+      setOrganization((prevData) => ({
+        ...prevData,
+        organizationId: undefined,
+        organizationName: borrowerData.organizationName,
+        address: borrowerData.address,
+        organizationStatus: borrowerData.organizationStatus,
+        note: borrowerData.note,
+      }));
+      setOrganizationList([]);
+    }
+    setCreateNewOrganization(false);
   };
+
+  useEffect(() => {
+    const data = organization.map((org) => ({
+      id: org.id,
+      organizationName: org.organizationName,
+      displayName: org.organizationName,
+      address: org.address,
+      organizationStatus: org.organizationStatus,
+      note: org.note,
+      showCreateNew: false,
+    }));
+    data.push({
+      id: 0,
+      organizationName: "",
+      displayName: "Create Organization",
+      address: "",
+      organizationStatus: "",
+      note: "",
+      showCreateNew: true,
+    });
+    setOrganizationList([...data]);
+  }, [organization]);
 
   return (
     <div className="w-[520px] mx-auto items-center">
@@ -159,88 +250,135 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
           </label>
           <br />
 
-          <label>
+          <label htmlFor="organizationName">
             <Typography className="mb-2" variant="h6">
               Organization Name
             </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="organizationName"
-              type="text"
-              name="organizationName"
-              variant="outlined"
-              size="md"
-              placeholder="Organization Name"
-              value={borrowerData.organizationName || ""}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <br />
+            {organizationList && (
+              <Select
+                selected={() => {
+                  const data = organizationList.find(
+                    (item) => item.displayName == borrowerData.organizationName,
+                  );
+                  if (data == undefined) {
+                    return;
+                  }
+                  return (
+                    <Option
+                      key={data.id}
+                      value={data.id.toString() || ""}
+                      className="custom-select bg-white hover:bg-white"
+                      onClick={() => {
+                        setCreateNewOrganization(data.showCreateNew);
+                      }}
+                    >
+                      {data?.displayName.trim() || ""}
+                    </Option>
+                  );
+                }}
+                className="w-full"
+                color="orange"
+                variant="outlined"
+                size="lg"
+                label="Organization Name"
+                name="organizationName"
+                value={borrowerData.organizationName || ""}
+                onChange={(e) => {
+                  handleInputChange({
+                    target: {
+                      name: "organizationName",
+                      value: e,
+                      type: "text",
+                    },
+                  });
+                }}
+              >
+                {organizationList.map((type) => (
+                  <Option
+                    key={type.id}
+                    value={type.id.toString()}
+                    onClick={() => {
+                      setCreateNewOrganization(type.showCreateNew);
+                    }}
+                  >
+                    {type.displayName || ""}
+                  </Option>
+                ))}
+              </Select>
+            )}
+            {createNewOrganization && (
+              <form onSubmit={handleSubmit}>
+                <Typography className="pt-5 pb-2" variant="h6" color="orange">
+                  Create Organization Name:
+                </Typography>
+                <div className="space-y-3">
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Organization Name"
+                    type="text"
+                    name="organizationName"
+                    variant="outlined"
+                    size="lg"
+                    value={borrowerData.organizationName || ""}
+                    onChange={(e) =>
+                      setBorrowerData((prevData) => ({
+                        ...prevData,
+                        organizationName: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                  <Textarea
+                    className="w-full"
+                    color="orange"
+                    label="Address"
+                    variant="outlined"
+                    name="address"
+                    value={borrowerData.address || ""}
+                    onChange={(e) =>
+                      setBorrowerData((prevData) => ({
+                        ...prevData,
+                        address: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="organizationStatus"
+                    type="text"
+                    name="organizationStatus"
+                    variant="outlined"
+                    size="md"
+                    placeholder="Organization Status"
+                    value={borrowerData.organizationStatus || ""}
+                    onChange={handleInputChange}
+                    required
+                  />
 
-          <label>
-            <Typography className="mb-2" variant="h6">
-              Address
-            </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="address"
-              type="text"
-              name="address"
-              variant="outlined"
-              size="md"
-              placeholder="Address"
-              value={borrowerData.address || ""}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <br />
-
-          <label>
-            <Typography className="mb-2" variant="h6">
-              Organization Status
-            </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="organizationStatus"
-              type="text"
-              name="organizationStatus"
-              variant="outlined"
-              size="md"
-              placeholder="Organization Status"
-              value={borrowerData.organizationStatus || ""}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <br />
-
-          <label>
-            <Typography className="mb-2" variant="h6">
-              Note
-            </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="note"
-              type="text"
-              name="note"
-              variant="outlined"
-              size="md"
-              placeholder="Note"
-              value={borrowerData.note || ""}
-              onChange={handleInputChange}
-              required
-            />
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="note"
+                    type="text"
+                    name="note"
+                    variant="outlined"
+                    size="md"
+                    placeholder="Note"
+                    value={borrowerData.note || ""}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </form>
+            )}
           </label>
           <br />
         </section>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button className="mb-10" type="submit" disabled={isSubmitting}>
           {isEditMode ? "Update Borrower" : "Create Borrower"}
         </Button>
       </form>
