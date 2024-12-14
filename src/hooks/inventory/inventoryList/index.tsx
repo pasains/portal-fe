@@ -9,22 +9,14 @@ export type InventoryList = {
   isBorrowable: boolean;
 };
 
-type InventoryResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: InventoryList[];
-};
-
 export default function useInventory() {
   const [inventory, setInventory] = useState<InventoryList[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
-  const [checkedItem, setCheckedItem] = useState<number[]>([]);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
@@ -32,35 +24,34 @@ export default function useInventory() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventory`)
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Not found!");
-          }
-          return response.json();
-        })
-        .then((json: InventoryResponse) => {
-          for (let i = 0; i < json.data.length; i++) {}
-          if (Array.isArray(json.data)) {
-            setLoading(false);
-            setInventory(json.data);
-          } else {
-            setLoading(false);
-            console.error("Expected array inventory, got:", json.data);
-            setInventory([]);
-          }
-        })
-        .catch((error: any) => {
-          setError(`Fetch error: ${error}`);
+
+    async function fetchTitle(currentPage: number) {
+      try {
+        const response = await fetch(
+          `${REACT_APP_PORTAL_BE_URL}/api/inventory?page=${currentPage}&limit=10`,
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Not found!");
+        }
+        const json = await response.json();
+        if (Array.isArray(json.data.inventory)) {
+          setLoading(false);
+          setInventory(json.data.inventory);
+          setTotalPage(json.data.totalPageInventory);
+        } else {
+          setLoading(false);
+          console.error("Expected array inventory, got:", json.data.inventory);
           setInventory([]);
-        });
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setInventory([]);
+      }
     }
 
-    fetchTitle();
-    return () => {};
-  }, [REACT_APP_PORTAL_BE_URL]);
+    fetchTitle(page);
+  }, [page]);
 
   const deleteInventory = async (id: any) => {
     setLoading(true);
@@ -106,18 +97,13 @@ export default function useInventory() {
     setOpenAlert(false);
   };
 
-  const handleCheck = (id: number) => {
-    setCheckedItem((prevChecked) =>
-      prevChecked.includes(id)
-        ? prevChecked.filter((id) => id !== id)
-        : [...prevChecked, id],
-    );
-  };
 
   return {
     inventory,
     openAlert,
-    handleCheck,
+    page,
+    totalPage,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,

@@ -152,7 +152,6 @@ export function OrganizationDetailContent() {
                   ))}
                 </tbody>
               </table>
-              <Pagination />
             </div>
           </div>
         </section>

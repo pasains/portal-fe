@@ -23,6 +23,8 @@ type Params = {
 
 export function useInventoryGroupDetail() {
   const { id } = useParams<Params>();
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inventoryItems, setInventoryItems] = useState<InventoryGroupDetail[]>(
@@ -60,36 +62,40 @@ export function useInventoryGroupDetail() {
     fetchData();
 
     // Fetch inventory items based on selected inventory group
-    const fetchItemData = async () => {
+    const fetchItemData = async (currentPage: number) => {
       setLoading(true);
       setError(null);
       console.log(`Inventory Group Id:`, id);
       try {
         const response = await fetch(
-          `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryGroupId=${id}`,
+          `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryGroupId=${id}&page=${currentPage}&limit=10`,
         );
-
+        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const { data } = await response.json();
-        setLoading(false);
-        console.log("Fetched Data_:", data);
-        setInventoryItems(data);
-      } catch (err) {
-        setLoading(false);
+        const json = await response.json();
+        if (Array.isArray(json.data.inventory)) {
+          setLoading(false);
+          setInventoryItems(json.data.inventory);
+          setTotalPage(json.data.totalPageInventory);
+        } else {
+          setLoading(false);
+          setInventoryItems([]);
+        }
+      } catch (err: any) {
         setError(`Fetching error: ${err} `);
-        throw err;
-      } finally {
-        setLoading(false);
+        setInventoryItems([]);
       }
     };
-    fetchItemData();
-    return () => {};
-  }, [id]);
+    fetchItemData(page);
+  }, [id, page]);
 
   return {
     id,
+    page,
+    totalPage,
+    setPage,
     inventoryItems,
     inventoryGroupDetail,
     loading,

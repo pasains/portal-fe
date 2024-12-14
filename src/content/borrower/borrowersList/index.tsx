@@ -189,7 +189,6 @@ export function BorrowerContent() {
             })}
           </tbody>
         </table>
-        <Pagination />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

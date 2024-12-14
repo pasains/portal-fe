@@ -162,7 +162,6 @@ export function OrganizationContent() {
             })}
           </tbody>
         </table>
-        <Pagination />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

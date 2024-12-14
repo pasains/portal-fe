@@ -12,10 +12,11 @@ import useOrganization from "../../hooks/organization/organizationList";
 
 interface BorrowingProps {
   initialData?: any;
-  onSubmit: (borrowingData: any) => void;
+  onSubmit: () => void;
   isEditMode?: boolean;
   isSubmitting?: any;
   success?: any;
+  setBorrowerDetail: (borrowingData: any) => void;
 }
 
 type BorrowingData = {
@@ -25,13 +26,14 @@ type BorrowingData = {
   identityNumber: string;
   phoneNumber: string;
   status: string;
-  organizationId: number | undefined;
+  organizationId: number;
   organizationName: string;
   address: string;
   organizationStatus: string;
   note: string;
   dueDate: Date | undefined;
   specialInstruction: string;
+  items: [{ inventoryId: number; quantity: number }];
 };
 
 const BorrowingForm: React.FC<BorrowingProps> = ({
@@ -40,6 +42,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
   isEditMode = false,
   isSubmitting,
   success,
+  setBorrowerDetail,
 }) => {
   const [borrowingData, setBorrowingData] = useState<BorrowingData>({
     borrowerId: 0,
@@ -48,13 +51,14 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
     identityNumber: "",
     phoneNumber: "",
     status: "",
-    organizationId: undefined,
+    organizationId: 0,
     organizationName: "",
     address: "",
     organizationStatus: "",
     note: "",
     dueDate: undefined,
     specialInstruction: "",
+    items: [{ inventoryId: 0, quantity: 0 }],
   });
   const [borrowerList, setBorrowerList] = useState<
     {
@@ -103,6 +107,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
       note: borrowingData.note,
       dueDate: undefined,
       specialInstruction: "",
+      items: [{ inventoryId: 0, quantity: 0 }],
     });
   };
 
@@ -121,11 +126,13 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
       note: "",
       dueDate: undefined,
       specialInstruction: "",
+      items: [{ inventoryId: 0, quantity: 0 }],
     });
   };
 
   //Console log the data
   useEffect(() => {
+    setBorrowerDetail(borrowingData);
     console.log(`BORROWING_DATA: `, borrowingData);
   }, [borrowingData]);
 
@@ -146,6 +153,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
         note: initialData.note || "",
         dueDate: initialData.dueDate || "",
         specialInstruction: initialData.specialInstruction || "",
+        items: [{ inventoryId: 0, quantity: 0 }],
       });
     }
   }, [isEditMode, initialData]);
@@ -167,6 +175,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
         note: "",
         dueDate: undefined,
         specialInstruction: "",
+        items: [{ inventoryId: 0, quantity: 0 }],
       });
     }
   }, [success]);
@@ -198,7 +207,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           organizationStatus: data?.borrowerOrganizationRel
             .organizationStatus as any,
           note: data?.borrowerOrganizationRel.note as any,
-          organizationId: data?.organizationId as any,
+          organizationId: data?.organizationId > 0 ? data.organizationId : 0,
         });
 
         if (data?.organizationId) {
@@ -227,7 +236,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(borrowingData);
+    onSubmit();
     // Check if borrower data exists and if fields are filled
     if (
       borrowingData.borrowerName &&
@@ -356,7 +365,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
   return (
     <div className="w-[520px] mx-auto items-center">
       <form onSubmit={handleSubmit}>
-        <section className="p-5 mb-10 items-center border border-b rounded-lg">
+        <section className="p-5 mb-10 border border-b rounded-lg">
           <label htmlFor="borrowerName">
             <Typography className="mb-2" variant="h6">
               Borrower Name:
@@ -611,26 +620,6 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                 </div>
               </form>
             )}
-          </label>
-          <br />
-
-          <label>
-            <Typography className="mb-2" variant="h6">
-              Status:
-            </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="Status"
-              type="text"
-              name="status"
-              variant="outlined"
-              size="lg"
-              placeholder="Status"
-              value={borrowingData.status || ""}
-              onChange={handleInputChange}
-              required
-            />
           </label>
           <br />
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 export type InventoryTypeList = {
   id: number;
@@ -7,17 +6,10 @@ export type InventoryTypeList = {
   description: string;
 };
 
-type InventoryTypeResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: InventoryTypeList[];
-};
-
 export default function useInventoryType() {
   const [inventoryType, setInventoryType] = useState<InventoryTypeList[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
@@ -29,38 +21,33 @@ export default function useInventoryType() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventorytype`)
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Not found!");
-          }
-          return response.json();
-        })
-        .then((json: InventoryTypeResponse) => {
-          console.log("INVENTORY_TYPE_DATA_LENGTH: " + json.data.length);
-          for (let i = 0; i < json.data.length; i++) {
-            console.log("INVENTORY_TYPE_ID_" + i + ": " + json.data[i].id);
-          }
-          if (Array.isArray(json.data)) {
-            setLoading(false);
-            setInventoryType(json.data);
-          } else {
-            setLoading(false);
-            console.error("Expected array, got:", json.data);
-            setInventoryType([]);
-          }
-        })
-        .catch((error: any) => {
-          setError(`Fetch error: ${error}`);
-          setInventoryType([]);
-        });
-    }
 
-    fetchTitle();
-    return () => {};
-  }, []);
+    async function fetchTitle(currentPage: number) {
+      try {
+        const response = await fetch(
+          `${REACT_APP_PORTAL_BE_URL}/api/inventorytype?page=${currentPage}&limit=10`,
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Not found!");
+        }
+        const json = await response.json();
+        if (Array.isArray(json.data.inventoryType)) {
+          setLoading(false);
+          setInventoryType(json.data.inventoryType);
+          setTotalPage(json.data.totalPage);
+        } else {
+          setLoading(false);
+          console.error("Expected array inventory type, got:", json.data);
+          setInventoryType([]);
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setInventoryType([]);
+      }
+    }
+    fetchTitle(page);
+  }, [page]);
 
   const deleteInventoryType = async (id: any) => {
     setLoading(true);
@@ -111,6 +98,9 @@ export default function useInventoryType() {
   return {
     inventoryType,
     openAlert,
+    page,
+    totalPage,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,

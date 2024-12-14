@@ -1,20 +1,21 @@
-import useInventory, {
-  InventoryList,
-} from "../../../hooks/inventory/inventoryList";
 import { useNavigate } from "react-router-dom";
-import {
-  CardHeader,
-  Checkbox,
-  Chip,
-  Input,
-  Typography,
-} from "@material-tailwind/react";
+import { Checkbox, Chip, Input, Typography } from "@material-tailwind/react";
 import { Pagination } from "../../../container/pagination";
 import { Card } from "flowbite-react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { useEffect, useState } from "react";
+import useInventory, { InventoryList } from "../../../hooks/inventory/inventoryList";
 
-export function InventoryBorrowingContent() {
-  const { inventory, handleCheck } = useInventory();
+interface InventoryBorrowingContentProps {
+  onItemsChange: (selectedItems: InventoryList[]) => void;
+}
+
+export function InventoryBorrowingContent({
+  onItemsChange,
+}: InventoryBorrowingContentProps) {
+  const { inventory } = useInventory();
+  const [selectedItems, setSelectedItems] = useState<InventoryList[]>([]);
+
   const navigate = useNavigate();
   const tableHead = [
     { titleHead: "Reference Id", accessor: "refId" },
@@ -25,9 +26,25 @@ export function InventoryBorrowingContent() {
     { titleHead: "" },
   ];
 
+  const toggleItemSelection = (item: InventoryList) => {
+    setSelectedItems((prev) => {
+      const isSelected = prev.find((selected) => selected.id === item.id);
+      if (isSelected) {
+        return prev.filter((selected) => selected.id !== item.id);
+      } else {
+        return [...prev, item];
+      }
+    });
+  };
+
+  useEffect(() => {
+    onItemsChange(selectedItems);
+    console.log(`Selected Items`, selectedItems);
+  }, [selectedItems, onItemsChange]);
+
   return (
     <Card className="h-full w-full">
-      <CardHeader floated={false} shadow={false} className="rounded-none">
+      <div className="rounded-none flex h-full flex-col gap-4 p-6">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
@@ -66,6 +83,10 @@ export function InventoryBorrowingContent() {
             </thead>
             <tbody>
               {inventory.map((item: InventoryList, index) => {
+                const isSelected = selectedItems.some(
+                  (selected) => selected.id === item.id,
+                );
+                console.log(`ITEM_ID`, item.id);
                 const isLast = index === inventory.length - 1;
                 const classes = isLast
                   ? "py-3 px-4"
@@ -128,9 +149,10 @@ export function InventoryBorrowingContent() {
                       <div className="mx-auto text-center">
                         <Checkbox
                           color="gray"
+                          checked={isSelected}
                           onClick={(e) => {
-                            handleCheck(item.id);
-                            e.stopPropagation();
+                            e.stopPropagation(); // Prevent row navigation
+                            toggleItemSelection(item);
                           }}
                         ></Checkbox>
                       </div>
@@ -141,8 +163,7 @@ export function InventoryBorrowingContent() {
             </tbody>
           </table>
         </div>
-        <Pagination />
-      </CardHeader>
+      </div>
     </Card>
   );
 }

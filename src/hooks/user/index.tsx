@@ -1,29 +1,30 @@
 import { useState } from "react";
 
+export type User = {
+  id: number;
+  email: string;
+  password: string;
+};
 
-export default function useCreateBorrowing() {
+export default function useLoginUser() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  const createBorrowing = async (borrowingData: any) => {
+  const userLogin = async (userData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
-
     try {
-      const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/borrowing/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(borrowingData),
+      const response = await fetch(`${REACT_APP_PORTAL_BE_URL}/api/user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(userData),
+      });
       const data = await response.json();
       if (!response.ok) {
         console.log(response);
@@ -35,14 +36,14 @@ export default function useCreateBorrowing() {
       }
     } catch (err) {
       setLoading(false);
-      setError("Failed to create borrowing");
+      setError("Failed to create inventory type");
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    createBorrowing,
+    userLogin,
     success,
     loading,
     error,

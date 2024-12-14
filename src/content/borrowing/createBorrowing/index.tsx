@@ -1,19 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../../container/alert";
 import BorrowingForm from "../../../container/borrowingForm";
 import useCreateBorrowing from "../../../hooks/borrowing/createBorrowing";
 import { InventoryBorrowingContent } from "../listInventoryBorrowing";
+import { InventoryList } from "../../../hooks/inventory/inventoryList";
 
 const CreateBorrowingContent = () => {
   const { createBorrowing, loading, error, success } = useCreateBorrowing();
+  const [borrowerDetails, setBorrowerDetails] = useState({});
+  const [combineData, setCombineData] = useState<any>({});
+  const [selectedItems, setSelectedItems] = useState<InventoryList[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handelCreateBorrowing = async (borrowingData: any) => {
+  useEffect(() => {
+    const data = { ...borrowerDetails, items: combineData?.items };
+    setCombineData(data);
+  }, [borrowerDetails]);
+
+  useEffect(() => {
+    const data = {
+      ...combineData,
+      items: selectedItems.map((item) => {
+        return { inventoryId: item.id, quantity: 1 };
+      }),
+    };
+    setCombineData(data);
+  }, [selectedItems]);
+
+  useEffect(() => {
+    console.log(`Combine Data`, combineData);
+  }, [combineData]);
+
+  const handleCreateBorrowing = async () => {
+    if (!Object.keys(borrowerDetails).length || selectedItems.length === 0) {
+      alert("Please provide borrower details and select items.");
+      return;
+    }
+
     setIsSubmitting(true);
-    const result = await createBorrowing(borrowingData);
+    const result = await createBorrowing(combineData);
     console.log(result);
-    console.log("BORROWING_ ", borrowingData);
     setIsSubmitting(false);
   };
 
@@ -26,8 +53,8 @@ const CreateBorrowingContent = () => {
       {loading && <p className="text-center">Loading...</p>}
 
       <div className="flex flex-cols">
-        <div className="w-1/3 pt-4">
-          <div className="text-left ml-16 mb-8">
+        <div className="w-1/3 p-4">
+          <div className="mb-8 mt-2 ml-12">
             <Typography variant="h5" color="blue-gray">
               Borrower detail
             </Typography>
@@ -36,14 +63,15 @@ const CreateBorrowingContent = () => {
             </Typography>
           </div>
           <BorrowingForm
-            onSubmit={handelCreateBorrowing}
+            onSubmit={handleCreateBorrowing}
             isEditMode={false}
             isSubmitting={isSubmitting}
             success={success}
+            setBorrowerDetail={setBorrowerDetails}
           />
         </div>
         <div className="w-2/3 p-4">
-          <InventoryBorrowingContent />
+          <InventoryBorrowingContent onItemsChange={setSelectedItems} />
         </div>
       </div>
 

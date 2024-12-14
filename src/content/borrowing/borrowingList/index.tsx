@@ -33,7 +33,7 @@ export function BorrowingContent() {
   ];
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/borrowing/update/${id}`);
+    navigate(`/borrowing/${id}`);
   };
 
   return (
@@ -218,7 +218,6 @@ export function BorrowingContent() {
             })}
           </tbody>
         </table>
-        <Pagination />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

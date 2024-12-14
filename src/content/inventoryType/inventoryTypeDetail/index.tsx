@@ -1,13 +1,14 @@
 import { Chip, Typography } from "@material-tailwind/react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
 import { Pagination } from "../../../container/pagination";
-import useInventory from "../../../hooks/inventory/inventoryList";
-import { useInventoryTypeDetail } from "../../../hooks/inventoryType/inventoryTypeDetail";
 import UpperTableDetail from "../../../container/upperTableDetail";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useInventoryTypeDetail } from "../../../hooks/inventoryType/inventoryTypeDetail";
+import useInventory from "../../../hooks/inventory/inventoryList";
 
 export function InventoryTypeDetailContent() {
-  const { inventoryTypeDetail, id, inventoryItems } = useInventoryTypeDetail();
+  const { inventoryTypeDetail, id, inventoryItems, page, totalPage, setPage } =
+    useInventoryTypeDetail();
   const { handleDelete } = useInventory();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
@@ -23,9 +24,10 @@ export function InventoryTypeDetailContent() {
     setIsEditing(true);
     navigate(`/inventory/update/${inventoryTypeId}`);
   };
-  console.log(`INVENTORY_TYPE_ID`, id);
-  console.log(`Inventory type detail`, inventoryTypeDetail);
-  console.log(`Inventory items`, inventoryItems);
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
+  };
 
   return (
     <div>
@@ -163,7 +165,11 @@ export function InventoryTypeDetailContent() {
                   ))}
                 </tbody>
               </table>
-              <Pagination />
+              <Pagination
+                currentPage={page}
+                totalPages={totalPage}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         </section>
