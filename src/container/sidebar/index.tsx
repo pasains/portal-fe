@@ -166,7 +166,12 @@ export function SidebarWithBurgerMenu() {
               </ListItemPrefix>
               Settings
             </ListItem>
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                localStorage.removeItem("access_token");
+                navigate(`/login`);
+              }}
+            >
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>

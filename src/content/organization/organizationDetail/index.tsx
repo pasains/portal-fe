@@ -7,7 +7,8 @@ import useOrganization from "../../../hooks/organization/organizationList";
 import UpperTableDetail from "../../../container/upperTableDetail";
 
 export function OrganizationDetailContent() {
-  const { id, organizationDetail, organizationList } = useOrganizationDetail();
+  const { id, organizationDetail, organizationList, page, totalPage, setPage } =
+    useOrganizationDetail();
   const { handleDelete } = useOrganization();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ export function OrganizationDetailContent() {
   const handleEditClick = (borrowerId: number) => {
     setIsEditing(true);
     navigate(`/borrower/update/${borrowerId}`);
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
   };
 
   return (
@@ -152,6 +157,11 @@ export function OrganizationDetailContent() {
                   ))}
                 </tbody>
               </table>
+              <Pagination
+                currentPage={page}
+                totalPages={totalPage}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         </section>

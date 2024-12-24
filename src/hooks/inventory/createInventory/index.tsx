@@ -5,6 +5,7 @@ export default function useCreateInventory() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   const createInventory = async (inventoryData: any) => {
@@ -20,12 +21,12 @@ export default function useCreateInventory() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(inventoryData),
         },
       );
       const data = await response.json();
-      console.log("CREATE_INVENTORY_MESSAGE", JSON.stringify(data.meta.message));
       if (!response.ok) {
         console.log(response);
         setLoading(false);

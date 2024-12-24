@@ -12,6 +12,9 @@ export function OrganizationContent() {
   const {
     organization,
     openAlert,
+    page,
+    totalPage,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -28,6 +31,10 @@ export function OrganizationContent() {
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/organization/update/${id}`);
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
   };
 
   return (
@@ -162,6 +169,11 @@ export function OrganizationContent() {
             })}
           </tbody>
         </table>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

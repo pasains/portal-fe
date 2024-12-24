@@ -8,59 +8,54 @@ export type OrganizationProps = {
   note: string;
 };
 
-type OrganizationResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: OrganizationProps[];
-};
-
 export default function useOrganization() {
   const [organization, setOrganization] = useState<OrganizationProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/organization`)
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Not found!");
-          }
-          return response.json();
-        })
-        .then((json: OrganizationResponse) => {
-          console.log("ORGANIZATION_1: " + json.data.length);
-          for (let i = 0; i < json.data.length; i++) {
-            console.log("ORGANIZATION_2" + i + ": " + json.data[i].id);
-          }
-          if (Array.isArray(json.data)) {
-            setLoading(false);
-            setOrganization(json.data);
-          } else {
-            setLoading(false);
-            console.error("Expected array, got:", json.data);
-            setOrganization([]);
-          }
-        })
-        .catch((error: any) => {
-          setError(`Fetch error: ${error}`);
+    async function fetchTitle(currentPage: number) {
+      try {
+        const response = await fetch(
+          `${REACT_APP_PORTAL_BE_URL}/api/organization?page=${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Not found!");
+        }
+        const json = await response.json();
+        if (Array.isArray(json.data.organization)) {
+          setLoading(false);
+          setOrganization(json.data.organization);
+          setTotalPage(json.data.totalPage);
+        } else {
+          setLoading(false);
+          console.error("Expected array organization, got:", json.data);
           setOrganization([]);
-        });
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setOrganization([]);
+      }
     }
 
-    fetchTitle();
-    return () => {};
-  }, [REACT_APP_PORTAL_BE_URL]);
+    fetchTitle(page);
+  }, [page]);
 
   const deletedOrganization = async (id: any) => {
     setLoading(true);
@@ -72,6 +67,7 @@ export default function useOrganization() {
           method: "DELETE",
           headers: {
             "Content-Type": "aplication/json",
+            Authorization: `${token}`,
           },
         },
       );
@@ -111,6 +107,9 @@ export default function useOrganization() {
   return {
     organization,
     setOrganization,
+    page,
+    totalPage,
+    setPage,
     openAlert,
     handleDelete,
     handleConfirmDelete,

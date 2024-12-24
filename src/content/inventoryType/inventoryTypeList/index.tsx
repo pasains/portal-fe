@@ -1,12 +1,13 @@
 import { Typography } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import useInventoryType, {
-  InventoryTypeList,
-} from "../../../hooks/inventoryType/inventoryTypeList";
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
+import useInventoryType, {
+  InventoryTypeList,
+} from "../../../hooks/inventoryType/inventoryTypeList";
+import TimedAlert from "../../../container/alert";
 
 export function InventoryTypeContent() {
   const {
@@ -14,6 +15,8 @@ export function InventoryTypeContent() {
     openAlert,
     page,
     totalPage,
+    loading,
+    success,
     setPage,
     handleDelete,
     handleConfirmDelete,
@@ -34,9 +37,13 @@ export function InventoryTypeContent() {
     console.log("Page changed to:", newPage);
     setPage(newPage);
   };
+  useEffect(() => {
+    console.log(`SUCCESS`, success);
+  }, [success]);
 
   return (
     <section>
+      {loading && <p className="text-center">Loading...</p>}
       <UpperTable
         pageTitle={"Inventory type list"}
         description="List of inventory type."
@@ -142,6 +149,15 @@ export function InventoryTypeContent() {
                           </svg>
                         </span>
                       </button>
+                      <div className="fixed z-9999 top-10 right-10">
+                        {success && (
+                          <TimedAlert
+                            message={success}
+                            duration={5000}
+                            color="green"
+                          />
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>

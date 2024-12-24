@@ -3,15 +3,18 @@ import { Pagination } from "../../../container/pagination";
 import UpperTableDetail from "../../../container/upperTableDetail";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import useInventory from "../../../hooks/inventory/inventoryList";
 import { useInventoryGroupDetail } from "../../../hooks/inventoryGroup/inventoryGroupDetail";
+import DeleteAlert from "../../../container/deleteAlert";
+import useInventory from "../../../hooks/inventory/inventoryList";
 
 export function InventoryGroupDetailContent() {
-  const { inventoryGroupDetail, id, inventoryItems, page, totalPage, setPage } =
+  const { inventoryGroupDetail, inventoryItems, id, page, totalPage, setPage } =
     useInventoryGroupDetail();
-  const { handleDelete } = useInventory();
+  const { handleDelete, openAlert, handleCloseAlert, handleConfirmDelete } =
+    useInventory();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+
   const tableHead = [
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Reference Id", accessor: "refId" },
@@ -169,6 +172,11 @@ export function InventoryGroupDetailContent() {
                 currentPage={page}
                 totalPages={totalPage}
                 onPageChange={handlePageChange}
+              />
+              <DeleteAlert
+                open={openAlert}
+                handleClose={handleCloseAlert}
+                handleConfirm={handleConfirmDelete}
               />
             </div>
           </div>

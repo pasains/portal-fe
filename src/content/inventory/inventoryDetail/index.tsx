@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { Button, Typography } from "@material-tailwind/react";
 import { useInventoryDetail } from "../../../hooks/inventory/inventoryDetail";
+import { useNavigate } from "react-router-dom";
 
 export function InventoryDetailContent() {
   const { inventoryDetail } = useInventoryDetail();
   const createdAtDate = new Date(inventoryDetail.createdAt);
+  const navigate = useNavigate();
   return (
     <section className="py-16 px-8 place-items-center mx-auto w-full">
       <div
@@ -12,7 +14,7 @@ export function InventoryDetailContent() {
         className="mx-auto container grid place-items-center grid-cols-1 md:grid-cols-2"
       >
         <img
-          src={inventoryDetail.image}
+          src={inventoryDetail.url}
           alt={inventoryDetail.inventoryName}
           className="h-[36rem]"
         />
@@ -24,7 +26,10 @@ export function InventoryDetailContent() {
             {inventoryDetail.inventoryTypeName}
           </Typography>
           <Typography className="text-sm">
-            Qty: {inventoryDetail.quantity}
+            Current quantity: {inventoryDetail.currentQuantity}
+          </Typography>
+          <Typography className="text-sm">
+            Total Quantity: {inventoryDetail.totalQuantity}
           </Typography>
           <Typography className="!mt-4 text-base font-normal leading-[27px] !text-gray-500">
             {inventoryDetail.description}
@@ -36,8 +41,14 @@ export function InventoryDetailContent() {
             </p>
           </div>
           <div className="mb-4 flex w-full items-center gap-3 md:w-1/2 ">
-            <Button color="gray" className="w-52">
-              Borrow
+            <Button
+              color="gray"
+              className="w-fit"
+              onClick={() => {
+                navigate(`/borrowing/create`);
+              }}
+            >
+              Create Borrowing
             </Button>
           </div>
         </div>

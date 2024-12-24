@@ -20,6 +20,7 @@ export function useUpdateInventoryType() {
     useState<InventoryTypeList>({} as InventoryTypeList);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,13 +29,19 @@ export function useUpdateInventoryType() {
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const { data } = await response.json();
         setLoading(false);
-        console.log("Fetched Data:", data);
+        console.log("Fetched Data inventory type:", data);
         setInvenntoryTypeDetail(data);
       } catch (err) {
         setLoading(false);
@@ -46,7 +53,6 @@ export function useUpdateInventoryType() {
     };
 
     fetchData();
-    return () => {};
   }, [id]);
 
   const updateInventoryType = async (id: any, inventoryTypeData: any) => {
@@ -60,6 +66,7 @@ export function useUpdateInventoryType() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(inventoryTypeData),
         },

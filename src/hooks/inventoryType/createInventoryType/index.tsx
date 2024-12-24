@@ -11,6 +11,7 @@ export default function useCreateInventoryType() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   const createInventoryType = async (inventoryTypeData: any) => {
@@ -18,19 +19,18 @@ export default function useCreateInventoryType() {
     setSuccess(null);
     setError(null);
     try {
-      console.log("SUSI 1 " + JSON.stringify(inventoryTypeData));
       const response = await fetch(
         `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/create`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(inventoryTypeData),
         },
       );
       const data = await response.json();
-      console.log("SUSI + ", JSON.stringify(data.meta.message));
       if (!response.ok) {
         console.log(response);
         setLoading(false);

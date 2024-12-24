@@ -14,8 +14,10 @@ export default function useInventoryType() {
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
   // Fetch all inventory type
   useEffect(() => {
@@ -26,6 +28,12 @@ export default function useInventoryType() {
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventorytype?page=${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
         console.log(response);
         if (!response.ok) {
@@ -52,13 +60,16 @@ export default function useInventoryType() {
   const deleteInventoryType = async (id: any) => {
     setLoading(true);
     setError(null);
+    setSuccess(null);
+
     try {
       const response = await fetch(
         `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/delete/${id}`,
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "aplication/json",
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
         },
       );
@@ -68,11 +79,13 @@ export default function useInventoryType() {
         console.log(response);
         setLoading(false);
         setError(result.meta.message);
+      } else {
+        setInventoryType((inventoryType) =>
+          inventoryType.filter((item) => item.id !== id),
+        );
+        setSuccess(result.meta.message);
+        console.log("Delete inventory type:", result.meta.message);
       }
-      console.log("Delete item", result);
-      setInventoryType((inventoryType) =>
-        inventoryType.filter((item) => item.id !== id),
-      );
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -87,7 +100,9 @@ export default function useInventoryType() {
   };
 
   const handleConfirmDelete = () => {
-    deleteInventoryType(deleteId);
+    if (deleteId !== null) {
+      deleteInventoryType(deleteId);
+    }
     setOpenAlert(false);
   };
 
@@ -107,5 +122,6 @@ export default function useInventoryType() {
     setInventoryType,
     loading,
     error,
+    success,
   };
 }

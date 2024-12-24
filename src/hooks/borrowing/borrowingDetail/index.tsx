@@ -14,6 +14,7 @@ export function useBorrowingDetail() {
     {} as BorrowingProps,
   );
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   useEffect(() => {
@@ -25,7 +26,10 @@ export function useBorrowingDetail() {
           `${REACT_APP_PORTAL_BE_URL}/api/borrowing/${id}`,
           {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
           },
         );
 
@@ -34,7 +38,7 @@ export function useBorrowingDetail() {
         }
         const { data } = await response.json();
         setLoading(false);
-        console.log("Fetched Data Borrower Detail:", data);
+        console.log("Fetched data borrwer detail for borrowing:", data);
         setBorrowingDetail(data);
       } catch (err) {
         setLoading(false);

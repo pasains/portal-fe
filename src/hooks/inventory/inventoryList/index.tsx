@@ -1,5 +1,26 @@
 import { useEffect, useState } from "react";
 
+type InventoryStockIdRel = {
+  currentQuantity: number;
+  totalQuantity: number;
+};
+type InventoryTypeIdRel = {
+  inventoryTypeName: string;
+};
+
+export type InventoryListDetailProps = {
+  id: number;
+  inventoryName: string;
+  refId: string;
+  description: string;
+  inventoryTypeIdRel: InventoryTypeIdRel;
+  inventoryTypeName: string;
+  inventoryStockIdRel: InventoryStockIdRel[] | undefined;
+  currentQuantity: number;
+  totalQuantity: number;
+  isBorrowable: boolean;
+};
+
 export type InventoryList = {
   id: number;
   inventoryName: string;
@@ -10,14 +31,16 @@ export type InventoryList = {
 };
 
 export default function useInventory() {
-  const [inventory, setInventory] = useState<InventoryList[]>([]);
+  const [inventory, setInventory] = useState<InventoryListDetailProps[]>([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+  const [pageInventory, setPageInventory] = useState(1);
+  const [totalPageInventory, setTotalPageInventory] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   // Function to get all inventory list
@@ -29,6 +52,12 @@ export default function useInventory() {
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventory?page=${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
         console.log(response);
         if (!response.ok) {
@@ -38,7 +67,7 @@ export default function useInventory() {
         if (Array.isArray(json.data.inventory)) {
           setLoading(false);
           setInventory(json.data.inventory);
-          setTotalPage(json.data.totalPageInventory);
+          setTotalPageInventory(json.data.totalPageInventory);
         } else {
           setLoading(false);
           console.error("Expected array inventory, got:", json.data.inventory);
@@ -50,19 +79,22 @@ export default function useInventory() {
       }
     }
 
-    fetchTitle(page);
-  }, [page]);
+    fetchTitle(pageInventory);
+  }, [pageInventory]);
 
   const deleteInventory = async (id: any) => {
     setLoading(true);
     setError(null);
+    setSuccess(null);
+
     try {
       const response = await fetch(
         `${REACT_APP_PORTAL_BE_URL}/api/inventory/delete/${id}`,
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "aplication/json",
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
         },
       );
@@ -72,9 +104,11 @@ export default function useInventory() {
         console.log(response);
         setLoading(false);
         setError(result.meta.message);
+      } else {
+        console.log(`Deleted inventory:`, result);
+        setInventory((inventory) => inventory.filter((item) => item.id !== id));
+        setSuccess(result.meta.message);
       }
-      console.log("Delete item", result);
-      setInventory((inventory) => inventory.filter((item) => item.id !== id));
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -89,7 +123,9 @@ export default function useInventory() {
   };
 
   const handleConfirmDelete = () => {
-    deleteInventory(deleteId);
+    if (deleteId !== null) {
+      deleteInventory(deleteId);
+    }
     setOpenAlert(false);
   };
 
@@ -97,18 +133,18 @@ export default function useInventory() {
     setOpenAlert(false);
   };
 
-
   return {
     inventory,
     openAlert,
-    page,
-    totalPage,
-    setPage,
+    pageInventory,
+    totalPageInventory,
+    setPageInventory,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
     setInventory,
     loading,
     error,
+    success,
   };
 }

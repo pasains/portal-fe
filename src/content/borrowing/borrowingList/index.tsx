@@ -8,11 +8,16 @@ import useBorrowing, {
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
+import TimedAlert from "../../../container/alert";
 
 export function BorrowingContent() {
   const {
     borrowing,
     openAlert,
+    page,
+    totalPage,
+    success,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -34,6 +39,10 @@ export function BorrowingContent() {
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/borrowing/${id}`);
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
   };
 
   return (
@@ -211,6 +220,15 @@ export function BorrowingContent() {
                           </svg>
                         </span>
                       </button>
+                      <div className="fixed z-9999 top-10 right-10">
+                        {success && (
+                          <TimedAlert
+                            message={success}
+                            duration={5000}
+                            color="green"
+                          />
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -218,6 +236,11 @@ export function BorrowingContent() {
             })}
           </tbody>
         </table>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}
