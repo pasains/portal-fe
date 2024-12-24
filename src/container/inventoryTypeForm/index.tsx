@@ -45,7 +45,6 @@ const InventoryTypeForm: React.FC<InventoryTypeFormProps> = ({
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
     let finalValue = type === "number" ? +value : value;
-    console.log("SUSI 3", finalValue);
 
     setInventoryTypeData({
       ...inventoryTypeData,

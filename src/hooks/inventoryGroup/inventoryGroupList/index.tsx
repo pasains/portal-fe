@@ -6,60 +6,60 @@ export type InventoryGroupProps = {
   description: string;
 };
 
-type InventoryGroupResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: InventoryGroupProps[];
-};
-
 export default function useInventoryGroup() {
   const [inventoryGroup, setInventoryGroup] = useState<InventoryGroupProps[]>(
     [],
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventorygroup`)
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Not found!");
-          }
-          return response.json();
-        })
-        .then((json: InventoryGroupResponse) => {
-          for (let i = 0; i < json.data.length; i++) {
-            console.log("INVENTARY GROUP" + i + ": " + json.data[i]);
-          }
-          if (Array.isArray(json.data)) {
-            setLoading(false);
-            setInventoryGroup(json.data);
-          } else {
-            setLoading(false);
-            console.error("Expected array, got:", json.data);
-            setInventoryGroup([]);
-          }
-        })
-        .catch((error: any) => {
-          setError(`Fetch error: ${error}`);
+    async function fetchTitle(currentPage: number) {
+      try {
+        const response = await fetch(
+          `${REACT_APP_PORTAL_BE_URL}/api/inventorygroup?page=${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Not Found.");
+        }
+        const json = await response.json();
+        if (Array.isArray(json.data.inventoryGroup)) {
+          setLoading(false);
+          setInventoryGroup(json.data.inventoryGroup);
+          setTotalPage(json.data.totalPage);
+        } else {
+          setLoading(false);
+          console.error(
+            "Expected array inventory group, got:",
+            json.data.inventorygroup,
+          );
           setInventoryGroup([]);
-        });
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setInventoryGroup([]);
+      }
     }
 
-    fetchTitle();
-    return () => {};
-  }, [REACT_APP_PORTAL_BE_URL]);
+    fetchTitle(page);
+  }, [page]);
 
   const deleteInventoryGroup = async (id: any) => {
     setLoading(true);
@@ -71,6 +71,7 @@ export default function useInventoryGroup() {
           method: "DELETE",
           headers: {
             "Content-Type": "aplication/json",
+            authorization: `${token}`,
           },
         },
       );
@@ -80,11 +81,11 @@ export default function useInventoryGroup() {
         console.log(response);
         setLoading(false);
         setError(result.meta.message);
+      } else {
+        console.log(`Deleted inventory group:`, result);
+        setInventoryGroup((item) => item.filter((item) => item.id !== id));
+        setSuccess(result.meta.message);
       }
-      console.log(result);
-      setInventoryGroup((item) =>
-        item.filter((item) => item.id !== id),
-      );
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -99,7 +100,9 @@ export default function useInventoryGroup() {
   };
 
   const handleConfirmDelete = () => {
-    deleteInventoryGroup(deleteId);
+    if (deleteId !== null) {
+      deleteInventoryGroup(deleteId);
+    }
     setOpenAlert(false);
   };
 
@@ -109,11 +112,15 @@ export default function useInventoryGroup() {
 
   return {
     inventoryGroup,
+    page,
+    totalPage,
+    setPage,
     openAlert,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
     loading,
     error,
+    success,
   };
 }

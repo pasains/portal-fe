@@ -4,7 +4,8 @@ import { Pagination } from "../../../container/pagination";
 import { Card } from "flowbite-react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import useInventory, { InventoryList } from "../../../hooks/inventory/inventoryList";
+import useBorrowableInventory from "../../../hooks/inventory/borrowableInventory";
+import { InventoryList } from "../../../hooks/inventory/inventoryList";
 
 interface InventoryBorrowingContentProps {
   onItemsChange: (selectedItems: InventoryList[]) => void;
@@ -13,7 +14,12 @@ interface InventoryBorrowingContentProps {
 export function InventoryBorrowingContent({
   onItemsChange,
 }: InventoryBorrowingContentProps) {
-  const { inventory } = useInventory();
+  const {
+    borrowableInventory,
+    pageBorrowableInventory,
+    totalPageBorrowableInventory,
+    setPageBorrowableInventory,
+  } = useBorrowableInventory();
   const [selectedItems, setSelectedItems] = useState<InventoryList[]>([]);
 
   const navigate = useNavigate();
@@ -35,6 +41,10 @@ export function InventoryBorrowingContent({
         return [...prev, item];
       }
     });
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPageBorrowableInventory(newPage);
   };
 
   useEffect(() => {
@@ -82,12 +92,12 @@ export function InventoryBorrowingContent({
               </tr>
             </thead>
             <tbody>
-              {inventory.map((item: InventoryList, index) => {
+              {borrowableInventory.map((item: InventoryList, index) => {
                 const isSelected = selectedItems.some(
                   (selected) => selected.id === item.id,
                 );
                 console.log(`ITEM_ID`, item.id);
-                const isLast = index === inventory.length - 1;
+                const isLast = index === borrowableInventory.length - 1;
                 const classes = isLast
                   ? "py-3 px-4"
                   : "py-3 px-4 border-b border-blue-gray-50";
@@ -162,6 +172,11 @@ export function InventoryBorrowingContent({
               })}
             </tbody>
           </table>
+          <Pagination
+            currentPage={pageBorrowableInventory}
+            totalPages={totalPageBorrowableInventory}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </Card>

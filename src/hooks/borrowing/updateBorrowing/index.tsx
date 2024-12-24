@@ -11,6 +11,7 @@ export function useUpdateBorrowing() {
     {} as BorrowingProps,
   );
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   const updateBorrowing = async (id: any, borrowing: any) => {
@@ -24,6 +25,7 @@ export function useUpdateBorrowing() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(borrowing),
         },
@@ -37,7 +39,7 @@ export function useUpdateBorrowing() {
         setSuccess(data.meta.message);
         setLoading(false);
       }
-      console.log("Updated data:", data);
+      console.log("Updated data borrowing:", data);
       setBorrowingDetail(data);
     } catch (error: any) {
       setError(`Updating error: ${error}`);

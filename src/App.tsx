@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "./pages/home/home";
 import { Inventory } from "./pages/inventory/inventory";
 import { Borrowing } from "./pages/borrowing/borrowing";
@@ -24,78 +24,96 @@ import { UpdateInventoryGroup } from "./pages/inventoryGroup/updateInventoryGrou
 import { CreateBorrower } from "./pages/borrower/createBorrower";
 import { CreateOrganization } from "./pages/organization/createOrganization";
 import { UpdateBorrowing } from "./pages/borrowing/updateBorrowing";
-import { UserLoginPage } from "./pages/login";
+import { LoginPage } from "./pages/login";
+import ProtectedRoutes from "./middleware";
 
 function App() {
   return (
     <div>
       <Routes>
-        //Home route
-        <Route path="/" element={<Home />} />
-        //User route
-        <Route path="/user" element={<UserLoginPage />} />
-        <Route path="/user/profile/:id" element={<Profile />} />
-        //Inventory route
-        <Route path="/inventory">
-          <Route index={true} element={<Inventory />} />
-          <Route path="/inventory/:id" element={<InventoryDetail />} />
-          <Route path="/inventory/create" element={<CreatedInventoryInput />} />
-          <Route
-            path="/inventory/update/:id"
-            element={<UpdatedInventoryInput />}
-          />
-          <Route path="/inventory/delete/:id" element={<DeleteAlert />} />
-        </Route>
-        //Inventory type route
-        <Route path="/inventorytype">
-          <Route index={true} element={<InventoryType />} />
-          <Route path="/inventorytype/:id" element={<InventoryTypeDetail />} />
-          <Route
-            path="/inventorytype/create"
-            element={<CreatedInventoryTypeInput />}
-          />
-          <Route
-            path="/inventorytype/update/:id"
-            element={<UpdatedInventoryTypeInput />}
-          />
-        </Route>
-        //Inventory group route
-        <Route path="/inventorygroup">
-          <Route index={true} element={<InventoryGroup />} />
-          <Route
-            path="/inventorygroup/:id"
-            element={<InventoryGroupDetail />}
-          />
-          <Route
-            path="/inventorygroup/create"
-            element={<CreateInventoryGroup />}
-          />
-          <Route
-            path="/inventorygroup/update/:id"
-            element={<UpdateInventoryGroup />}
-          />
-        </Route>
-        //Borrowing route
-        <Route path="/borrowing">
-          <Route index={true} element={<Borrowing />} />
-          <Route path="/borrowing/create" element={<CreatedBorrowingInput />} />
-          <Route path="/borrowing/:id" element={<UpdateBorrowing />} />
-        </Route>
-        //Borrower route
-        <Route path="/borrower">
-          <Route index={true} element={<Borrower />} />
-          <Route path="/borrower/update/:id" element={<UpdatedBorrower />} />
-          <Route path="/borrower/create" element={<CreateBorrower />} />
-        </Route>
-        //Organization route
-        <Route path="/organization">
-          <Route index={true} element={<Organization />} />
-          <Route path="/organization/:id" element={<OrganizationDetail />} />
-          <Route path="/organization/create" element={<CreateOrganization />} />
-          <Route
-            path="/organization/update/:id"
-            element={<UpdatedOrganization />}
-          />
+        //login
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<ProtectedRoutes />}>
+          //Home route
+          <Route path="/home" element={<Home />} />
+          //User route
+          <Route path="/user/profile/:id" element={<Profile />} />
+          //Inventory route
+          <Route path="/inventory">
+            <Route index={true} element={<Inventory />} />
+            <Route path="/inventory/:id" element={<InventoryDetail />} />
+            <Route
+              path="/inventory/create"
+              element={<CreatedInventoryInput />}
+            />
+            <Route
+              path="/inventory/update/:id"
+              element={<UpdatedInventoryInput />}
+            />
+            <Route path="/inventory/delete/:id" element={<DeleteAlert />} />
+          </Route>
+          //Inventory type route
+          <Route path="/inventorytype">
+            <Route index={true} element={<InventoryType />} />
+            <Route
+              path="/inventorytype/:id"
+              element={<InventoryTypeDetail />}
+            />
+            <Route
+              path="/inventorytype/create"
+              element={<CreatedInventoryTypeInput />}
+            />
+            <Route
+              path="/inventorytype/update/:id"
+              element={<UpdatedInventoryTypeInput />}
+            />
+          </Route>
+          //Inventory group route
+          <Route path="/inventorygroup">
+            <Route index={true} element={<InventoryGroup />} />
+            <Route
+              path="/inventorygroup/:id"
+              element={<InventoryGroupDetail />}
+            />
+            <Route
+              path="/inventorygroup/create"
+              element={<CreateInventoryGroup />}
+            />
+            <Route
+              path="/inventorygroup/update/:id"
+              element={<UpdateInventoryGroup />}
+            />
+          </Route>
+          //Borrowing route
+          <Route path="/borrowing">
+            <Route index={true} element={<Borrowing />} />
+            <Route
+              path="/borrowing/create"
+              element={<CreatedBorrowingInput />}
+            />
+            <Route path="/borrowing/:id" element={<UpdateBorrowing />} />
+          </Route>
+          //Borrower route
+          <Route path="/borrower">
+            <Route index={true} element={<Borrower />} />
+            <Route path="/borrower/update/:id" element={<UpdatedBorrower />} />
+            <Route path="/borrower/create" element={<CreateBorrower />} />
+          </Route>
+          //Organization route
+          <Route path="/organization">
+            <Route index={true} element={<Organization />} />
+            <Route path="/organization/:id" element={<OrganizationDetail />} />
+            <Route
+              path="/organization/create"
+              element={<CreateOrganization />}
+            />
+            <Route
+              path="/organization/update/:id"
+              element={<UpdatedOrganization />}
+            />
+          </Route>
+          // //
         </Route>
       </Routes>
     </div>

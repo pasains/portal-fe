@@ -17,6 +17,7 @@ export function useUpdateItem() {
   const [itemsUpdate, setItemsUpdate] = useState<Item[]>([]);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
   const updateItem = async (borrowingId: any) => {
     console.log(`BORROWING ID`, borrowingId);
@@ -35,13 +36,13 @@ export function useUpdateItem() {
       quantity: itm.quantity,
     }));
     try {
-      console.log(`ITEMS[]`, partialItems);
       const response = await fetch(
         `${REACT_APP_PORTAL_BE_URL}/api/item/updateall/${borrowingId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify({ items: partialItems }),
         },

@@ -5,6 +5,7 @@ export default function useCreateBorrower() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   const createBorrower = async (borrowerData: any) => {
@@ -19,12 +20,12 @@ export default function useCreateBorrower() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(borrowerData),
         },
       );
       const data = await response.json();
-      console.log("BORROWER_CREATE + ", JSON.stringify(data.meta.message));
       if (!response.ok) {
         console.log(response);
         setLoading(false);

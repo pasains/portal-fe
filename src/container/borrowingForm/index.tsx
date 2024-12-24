@@ -6,6 +6,10 @@ import {
   Select,
   Option,
   Textarea,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
 } from "@material-tailwind/react";
 import useBorrower from "../../hooks/borrower/borrowersList";
 import useOrganization from "../../hooks/organization/organizationList";
@@ -237,12 +241,23 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
     onSubmit();
+
+    // Prepend +62 to the phone number if it doesn't already start with it
+    const formattedPhoneNumber = borrowingData.phoneNumber.startsWith("+62")
+      ? borrowingData.phoneNumber
+      : `+62${borrowingData.phoneNumber}`;
+
+    // Update the borrowingData with the formatted phone number
+    setBorrowingData((prevData) => ({
+      ...prevData,
+      phoneNumber: formattedPhoneNumber,
+    }));
     // Check if borrower data exists and if fields are filled
     if (
       borrowingData.borrowerName &&
       borrowingData.identityCard &&
       borrowingData.identityNumber &&
-      borrowingData.phoneNumber
+      formattedPhoneNumber
     ) {
       // Check if borrower already exist
       const existingBorrower = borrower.find(
@@ -255,7 +270,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           borrowerName: borrowingData.borrowerName,
           identityCard: borrowingData.identityCard,
           identityNumber: borrowingData.identityNumber,
-          phoneNumber: borrowingData.phoneNumber,
+          phoneNumber: formattedPhoneNumber,
         }));
       } else {
         // If borrower doesnt exists, create a new one
@@ -265,7 +280,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           borrowerName: borrowingData.borrowerName,
           identityCard: borrowingData.identityCard,
           identityNumber: borrowingData.identityNumber,
-          phoneNumber: borrowingData.phoneNumber,
+          phoneNumber: formattedPhoneNumber,
         }));
       }
       setBorrowerList([]);
@@ -361,6 +376,9 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
     setBorrowerList([...dataBorrower]);
     setOrganizationList([...dataOrganization]);
   }, [borrower, organization]);
+  const COUNTRIES = ["Indonesia (+62)"];
+  const CODES = ["+62"];
+  const [country, setCountry] = React.useState(0);
 
   return (
     <div className="w-[520px] mx-auto items-center">
@@ -462,23 +480,54 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                     }
                     required
                   />
-                  <Input
-                    className="w-full"
-                    color="orange"
-                    label="Phone Number"
-                    type="text"
-                    name="note"
-                    variant="outlined"
-                    size="lg"
-                    value={borrowingData.phoneNumber || ""}
-                    onChange={(e) =>
-                      setBorrowingData((prevData) => ({
-                        ...prevData,
-                        phoneNumber: e.target.value,
-                      }))
-                    }
-                    required
-                  />
+                  <div className="relative flex w-full">
+                    <Menu placement="bottom-start">
+                      <MenuHandler>
+                        <Button
+                          ripple={false}
+                          variant="text"
+                          color="blue-gray"
+                          className="h-10 w-14 shrink-0 rounded-r-none border border-r-0 border-blue-gray-200 bg-transparent px-3"
+                        >
+                          {CODES[country]}
+                        </Button>
+                      </MenuHandler>
+                      <MenuList className="max-h-[20rem] max-w-[18rem]">
+                        {COUNTRIES.map((country, index) => {
+                          return (
+                            <MenuItem
+                              key={country}
+                              value={country}
+                              onClick={() => setCountry(index)}
+                            >
+                              {country}
+                            </MenuItem>
+                          );
+                        })}
+                      </MenuList>
+                    </Menu>
+                    <Input
+                      type="tel"
+                      pattern="[0-9]*"
+                      inputMode="numeric"
+                      maxLength={12}
+                      placeholder="324-456-2323"
+                      className="appearance-none rounded-l-none !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      labelProps={{
+                        className: "before:content-none after:content-none",
+                      }}
+                      containerProps={{
+                        className: "min-w-0",
+                      }}
+                      value={borrowingData.phoneNumber || ""}
+                      onChange={(e) =>
+                        setBorrowingData((prevData) => ({
+                          ...prevData,
+                          phoneNumber: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
               </form>
             )}

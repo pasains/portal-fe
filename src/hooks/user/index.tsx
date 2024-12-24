@@ -6,14 +6,15 @@ export type User = {
   password: string;
 };
 
-export default function useLoginUser() {
+export default function useUser() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
-  const userLogin = async (userData: any) => {
+  const user = async (userData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
@@ -22,6 +23,7 @@ export default function useLoginUser() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `${token}`,
         },
         body: JSON.stringify(userData),
       });
@@ -36,14 +38,14 @@ export default function useLoginUser() {
       }
     } catch (err) {
       setLoading(false);
-      setError("Failed to create inventory type");
+      setError("Failed to create user.");
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    userLogin,
+    user,
     success,
     loading,
     error,

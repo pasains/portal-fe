@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-
-export type InventoryGroupList = {
-  id: number;
-  inventoryGroupName: string;
-  description: string;
-};
+import { InventoryGroupProps } from "../inventoryGroupList";
 
 type Params = {
   id: string;
@@ -16,38 +11,11 @@ export function useUpdateInventoryGroup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [inventoryGroupDetail, setInventoryGroupDetail] =
-    useState<InventoryGroupList>({} as InventoryGroupList);
+  const [inventoryGroupUpdate, setInventoryGroupUpdate] =
+    useState<InventoryGroupProps>({} as InventoryGroupProps);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(
-          `${REACT_APP_PORTAL_BE_URL}/api/inventorygroup/${id}`,
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const { data } = await response.json();
-        setLoading(false);
-        console.log("Fetched Data:", data);
-        setInventoryGroupDetail(data);
-      } catch (err) {
-        setLoading(false);
-        setError(`Fetching error: ${err} `);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    return () => {};
-  }, [id]);
+  const token = localStorage.getItem("access_token");
 
   const updateInventoryGroup = async (id: any, inventoryGroupData: any) => {
     setLoading(true);
@@ -59,7 +27,8 @@ export function useUpdateInventoryGroup() {
         {
           method: "PUT",
           headers: {
-            "Content-Group": "application/json",
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(inventoryGroupData),
         },
@@ -73,8 +42,8 @@ export function useUpdateInventoryGroup() {
         setSuccess(data.meta.message);
         setLoading(false);
       }
-      console.log("Updated data:", data);
-      setInventoryGroupDetail(data);
+      console.log("Updated inventory group data:", data);
+      setInventoryGroupUpdate(data);
     } catch (error: any) {
       setError(`Updating error: ${error}`);
       setLoading(false);
@@ -85,7 +54,7 @@ export function useUpdateInventoryGroup() {
 
   return {
     id,
-    inventoryGroupDetail,
+    inventoryGroupUpdate,
     success,
     updateInventoryGroup,
     loading,

@@ -7,13 +7,14 @@ export function useUpdateBorrower() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [borrowerDetail, setBorrowerDetail] = useState<BorrowerProps>(
+  const [borrowerUpdate, setBorrowerUpdate] = useState<BorrowerProps>(
     {} as BorrowerProps,
   );
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  const updateBorrower = async (id: any, borrower: any) => {
+  const updateBorrower = async (id: any, borrowerData: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
@@ -24,8 +25,9 @@ export function useUpdateBorrower() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
-          body: JSON.stringify(borrower),
+          body: JSON.stringify(borrowerData),
         },
       );
       const data = await response.json();
@@ -37,8 +39,8 @@ export function useUpdateBorrower() {
         setSuccess(data.meta.message);
         setLoading(false);
       }
-      console.log("Updated data:", data);
-      setBorrowerDetail(data);
+      console.log("Updated data borrower:", data);
+      setBorrowerUpdate(data);
     } catch (error: any) {
       setError(`Updating error: ${error}`);
       setLoading(false);
@@ -47,5 +49,5 @@ export function useUpdateBorrower() {
     }
   };
 
-  return { id, borrowerDetail, success, updateBorrower, loading, error };
+  return { id, borrowerUpdate, success, updateBorrower, loading, error };
 }

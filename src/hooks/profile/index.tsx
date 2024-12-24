@@ -25,6 +25,7 @@ export function useUsers() {
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState<UserProps>({} as UserProps);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
   useEffect(() => {
     if (!id) return;
@@ -38,13 +39,17 @@ export function useUsers() {
         }
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/user/profile/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
-
-        console.log(`TEST`, REACT_APP_PORTAL_BE_URL, id);
+        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
         const { data } = await response.json();
         console.log("Fetched Data:", data);
         setUsers(data);

@@ -7,10 +7,16 @@ import UpperTable from "../../../container/upperTable";
 import { Typography } from "@material-tailwind/react";
 import DeleteAlert from "../../../container/deleteAlert";
 import { Pagination } from "../../../container/pagination";
+import TimedAlert from "../../../container/alert";
 
 export function InventoryGroupContent() {
   const {
     inventoryGroup,
+    page,
+    totalPage,
+    success,
+    loading,
+    setPage,
     openAlert,
     handleDelete,
     handleConfirmDelete,
@@ -28,8 +34,13 @@ export function InventoryGroupContent() {
     navigate(`/inventorygroup/update/${id}`);
   };
 
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
+  };
   return (
     <section>
+      {loading && <p className="text-center">Loading...</p>}
       <UpperTable
         pageTitle={"Inventory group list"}
         createTitle={"CREATE INVENTORY GROUP"}
@@ -135,6 +146,13 @@ export function InventoryGroupContent() {
                           </svg>
                         </span>
                       </button>
+                      {success && (
+                        <TimedAlert
+                          message={success}
+                          duration={5000}
+                          color="green"
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -142,6 +160,11 @@ export function InventoryGroupContent() {
             })}
           </tbody>
         </table>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

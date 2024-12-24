@@ -12,6 +12,7 @@ export type InventoryTypeDetail = {
   inventoryName: string;
   refId: string;
   description: string;
+  inventoryTypeIdRel: InventoryType;
   inventoryTypeId: number;
   inventoryTypeName: string;
   isBorrowable: boolean;
@@ -26,15 +27,19 @@ export function useInventoryTypeDetail() {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [deleteId, setDeletId] = useState(null);
+  const [openAlert, setOpenAlert] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [inventoryItems, setInventoryItems] = useState<InventoryTypeDetail[]>(
     [],
   );
   const [inventoryTypeDetail, setInventoryTypeDetail] = useState<InventoryType>(
     {} as InventoryType,
   );
+
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
-  console.log(`SELECTED_INVENTORY_TYPE_DETAIL_ID`, id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,13 +48,18 @@ export function useInventoryTypeDetail() {
       try {
         const inventoryTypeResponse = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
 
         if (!inventoryTypeResponse.ok) {
           throw new Error("Network response was not ok");
         }
         const { data: inventoryTypeData } = await inventoryTypeResponse.json();
-        console.log("JAmpes", inventoryTypeData);
         setInventoryTypeDetail(inventoryTypeData);
       } catch (err) {
         setError(`Fetching error: ${err} `);
@@ -69,6 +79,12 @@ export function useInventoryTypeDetail() {
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryTypeId=${id}i&page=${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
         console.log(response);
         if (!response.ok) {
@@ -91,14 +107,72 @@ export function useInventoryTypeDetail() {
     fetchItemData(page);
   }, [id, page]);
 
+  const deleteInventory = async (id: any) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/inventory/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        },
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        console.log(response);
+        setLoading(false);
+        setError(result.meta.message);
+      } else {
+        console.log(`Deleted inventory from inventory type:`, result);
+        setInventoryItems((inventory) =>
+          inventory.filter((item) => item.id !== id),
+        );
+        setSuccess(result.meta.message);
+      }
+    } catch (error: any) {
+      setError(`Deleting error: ${error}`);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = (id: any) => {
+    setOpenAlert(true);
+    setDeletId(id);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteId !== null) {
+      deleteInventory(deleteId);
+    }
+    setOpenAlert(false);
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
   return {
     id,
     page,
     totalPage,
     setPage,
+    handleDelete,
+    handleConfirmDelete,
+    handleCloseAlert,
+    openAlert,
     inventoryItems,
     inventoryTypeDetail,
     loading,
     error,
+    success,
   };
 }

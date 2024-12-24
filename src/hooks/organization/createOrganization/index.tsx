@@ -6,6 +6,7 @@ export default function useCreateOrganization() {
   const [error, setError] = useState<string | null>(null);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
   const createOrganization = async (organizationData: any) => {
     setLoading(true);
@@ -18,12 +19,13 @@ export default function useCreateOrganization() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(organizationData),
         },
       );
       const data = await response.json();
-      console.log("ORG_CREATE + ", JSON.stringify(data.meta.message));
+      console.log("ORGANIZATION_CREATE:", JSON.stringify(data.meta.message));
       if (!response.ok) {
         console.log(response);
         setLoading(false);
@@ -34,7 +36,7 @@ export default function useCreateOrganization() {
       }
     } catch (err) {
       setLoading(false);
-      setError("Failed to create inventory type");
+      setError("Failed to create inventory type.");
     } finally {
       setLoading(false);
     }

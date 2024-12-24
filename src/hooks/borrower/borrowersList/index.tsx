@@ -17,59 +17,54 @@ export type BorrowerProps = {
   borrowerOrganizationRel: BorrowerOrganization;
 };
 
-type InventoryTypeResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: BorrowerProps[];
-};
-
 export default function useBorrower() {
   const [borrower, setBorrower] = useState<BorrowerProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/borrower`)
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Not found!");
-          }
-          return response.json();
-        })
-        .then((json: InventoryTypeResponse) => {
-          console.log("BORROWER_1: " + json.data.length);
-          for (let i = 0; i < json.data.length; i++) {
-            console.log("BORROWER_2" + i + ": " + json.data[i].id);
-          }
-          if (Array.isArray(json.data)) {
-            setLoading(false);
-            setBorrower(json.data);
-          } else {
-            setLoading(false);
-            console.error("Expected array, got:", json.data);
-            setBorrower([]);
-          }
-        })
-        .catch((error: any) => {
-          setError(`Fetch error: ${error}`);
+    async function fetchTitle(currentPage: number) {
+      try {
+        const response = await fetch(
+          `${REACT_APP_PORTAL_BE_URL}/api/borrower?page=${currentPage}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Not found!");
+        }
+        const json = await response.json();
+        if (Array.isArray(json.data.borrower)) {
+          setLoading(false);
+          setBorrower(json.data.borrower);
+          setTotalPage(json.data.totalPage);
+        } else {
+          setLoading(false);
+          console.error("Expected array borrower, got:", json.data);
           setBorrower([]);
-        });
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setBorrower([]);
+      }
     }
 
-    fetchTitle();
-    return () => {};
-  }, []);
+    fetchTitle(page);
+  }, [page]);
 
   const deletedBorrower = async (id: any) => {
     setLoading(true);
@@ -80,7 +75,8 @@ export default function useBorrower() {
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "aplication/json",
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
         },
       );
@@ -117,6 +113,9 @@ export default function useBorrower() {
 
   return {
     borrower,
+    page,
+    setPage,
+    totalPage,
     setBorrower,
     openAlert,
     handleDelete,
