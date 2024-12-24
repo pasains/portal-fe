@@ -16,7 +16,16 @@ import {
 import { useUpdateItem } from "../../../hooks/item/updateItem";
 
 const ItemBorrowing: React.FC = ({}) => {
-  const { id, item, setItem, borrowingDetail, refreshData } = useItemDetail();
+  const {
+    id,
+    item,
+    setItem,
+    borrowingDetail,
+    refreshData,
+    page,
+    totalPage,
+    setPage,
+  } = useItemDetail();
   const { updateItem, setItemsUpdate, loading } = useUpdateItem();
   const tableHead = [
     { titleHead: "Inventory Name", accessor: "inventoryName" },
@@ -31,6 +40,11 @@ const ItemBorrowing: React.FC = ({}) => {
   useEffect(() => {
     setItemsUpdate(item);
   }, [item]);
+
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
+  };
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({});
   const handlePostConditionInput = (id: number, value: string) => {
@@ -209,6 +223,11 @@ const ItemBorrowing: React.FC = ({}) => {
                 );
               })}
             </tbody>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPage}
+              onPageChange={handlePageChange}
+            />
           </table>
         </div>
         <div className="items-end mr-10 mx-auto">

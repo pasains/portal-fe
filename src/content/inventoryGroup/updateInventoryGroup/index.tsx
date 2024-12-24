@@ -3,22 +3,18 @@ import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../../container/alert";
 import { useUpdateInventoryGroup } from "../../../hooks/inventoryGroup/updateInventoryGroup";
 import InventoryGroupForm from "../../../container/inventoryGroupForm";
+import { useInventoryGroupDetail } from "../../../hooks/inventoryGroup/inventoryGroupDetail";
 
 const UpdateInventoryGroupContent = () => {
-  const {
-    updateInventoryGroup,
-    id,
-    inventoryGroupDetail,
-    loading,
-    success,
-    error,
-  } = useUpdateInventoryGroup();
+  const { updateInventoryGroup, id, loading, success, error } =
+    useUpdateInventoryGroup();
+  const { inventoryGroupDetail } = useInventoryGroupDetail();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleUpdateInventoryGroup = async (inventoryTypeData: any) => {
+  const handleUpdateInventoryGroup = async (inventoryGroupData: any) => {
     setIsSubmitting(true);
     if (id) {
-      const result = await updateInventoryGroup(id, inventoryTypeData);
+      const result = await updateInventoryGroup(id, inventoryGroupData);
       setIsSubmitting(false);
       console.log(result);
     }

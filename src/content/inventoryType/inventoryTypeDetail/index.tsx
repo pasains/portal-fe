@@ -4,12 +4,24 @@ import UpperTableDetail from "../../../container/upperTableDetail";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useInventoryTypeDetail } from "../../../hooks/inventoryType/inventoryTypeDetail";
-import useInventory from "../../../hooks/inventory/inventoryList";
+import DeleteAlert from "../../../container/deleteAlert";
+import TimedAlert from "../../../container/alert";
 
 export function InventoryTypeDetailContent() {
-  const { inventoryTypeDetail, id, inventoryItems, page, totalPage, setPage } =
-    useInventoryTypeDetail();
-  const { handleDelete } = useInventory();
+  const {
+    id,
+    inventoryTypeDetail,
+    inventoryItems,
+    page,
+    totalPage,
+    openAlert,
+    success,
+    loading,
+    setPage,
+    handleDelete,
+    handleCloseAlert,
+    handleConfirmDelete,
+  } = useInventoryTypeDetail();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
@@ -44,6 +56,7 @@ export function InventoryTypeDetailContent() {
               createLink={`/inventory/create`}
             />
             <div className="h-full w-full overflow-scroll">
+              {loading && <p className="text-center">Loading...</p>}
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
@@ -99,7 +112,7 @@ export function InventoryTypeDetailContent() {
                           variant="ghost"
                           value={items.isBorrowable ? "Yes" : "No"}
                           color={items.isBorrowable ? "green" : "red"}
-                          className="w-fit"
+                          className="w-fit text-center mx-auto"
                         />
                       </td>
                       <td className={`px-4 py-3`}>
@@ -108,7 +121,7 @@ export function InventoryTypeDetailContent() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.inventoryTypeName}
+                          {items.inventoryTypeIdRel.inventoryTypeName}
                         </Typography>
                       </td>
                       <td
@@ -159,6 +172,15 @@ export function InventoryTypeDetailContent() {
                               </svg>
                             </span>
                           </button>
+                          <div className="fixed z-9999 top-10 right-10">
+                            {success && (
+                              <TimedAlert
+                                message={success}
+                                duration={5000}
+                                color="green"
+                              />
+                            )}
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -169,6 +191,11 @@ export function InventoryTypeDetailContent() {
                 currentPage={page}
                 totalPages={totalPage}
                 onPageChange={handlePageChange}
+              />
+              <DeleteAlert
+                open={openAlert}
+                handleClose={handleCloseAlert}
+                handleConfirm={handleConfirmDelete}
               />
             </div>
           </div>

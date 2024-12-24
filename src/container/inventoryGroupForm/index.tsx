@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Typography } from "@material-tailwind/react";
+import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 interface InventoryGroupProps {
   initialData?: any;
@@ -24,8 +24,8 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
   useEffect(() => {
     if (isEditMode && initialData) {
       setInventoryGroupData({
-        inventoryGroupName: initialData.inventoryGroupName,
-        description: initialData.description,
+        inventoryGroupName: initialData.inventoryGroupName || "",
+        description: initialData.description || "",
       });
     }
   }, [initialData, isEditMode]);
@@ -42,7 +42,6 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
     let finalValue = type === "number" ? +value : value;
-    console.log("Inventory Group", finalValue);
 
     setInventoryGroupData({
       ...inventoryGroupData,
@@ -82,15 +81,12 @@ const InventoryGroupForm: React.FC<InventoryGroupProps> = ({
             <Typography className="mb-2" variant="h6">
               Description :
             </Typography>
-            <Input
+            <Textarea
               className="w-full"
               color="orange"
               label="Description"
-              type="text"
               name="description"
               variant="outlined"
-              size="md"
-              placeholder="Description"
               value={inventoryGroupData.description || ""}
               onChange={handleInputChange}
               required

@@ -12,8 +12,8 @@ export type InventoryListDetail = {
   condition: string;
   createdAt: Date;
   updatedAt: Date;
-  image: string;
-  quantity: number;
+  documentIdRel: { url: string }[];
+  inventoryStockIdRel: { currentQuantity: number }[];
 };
 
 export function useUpdateInventory() {
@@ -25,6 +25,7 @@ export function useUpdateInventory() {
     {} as InventoryListDetail,
   );
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
   const updateInventory = async (id: any, inventoryData: any) => {
@@ -38,6 +39,7 @@ export function useUpdateInventory() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
           body: JSON.stringify(inventoryData),
         },
@@ -51,7 +53,7 @@ export function useUpdateInventory() {
         setSuccess(data.meta.message);
         setLoading(false);
       }
-      console.log("Updated data:", data);
+      console.log("Updated data inventory:", data.data);
       setInvenntoryUpdate(data);
     } catch (error: any) {
       setError(`Updating error: ${error}`);

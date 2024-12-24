@@ -12,8 +12,9 @@ export type InventoryListDetail = {
   condition: string;
   createdAt: Date;
   updatedAt: Date;
-  image: string;
-  quantity: number;
+  url: string;
+  currentQuantity: number;
+  totalQuantity: number;
 };
 
 type Params = {
@@ -27,18 +28,23 @@ export function useInventoryDetail() {
   const [inventoryDetail, setInventoryDetail] = useState<InventoryListDetail>(
     {} as InventoryListDetail,
   );
-  console.log(`ID`, id);
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-      console.log(`REACT`, REACT_APP_PORTAL_BE_URL);
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventory/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
 
         if (!response.ok) {
@@ -46,7 +52,7 @@ export function useInventoryDetail() {
         }
         const { data } = await response.json();
         setLoading(false);
-        console.log("Fetched Data:", data);
+        console.log("Fetched Data Inventory Detail:", data);
         setInventoryDetail(data);
       } catch (err) {
         setLoading(false);
@@ -58,7 +64,6 @@ export function useInventoryDetail() {
     };
 
     fetchData();
-    return () => {};
   }, [id]);
 
   return { id, inventoryDetail, loading, error };

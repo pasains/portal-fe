@@ -4,7 +4,7 @@ export enum Status {
   "DONE" = "DONE",
   "PENDING" = "PENDING",
 }
-type BorrowerOrganization = {
+type BorrowerOrganizationRel = {
   organizationName: string;
   address: string;
 };
@@ -14,7 +14,7 @@ type BorrowerIdRel = {
   identityCard: string;
   identityNumber: string;
   phoneNumber: string;
-  borrowerOrganizationRel: BorrowerOrganization;
+  borrowerOrganizationRel: BorrowerOrganizationRel;
 };
 
 export type BorrowingProps = {
@@ -37,62 +37,54 @@ export type BorrowingProps = {
   updatedAt: Date;
 };
 
-type BorrowingResponse = {
-  meta: {
-    message: string;
-    status: string;
-    dataType: string;
-  };
-  data: BorrowingProps[];
-};
-
 export default function useBorrowing() {
   const [borrowing, setBorrowing] = useState<BorrowingProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
-  console.log(`${REACT_APP_PORTAL_BE_URL}`);
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    function fetchTitle() {
-      fetch(`${REACT_APP_PORTAL_BE_URL}/api/borrowing`)
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Not found!");
-          }
-          return response.json();
-        })
-        .then((json: BorrowingResponse) => {
-          for (let i = 0; i < json.data.length; i++) {
-            console.log("BORROWING" + i + ": " + json.data[i].id);
-            console.log(
-              `BORROWING_DATA ${json.data.map((items) => items.borrowerIdRel.borrowerOrganizationRel.organizationName)}`,
-            );
-          }
-          if (Array.isArray(json.data)) {
-            setLoading(false);
-            setBorrowing(json.data);
-          } else {
-            setLoading(false);
-            console.error("Expected array, got:", json.data);
-            setBorrowing([]);
-          }
-        })
-        .catch((error: any) => {
-          setError(`Fetch error: ${error}`);
+    async function fetchTitle(currentPage: number) {
+      try {
+        const response = await fetch(
+          `${REACT_APP_PORTAL_BE_URL}/api/borrowing?page${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
+        );
+        if (!response.ok) {
+          throw new Error("Not found!");
+        }
+        const json = await response.json();
+        if (Array.isArray(json.data.borrowing)) {
+          setLoading(false);
+          setBorrowing(json.data.borrowing);
+          setTotalPage(json.data.totalPage);
+        } else {
+          setLoading(false);
+          console.error("Expected array borrowing detail, got:", json.data);
           setBorrowing([]);
-        });
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setBorrowing([]);
+      }
     }
 
-    fetchTitle();
-    return () => {};
-  }, [REACT_APP_PORTAL_BE_URL]);
+    fetchTitle(page);
+  }, [page]);
 
   const deleteBorrowing = async (id: any) => {
     setLoading(true);
@@ -104,6 +96,7 @@ export default function useBorrowing() {
           method: "DELETE",
           headers: {
             "Content-Type": "aplication/json",
+            Authorization: `${token}`,
           },
         },
       );
@@ -113,9 +106,11 @@ export default function useBorrowing() {
         console.log(response);
         setLoading(false);
         setError(result.meta.message);
+      } else {
+        console.log(`Deleted borrowing:`, result);
+        setBorrowing((borrowing) => borrowing.filter((item) => item.id !== id));
+        setSuccess(result.meta.message);
       }
-      console.log(result);
-      setBorrowing((borrowing) => borrowing.filter((item) => item.id !== id));
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -141,10 +136,14 @@ export default function useBorrowing() {
   return {
     borrowing,
     openAlert,
+    page,
+    setPage,
+    totalPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
     loading,
     error,
+    success,
   };
 }

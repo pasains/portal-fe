@@ -13,6 +13,9 @@ const TimedAlert: React.FC<TimedAlertProps> = ({
   color = "blue",
 }): ReactElement | null => {
   const [visible, setVisible] = useState<boolean>(true);
+  useEffect(() => {
+    console.log(`MESSAGE`, message);
+  }, [message]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,4 +37,3 @@ const TimedAlert: React.FC<TimedAlertProps> = ({
 };
 
 export default TimedAlert;
-

@@ -12,6 +12,9 @@ export function BorrowerContent() {
   const {
     borrower,
     openAlert,
+    page,
+    totalPage,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -31,6 +34,10 @@ export function BorrowerContent() {
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/borrower/update/${id}`);
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
   };
 
   return (
@@ -189,6 +196,11 @@ export function BorrowerContent() {
             })}
           </tbody>
         </table>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

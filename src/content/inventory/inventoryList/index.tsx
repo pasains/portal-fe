@@ -1,22 +1,25 @@
+import { Chip, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UpperTable from "../../../container/upperTable";
-import { Chip, Typography } from "@material-tailwind/react";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
 import useInventory, {
-  InventoryList,
+  InventoryListDetailProps,
 } from "../../../hooks/inventory/inventoryList";
+import TimedAlert from "../../../container/alert";
 
 export function InventoryContent() {
   const {
     inventory,
+    pageInventory,
+    totalPageInventory,
+    success,
+    loading,
     openAlert,
-    page,
-    totalPage,
-    setPage,
-    handleDelete,
+    setPageInventory,
     handleConfirmDelete,
+    handleDelete,
     handleCloseAlert,
   } = useInventory();
   const [isEditing, setIsEditing] = useState(false);
@@ -26,9 +29,12 @@ export function InventoryContent() {
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "is Borrowable?", accessor: "isBorrowable" },
+    { titleHead: "Current Quantity", accessor: "currentQuantity" },
+    { titleHead: "Total Quantity", accessor: "totalQuantity" },
     { titleHead: "Description", accessor: "description" },
     { titleHead: "" },
   ];
+
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/inventory/update/${id}`);
@@ -36,10 +42,12 @@ export function InventoryContent() {
 
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
-    setPage(newPage);
+    setPageInventory(newPage);
   };
+
   return (
     <section>
+      {loading && <p className="text-center">Loading...</p>}
       <UpperTable
         pageTitle={"Inventory list"}
         description="List of inventory."
@@ -67,7 +75,7 @@ export function InventoryContent() {
             </tr>
           </thead>
           <tbody>
-            {inventory.map((item: InventoryList, index) => {
+            {inventory.map((item: InventoryListDetailProps, index) => {
               const isLast = index === inventory.length - 1;
               const classes = isLast
                 ? "py-3 px-4"
@@ -105,7 +113,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryTypeName}
+                      {item.inventoryTypeIdRel.inventoryTypeName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -116,6 +124,25 @@ export function InventoryContent() {
                       color={item.isBorrowable ? "green" : "red"}
                       className="w-fit items-center mx-auto"
                     />
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal text-center"
+                    >
+                      {item.inventoryStockIdRel?.[0]?.currentQuantity ||
+                        undefined}
+                    </Typography>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal text-center"
+                    >
+                      {item.inventoryStockIdRel?.[0]?.totalQuantity}
+                    </Typography>
                   </td>
                   <td className={classes}>
                     <Typography
@@ -172,6 +199,15 @@ export function InventoryContent() {
                           </svg>
                         </span>
                       </button>
+                      <div className="fixed z-9999 top-10 right-10">
+                        {success && (
+                          <TimedAlert
+                            message={success}
+                            duration={5000}
+                            color="green"
+                          />
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -180,8 +216,8 @@ export function InventoryContent() {
           </tbody>
         </table>
         <Pagination
-          currentPage={page}
-          totalPages={totalPage}
+          currentPage={pageInventory}
+          totalPages={totalPageInventory}
           onPageChange={handlePageChange}
         />
         <DeleteAlert

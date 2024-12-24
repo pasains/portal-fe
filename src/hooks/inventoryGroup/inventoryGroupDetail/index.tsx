@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { InventoryGroupProps } from "../inventoryGroupList";
 
-export type InventoryGroup = {
-  id: number;
-  inventoryGroupName: string;
-  description: string;
-};
-
-export type InventoryGroupDetail = {
+export type InventoryGroupDetailProps = {
   id: number;
   inventoryName: string;
   refId: string;
@@ -27,13 +22,13 @@ export function useInventoryGroupDetail() {
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [inventoryItems, setInventoryItems] = useState<InventoryGroupDetail[]>(
-    [],
-  );
+  const [inventoryItems, setInventoryItems] = useState<
+    InventoryGroupDetailProps[]
+  >([]);
   const [inventoryGroupDetail, setInventoryGroupDetail] =
-    useState<InventoryGroup>({} as InventoryGroup);
+    useState<InventoryGroupProps>({} as InventoryGroupProps);
+  const token = localStorage.getItem("access_token");
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
-  console.log(`SELECTED_INVENTORY_GROUP_DETAIL_ID`, id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +37,12 @@ export function useInventoryGroupDetail() {
       try {
         const inventoryGroupResponse = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventorygroup/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
 
         if (!inventoryGroupResponse.ok) {
@@ -49,7 +50,6 @@ export function useInventoryGroupDetail() {
         }
         const { data: inventoryGroupData } =
           await inventoryGroupResponse.json();
-        console.log("Inventory_Group_Data", inventoryGroupData);
         setInventoryGroupDetail(inventoryGroupData);
       } catch (err) {
         setError(`Fetching error: ${err} `);
@@ -69,6 +69,12 @@ export function useInventoryGroupDetail() {
       try {
         const response = await fetch(
           `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryGroupId=${id}&page=${currentPage}&limit=10`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          },
         );
         console.log(response);
         if (!response.ok) {

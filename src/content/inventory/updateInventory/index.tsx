@@ -24,6 +24,11 @@ const UpdateInventoryContent = () => {
       console.log("id", id);
     }
   }, [id]);
+  useEffect(() => {
+    if (inventoryDetail) {
+      console.log("inventory detail", inventoryDetail);
+    }
+  }, [inventoryDetail]);
 
   return (
     <div>
