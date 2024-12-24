@@ -1,17 +1,20 @@
 import { useState } from "react";
-import useInventory, {
-  InventoryList,
-} from "../../../hooks/inventory/inventoryList";
 import { useNavigate } from "react-router-dom";
 import UpperTable from "../../../container/upperTable";
 import { Chip, Typography } from "@material-tailwind/react";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
+import useInventory, {
+  InventoryList,
+} from "../../../hooks/inventory/inventoryList";
 
 export function InventoryContent() {
   const {
     inventory,
     openAlert,
+    page,
+    totalPage,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -31,6 +34,10 @@ export function InventoryContent() {
     navigate(`/inventory/update/${id}`);
   };
 
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
+  };
   return (
     <section>
       <UpperTable
@@ -172,7 +179,11 @@ export function InventoryContent() {
             })}
           </tbody>
         </table>
-        <Pagination />
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

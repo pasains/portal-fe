@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export type InventoryType = {
   id: number;
@@ -23,6 +23,8 @@ type Params = {
 
 export function useInventoryTypeDetail() {
   const { id } = useParams<Params>();
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inventoryItems, setInventoryItems] = useState<InventoryTypeDetail[]>(
@@ -60,36 +62,40 @@ export function useInventoryTypeDetail() {
     fetchData();
 
     // Fetch inventory items based on selected inventory type
-    const fetchItemData = async () => {
+    const fetchItemData = async (currentPage: number) => {
       setLoading(true);
       setError(null);
       console.log(`Inventory Type Id:`, id);
       try {
         const response = await fetch(
-          `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryTypeId=${id}`,
+          `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryTypeId=${id}i&page=${currentPage}&limit=10`,
         );
-
+        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const { data } = await response.json();
-        setLoading(false);
-        console.log("Fetched Data_:", data);
-        setInventoryItems(data);
-      } catch (err) {
-        setLoading(false);
-        setError(`Fetching error: ${err} `);
-        throw err;
-      } finally {
-        setLoading(false);
+        const json = await response.json();
+        if (Array.isArray(json.data.inventory)) {
+          setLoading(false);
+          setInventoryItems(json.data.inventory);
+          setTotalPage(json.data.totalPageInventory);
+        } else {
+          setLoading(false);
+          setInventoryItems([]);
+        }
+      } catch (error: any) {
+        setError(`Fetch error: ${error}`);
+        setInventoryItems([]);
       }
     };
-    fetchItemData();
-    return () => {};
-  }, [id]);
+    fetchItemData(page);
+  }, [id, page]);
 
   return {
     id,
+    page,
+    totalPage,
+    setPage,
     inventoryItems,
     inventoryTypeDetail,
     loading,

@@ -23,6 +23,8 @@ import { OrganizationDetail } from "./pages/organization/organizationDetail";
 import { UpdateInventoryGroup } from "./pages/inventoryGroup/updateInventoryGroup";
 import { CreateBorrower } from "./pages/borrower/createBorrower";
 import { CreateOrganization } from "./pages/organization/createOrganization";
+import { UpdateBorrowing } from "./pages/borrowing/updateBorrowing";
+import { UserLoginPage } from "./pages/login";
 
 function App() {
   return (
@@ -31,6 +33,7 @@ function App() {
         //Home route
         <Route path="/" element={<Home />} />
         //User route
+        <Route path="/user" element={<UserLoginPage />} />
         <Route path="/user/profile/:id" element={<Profile />} />
         //Inventory route
         <Route path="/inventory">
@@ -76,6 +79,7 @@ function App() {
         <Route path="/borrowing">
           <Route index={true} element={<Borrowing />} />
           <Route path="/borrowing/create" element={<CreatedBorrowingInput />} />
+          <Route path="/borrowing/:id" element={<UpdateBorrowing />} />
         </Route>
         //Borrower route
         <Route path="/borrower">

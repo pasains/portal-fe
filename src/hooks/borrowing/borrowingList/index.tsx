@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 export enum Status {
-  DONE = "DONE",
-  PENDING = "PENDING",
+  "DONE" = "DONE",
+  "PENDING" = "PENDING",
 }
 type BorrowerOrganization = {
   organizationName: string;
@@ -20,8 +20,17 @@ type BorrowerIdRel = {
 export type BorrowingProps = {
   id: number;
   borrowerId: number;
+  borrowerName: string;
+  identityCard: string;
+  identityNumber: string;
+  phoneNumber: string;
+  organizationId: string;
+  organizationName: string;
+  address: string;
+  organizationStatus: string;
+  note: string;
   dueDate: Date;
-  status: string;
+  status: Status;
   specialInstruction: string;
   borrowerIdRel: BorrowerIdRel;
   createdAt: Date;

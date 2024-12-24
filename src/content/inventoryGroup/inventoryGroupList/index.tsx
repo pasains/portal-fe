@@ -142,7 +142,6 @@ export function InventoryGroupContent() {
             })}
           </tbody>
         </table>
-        <Pagination />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

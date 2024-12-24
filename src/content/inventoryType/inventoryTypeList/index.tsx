@@ -12,6 +12,9 @@ export function InventoryTypeContent() {
   const {
     inventoryType,
     openAlert,
+    page,
+    totalPage,
+    setPage,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -26,6 +29,10 @@ export function InventoryTypeContent() {
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/inventorytype/update/${id}`);
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
   };
 
   return (
@@ -142,7 +149,11 @@ export function InventoryTypeContent() {
             })}
           </tbody>
         </table>
-        <Pagination />
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
         <DeleteAlert
           open={openAlert}
           handleClose={handleCloseAlert}

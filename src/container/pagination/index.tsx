@@ -2,26 +2,52 @@ import React from "react";
 import { Button, IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-export function Pagination() {
-  const [active, setActive] = React.useState(1);
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
-  const getItemProps = (index: any) =>
+export function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
+  const getItemProps = (page: number) =>
     ({
-      variant: active === index ? "filled" : "text",
-      color: "gray",
-      onClick: () => setActive(index),
+      variant: currentPage === page ? "filled" : "text",
+      color: currentPage === page ? "blue" : "gray",
+      onClick: () => onPageChange(page),
     }) as any;
 
   const next = () => {
-    if (active === 5) return;
-
-    setActive(active + 1);
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
   };
 
   const prev = () => {
-    if (active === 1) return;
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisible = 5; // max visible page
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    const endPage = Math.min(startPage + maxVisible - 1, totalPages);
 
-    setActive(active - 1);
+    // Adjust startPage if endPage exceeds totalPages
+    startPage = Math.max(1, endPage - maxVisible + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <IconButton key={i} {...getItemProps(i)}>
+          {i}
+        </IconButton>,
+      );
+    }
+    return pageNumbers;
   };
 
   return (
@@ -30,23 +56,17 @@ export function Pagination() {
         variant="text"
         className="flex items-center gap-2"
         onClick={prev}
-        disabled={active === 1}
+        disabled={currentPage === 1}
       >
         <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" />
         Previous
       </Button>
-      <div className="flex items-center gap-2">
-        <IconButton {...getItemProps(1)}>1</IconButton>
-        <IconButton {...getItemProps(2)}>2</IconButton>
-        <IconButton {...getItemProps(3)}>3</IconButton>
-        <IconButton {...getItemProps(4)}>4</IconButton>
-        <IconButton {...getItemProps(5)}>5</IconButton>
-      </div>
+      <div className="flex items-center gap-2">{renderPageNumbers()}</div>
       <Button
         variant="text"
         className="flex items-center gap-2"
         onClick={next}
-        disabled={active === 5}
+        disabled={currentPage === totalPages}
       >
         Next
         <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />

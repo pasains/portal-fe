@@ -1,27 +1,31 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { BorrowingProps } from "../borrowingList";
 
-
-export default function useCreateBorrowing() {
+export function useUpdateBorrowing() {
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [borrowingDetail, setBorrowingDetail] = useState<BorrowingProps>(
+    {} as BorrowingProps,
+  );
 
   const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  const createBorrowing = async (borrowingData: any) => {
+  const updateBorrowing = async (id: any, borrowing: any) => {
     setLoading(true);
     setSuccess(null);
     setError(null);
-
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/borrowing/create`,
+        `${REACT_APP_PORTAL_BE_URL}/api/borrowing/update/${id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(borrowingData),
+          body: JSON.stringify(borrowing),
         },
       );
       const data = await response.json();
@@ -33,17 +37,22 @@ export default function useCreateBorrowing() {
         setSuccess(data.meta.message);
         setLoading(false);
       }
-    } catch (err) {
+      console.log("Updated data:", data);
+      setBorrowingDetail(data);
+    } catch (error: any) {
+      setError(`Updating error: ${error}`);
       setLoading(false);
-      setError("Failed to create borrowing");
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    createBorrowing,
+    id,
+    borrowingDetail,
+    setBorrowingDetail,
     success,
+    updateBorrowing,
     loading,
     error,
   };
