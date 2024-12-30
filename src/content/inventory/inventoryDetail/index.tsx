@@ -44,7 +44,7 @@ export function InventoryDetailContent() {
             {inventoryDetail.inventoryTypeName}
           </Typography>
           <Typography className="text-sm">
-            Current Quantity: {inventoryDetail.currentQuantity}
+            Current quantity: {inventoryDetail.currentQuantity}
           </Typography>
           <Typography className="text-sm">
             Total Quantity: {inventoryDetail.totalQuantity}

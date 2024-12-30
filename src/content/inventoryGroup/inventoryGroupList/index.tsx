@@ -146,6 +146,13 @@ export function InventoryGroupContent() {
                           </svg>
                         </span>
                       </button>
+                      {success && (
+                        <TimedAlert
+                          message={success}
+                          duration={5000}
+                          color="green"
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>

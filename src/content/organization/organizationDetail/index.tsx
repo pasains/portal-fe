@@ -21,6 +21,7 @@ export function OrganizationDetailContent() {
     totalPage,
     setPage,
   } = useOrganizationDetail();
+
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [

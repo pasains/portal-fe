@@ -113,7 +113,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryTypeName}
+                      {item.inventoryTypeIdRel.inventoryTypeName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -131,7 +131,8 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
-                      {item.currentQuantity || undefined}
+                      {item.inventoryStockIdRel?.[0]?.currentQuantity ||
+                        undefined}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -140,7 +141,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
-                      {item.totalQuantity}
+                      {item.inventoryStockIdRel?.[0]?.totalQuantity}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -198,6 +199,15 @@ export function InventoryContent() {
                           </svg>
                         </span>
                       </button>
+                      <div className="fixed z-9999 top-10 right-10">
+                        {success && (
+                          <TimedAlert
+                            message={success}
+                            duration={5000}
+                            color="green"
+                          />
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
