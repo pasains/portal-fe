@@ -7,6 +7,7 @@ import useBorrower, {
 import UpperTable from "../../../container/upperTable";
 import DeleteAlert from "../../../container/deleteAlert";
 import { Pagination } from "../../../container/pagination";
+import TimedAlert from "../../../container/alert";
 
 export function BorrowerContent() {
   const {
@@ -14,6 +15,7 @@ export function BorrowerContent() {
     openAlert,
     page,
     totalPage,
+    success,
     setPage,
     handleDelete,
     handleConfirmDelete,
@@ -122,7 +124,7 @@ export function BorrowerContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerOrganizationRel.organizationName}
+                      {item.organizationName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -131,7 +133,7 @@ export function BorrowerContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerOrganizationRel.address}
+                      {item.address}
                     </Typography>
                   </td>
                   <td className={`${classes}`}>
@@ -140,7 +142,7 @@ export function BorrowerContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerOrganizationRel.organizationStatus}
+                      {item.organizationStatus}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -196,6 +198,11 @@ export function BorrowerContent() {
             })}
           </tbody>
         </table>
+        <div className="fixed z-9999 top-10 right-10">
+          {success && (
+            <TimedAlert message={success} duration={5000} color="green" />
+          )}
+        </div>
         <Pagination
           currentPage={page}
           totalPages={totalPage}

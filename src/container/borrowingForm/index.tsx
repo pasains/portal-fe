@@ -6,10 +6,6 @@ import {
   Select,
   Option,
   Textarea,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
 } from "@material-tailwind/react";
 import useBorrower from "../../hooks/borrower/borrowersList";
 import useOrganization from "../../hooks/organization/organizationList";
@@ -53,7 +49,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
     borrowerName: "",
     identityCard: "",
     identityNumber: "",
-    phoneNumber: "",
+    phoneNumber: "+62",
     status: "",
     organizationId: 0,
     organizationName: "",
@@ -205,12 +201,10 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           identityCard: data?.identityCard as any,
           identityNumber: data?.identityNumber as any,
           phoneNumber: data?.phoneNumber as any,
-          organizationName: data?.borrowerOrganizationRel
-            .organizationName as any,
-          address: data?.borrowerOrganizationRel.address as any,
-          organizationStatus: data?.borrowerOrganizationRel
-            .organizationStatus as any,
-          note: data?.borrowerOrganizationRel.note as any,
+          organizationName: data?.organizationName as any,
+          address: data?.address as any,
+          organizationStatus: data?.organizationStatus as any,
+          note: data?.note as any,
           organizationId: data?.organizationId > 0 ? data.organizationId : 0,
         });
 
@@ -242,22 +236,12 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
     e.preventDefault();
     onSubmit();
 
-    // Prepend +62 to the phone number if it doesn't already start with it
-    const formattedPhoneNumber = borrowingData.phoneNumber.startsWith("+62")
-      ? borrowingData.phoneNumber
-      : `+62${borrowingData.phoneNumber}`;
-
-    // Update the borrowingData with the formatted phone number
-    setBorrowingData((prevData) => ({
-      ...prevData,
-      phoneNumber: formattedPhoneNumber,
-    }));
     // Check if borrower data exists and if fields are filled
     if (
       borrowingData.borrowerName &&
       borrowingData.identityCard &&
       borrowingData.identityNumber &&
-      formattedPhoneNumber
+      borrowingData.phoneNumber
     ) {
       // Check if borrower already exist
       const existingBorrower = borrower.find(
@@ -270,7 +254,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           borrowerName: borrowingData.borrowerName,
           identityCard: borrowingData.identityCard,
           identityNumber: borrowingData.identityNumber,
-          phoneNumber: formattedPhoneNumber,
+          phoneNumber: borrowingData.phoneNumber,
         }));
       } else {
         // If borrower doesnt exists, create a new one
@@ -280,7 +264,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           borrowerName: borrowingData.borrowerName,
           identityCard: borrowingData.identityCard,
           identityNumber: borrowingData.identityNumber,
-          phoneNumber: formattedPhoneNumber,
+          phoneNumber: borrowingData.phoneNumber,
         }));
       }
       setBorrowerList([]);
@@ -332,10 +316,10 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           identityCard: type.identityCard,
           identityNumber: type.identityNumber,
           phoneNumber: type.phoneNumber,
-          organizationName: type.borrowerOrganizationRel.organizationName,
-          address: type.borrowerOrganizationRel.address,
-          organizationStatus: type.borrowerOrganizationRel.organizationStatus,
-          note: type.borrowerOrganizationRel.note,
+          organizationName: type.organizationName,
+          address: type.address,
+          organizationStatus: type.organizationStatus,
+          note: type.note,
           displayName: type.borrowerName,
           showCreateNew: false,
         }))
@@ -480,54 +464,26 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                     }
                     required
                   />
-                  <div className="relative flex w-full">
-                    <Menu placement="bottom-start">
-                      <MenuHandler>
-                        <Button
-                          ripple={false}
-                          variant="text"
-                          color="blue-gray"
-                          className="h-10 w-14 shrink-0 rounded-r-none border border-r-0 border-blue-gray-200 bg-transparent px-3"
-                        >
-                          {CODES[country]}
-                        </Button>
-                      </MenuHandler>
-                      <MenuList className="max-h-[20rem] max-w-[18rem]">
-                        {COUNTRIES.map((country, index) => {
-                          return (
-                            <MenuItem
-                              key={country}
-                              value={country}
-                              onClick={() => setCountry(index)}
-                            >
-                              {country}
-                            </MenuItem>
-                          );
-                        })}
-                      </MenuList>
-                    </Menu>
-                    <Input
-                      type="tel"
-                      pattern="[0-9]*"
-                      inputMode="numeric"
-                      maxLength={12}
-                      placeholder="324-456-2323"
-                      className="appearance-none rounded-l-none !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                      labelProps={{
-                        className: "before:content-none after:content-none",
-                      }}
-                      containerProps={{
-                        className: "min-w-0",
-                      }}
-                      value={borrowingData.phoneNumber || ""}
-                      onChange={(e) =>
-                        setBorrowingData((prevData) => ({
-                          ...prevData,
-                          phoneNumber: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Phone Number"
+                    type="text"
+                    variant="outlined"
+                    size="md"
+                    placeholder="Phone Number"
+                    value={borrowingData.phoneNumber || ""}
+                    onChange={(e) =>
+                      setBorrowingData((prevData) => {
+                        const rawValue = e.target.value.replace(/^0+/, ""); // Remove leading zeroes
+                        const phoneNumber = rawValue.startsWith("+62")
+                          ? rawValue
+                          : `+62${rawValue}`;
+                        return { ...prevData, phoneNumber };
+                      })
+                    }
+                    required
+                  />
                 </div>
               </form>
             )}

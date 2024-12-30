@@ -6,10 +6,6 @@ import {
   Select,
   Option,
   Textarea,
-  Menu,
-  MenuList,
-  MenuItem,
-  MenuHandler,
 } from "@material-tailwind/react";
 import useOrganization from "../../hooks/organization/organizationList";
 
@@ -20,7 +16,6 @@ interface BorrowerProps {
   isSubmitting?: any;
   success?: any;
 }
-
 type BorrowerData = {
   borrowerName: string;
   identityCard: string;
@@ -44,7 +39,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
     borrowerName: "",
     identityCard: "",
     identityNumber: "",
-    phoneNumber: "",
+    phoneNumber: "+62",
     organizationId: undefined,
     organizationName: "",
     address: "",
@@ -129,7 +124,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(borrowerData);
-    // Update borrowerData with the formatted phone number
+
     if (
       initialData.organizationName &&
       borrowerData.address &&
@@ -150,6 +145,10 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
   };
 
   useEffect(() => {
+    if (!Array.isArray(organization)) {
+      console.error("Organization is not an array:", organization);
+      return;
+    }
     const data = organization.map((org) => ({
       id: org.id,
       organizationName: org.organizationName,
@@ -170,9 +169,6 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
     });
     setOrganizationList([...data]);
   }, [organization]);
-  const COUNTRIES = ["Indonesia (+62)"];
-  const CODES = ["+62"];
-  const [country, setCountry] = React.useState(0);
 
   return (
     <div className="w-[520px] mx-auto items-center">
@@ -242,47 +238,19 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
             <Typography className="mb-2" variant="h6">
               Phone Number
             </Typography>
-            <div className="relative flex w-full">
-              <Menu placement="bottom-start">
-                <MenuHandler>
-                  <Button
-                    ripple={false}
-                    variant="text"
-                    color="blue-gray"
-                    className="h-10 w-14 shrink-0 rounded-r-none border border-r-0 border-blue-gray-200 bg-transparent px-3"
-                  >
-                    {CODES[country]}
-                  </Button>
-                </MenuHandler>
-                <MenuList className="max-h-[20rem] max-w-[18rem]">
-                  {COUNTRIES.map((country, index) => {
-                    return (
-                      <MenuItem
-                        key={country}
-                        value={country}
-                        onClick={() => setCountry(index)}
-                      >
-                        {country}
-                      </MenuItem>
-                    );
-                  })}
-                </MenuList>
-              </Menu>
-              <Input
-                type="tel"
-                pattern="[0-9]*"
-                inputMode="numeric"
-                maxLength={12}
-                placeholder="324-456-2323"
-                className="appearance-none rounded-l-none !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
-                containerProps={{
-                  className: "min-w-0",
-                }}
-              />
-            </div>
+            <Input
+              className="w-full"
+              color="orange"
+              label="phoneNumber"
+              type="text"
+              name="phoneNumber"
+              variant="outlined"
+              size="md"
+              placeholder="Phone Number"
+              value={borrowerData.phoneNumber || ""}
+              onChange={handleInputChange}
+              required
+            />
           </label>
           <br />
 

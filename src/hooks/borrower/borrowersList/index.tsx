@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
 
-type BorrowerOrganization = {
-  organizationName: string;
-  address: string;
-  organizationStatus: string;
-  note: string;
-};
-
 export type BorrowerProps = {
   id: number;
   borrowerName: string;
@@ -14,13 +7,17 @@ export type BorrowerProps = {
   identityNumber: string;
   phoneNumber: string;
   organizationId: number;
-  borrowerOrganizationRel: BorrowerOrganization;
+  organizationName: string;
+  address: string;
+  organizationStatus: string;
+  note: string;
 };
 
 export default function useBorrower() {
   const [borrower, setBorrower] = useState<BorrowerProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [success, setSuccess] = useState<string | null>(null);
   const [totalPage, setTotalPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeletId] = useState(null);
@@ -35,7 +32,7 @@ export default function useBorrower() {
     async function fetchTitle(currentPage: number) {
       try {
         const response = await fetch(
-          `${REACT_APP_PORTAL_BE_URL}/api/borrower?page=${currentPage}`,
+          `${REACT_APP_PORTAL_BE_URL}/api/borrower?page=${currentPage}&limit=10`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -87,8 +84,9 @@ export default function useBorrower() {
         setLoading(false);
         setError(result.meta.message);
       }
-      console.log("Delete item", result);
+      console.log("Delete borrower", result);
       setBorrower((borrower) => borrower.filter((item) => item.id !== id));
+      setSuccess(result.meta.message);
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -103,7 +101,9 @@ export default function useBorrower() {
   };
 
   const handleConfirmDelete = () => {
-    deletedBorrower(deleteId);
+    if (deleteId !== null) {
+      deletedBorrower(deleteId);
+    }
     setOpenAlert(false);
   };
 
@@ -123,5 +123,6 @@ export default function useBorrower() {
     handleCloseAlert,
     loading,
     error,
+    success,
   };
 }

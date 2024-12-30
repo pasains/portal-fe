@@ -3,13 +3,24 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Pagination } from "../../../container/pagination";
 import { useOrganizationDetail } from "../../../hooks/organization/organizationDetail";
-import useOrganization from "../../../hooks/organization/organizationList";
 import UpperTableDetail from "../../../container/upperTableDetail";
+import TimedAlert from "../../../container/alert";
+import DeleteAlert from "../../../container/deleteAlert";
 
 export function OrganizationDetailContent() {
-  const { id, organizationDetail, organizationList, page, totalPage, setPage } =
-    useOrganizationDetail();
-  const { handleDelete } = useOrganization();
+  const {
+    id,
+    organizationDetail,
+    organizationList,
+    success,
+    openAlert,
+    handleDelete,
+    handleCloseAlert,
+    handleConfirmDelete,
+    page,
+    totalPage,
+    setPage,
+  } = useOrganizationDetail();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
@@ -157,10 +168,20 @@ export function OrganizationDetailContent() {
                   ))}
                 </tbody>
               </table>
+              <div className="fixed z-9999 top-10 right-10">
+                {success && (
+                  <TimedAlert message={success} duration={5000} color="green" />
+                )}
+              </div>
               <Pagination
                 currentPage={page}
                 totalPages={totalPage}
                 onPageChange={handlePageChange}
+              />
+              <DeleteAlert
+                open={openAlert}
+                handleClose={handleCloseAlert}
+                handleConfirm={handleConfirmDelete}
               />
             </div>
           </div>

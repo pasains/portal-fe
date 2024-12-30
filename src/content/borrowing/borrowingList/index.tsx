@@ -94,7 +94,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerIdRel.borrowerName}
+                      {item.borrowerName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -103,10 +103,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {
-                        item.borrowerIdRel.borrowerOrganizationRel
-                          .organizationName
-                      }
+                      {item.organizationName}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -115,7 +112,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerIdRel.borrowerOrganizationRel.address}
+                      {item.address}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -124,7 +121,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerIdRel.identityCard}
+                      {item.identityCard}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -133,7 +130,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerIdRel.identityNumber}
+                      {item.identityNumber}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -142,7 +139,7 @@ export function BorrowingContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.borrowerIdRel.phoneNumber}
+                      {item.phoneNumber}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -220,15 +217,6 @@ export function BorrowingContent() {
                           </svg>
                         </span>
                       </button>
-                      <div className="fixed z-9999 top-10 right-10">
-                        {success && (
-                          <TimedAlert
-                            message={success}
-                            duration={5000}
-                            color="green"
-                          />
-                        )}
-                      </div>
                     </div>
                   </td>
                 </tr>
@@ -236,6 +224,11 @@ export function BorrowingContent() {
             })}
           </tbody>
         </table>
+        <div className="fixed z-9999 top-10 right-10">
+          {success && (
+            <TimedAlert message={success} duration={5000} color="green" />
+          )}
+        </div>
         <Pagination
           currentPage={page}
           totalPages={totalPage}

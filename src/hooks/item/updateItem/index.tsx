@@ -50,6 +50,7 @@ export function useUpdateItem() {
       const data = await response.json();
       if (!response.ok) {
         console.log(response);
+        console.log(`UPDATE`, data.message);
         setLoading(false);
         setError(data.message);
       } else {

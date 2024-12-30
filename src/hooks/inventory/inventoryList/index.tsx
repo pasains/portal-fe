@@ -1,21 +1,11 @@
 import { useEffect, useState } from "react";
 
-type InventoryStockIdRel = {
-  currentQuantity: number;
-  totalQuantity: number;
-};
-type InventoryTypeIdRel = {
-  inventoryTypeName: string;
-};
-
 export type InventoryListDetailProps = {
   id: number;
   inventoryName: string;
   refId: string;
   description: string;
-  inventoryTypeIdRel: InventoryTypeIdRel;
   inventoryTypeName: string;
-  inventoryStockIdRel: InventoryStockIdRel[] | undefined;
   currentQuantity: number;
   totalQuantity: number;
   isBorrowable: boolean;
@@ -26,6 +16,8 @@ export type InventoryList = {
   inventoryName: string;
   refId: string;
   description: string;
+  quantity: number;
+  currentQuantity: number;
   inventoryTypeName: string;
   isBorrowable: boolean;
 };

@@ -4,21 +4,10 @@ export enum Status {
   "DONE" = "DONE",
   "PENDING" = "PENDING",
 }
-type BorrowerOrganizationRel = {
-  organizationName: string;
-  address: string;
-};
-
-type BorrowerIdRel = {
-  borrowerName: string;
-  identityCard: string;
-  identityNumber: string;
-  phoneNumber: string;
-  borrowerOrganizationRel: BorrowerOrganizationRel;
-};
 
 export type BorrowingProps = {
   id: number;
+  invoiceNumber: string;
   borrowerId: number;
   borrowerName: string;
   identityCard: string;
@@ -32,7 +21,6 @@ export type BorrowingProps = {
   dueDate: Date;
   status: Status;
   specialInstruction: string;
-  borrowerIdRel: BorrowerIdRel;
   createdAt: Date;
   updatedAt: Date;
 };

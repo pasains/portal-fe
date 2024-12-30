@@ -12,6 +12,7 @@ export default function useOrganization() {
   const [organization, setOrganization] = useState<OrganizationProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [deleteId, setDeletId] = useState(null);
@@ -78,10 +79,11 @@ export default function useOrganization() {
         setLoading(false);
         setError(result.meta.message);
       }
-      console.log("Delete item", result);
+      console.log("Delete organization", result);
       setOrganization((organization) =>
         organization.filter((item) => item.id !== id),
       );
+      setSuccess(result.meta.message);
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -96,7 +98,9 @@ export default function useOrganization() {
   };
 
   const handleConfirmDelete = () => {
-    deletedOrganization(deleteId);
+    if (deleteId !== null) {
+      deletedOrganization(deleteId);
+    }
     setOpenAlert(false);
   };
 
@@ -110,6 +114,7 @@ export default function useOrganization() {
     page,
     totalPage,
     setPage,
+    success,
     openAlert,
     handleDelete,
     handleConfirmDelete,
