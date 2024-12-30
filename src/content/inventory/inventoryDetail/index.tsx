@@ -2,11 +2,29 @@ import React, { useEffect } from "react";
 import { Button, Typography } from "@material-tailwind/react";
 import { useInventoryDetail } from "../../../hooks/inventory/inventoryDetail";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import useInventoryByBorrowing, {
+  InventoryByBorrowingList,
+} from "../../../hooks/inventory/inventoryByBorrowing";
+import { Pagination } from "../../../container/pagination";
 
 export function InventoryDetailContent() {
   const { inventoryDetail } = useInventoryDetail();
-  const createdAtDate = new Date(inventoryDetail.createdAt);
+  const { page, inventory, totalPage, setPage, loading } =
+    useInventoryByBorrowing();
   const navigate = useNavigate();
+  const tableHead = [
+    { titleHead: "Invoice Number", accessor: "invoiceNumber" },
+    { titleHead: "Borrower Name", accessor: "borrowerName" },
+    { titleHead: "Organization Name", accessor: "organizationName" },
+    { titleHead: "Address", accessor: "address" },
+    { titleHead: "Status Borrowing", accessor: "status" },
+    { titleHead: "Time Stamp", accessor: "createdAt" },
+  ];
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPage(newPage);
+  };
   return (
     <section className="py-16 px-8 place-items-center mx-auto w-full">
       <div
@@ -53,12 +71,13 @@ export function InventoryDetailContent() {
           </div>
         </div>
       </div>
-      <div className="mt-20">
-        <div className="w-full flex justify-between items-center mb-3 mt-1">
+      <div className="mt-20 w-3/4">
+        <div className="flex justify-between items-center mb-3 mt-1">
           <div>
-            <h3 className="text-lg font-semibold text-slate-800">
-              Inventory History
-            </h3>
+            <h1 className="text-lg font-semibold text-slate-800">
+              Tracking Borrowing History for Inventory
+            </h1>
+            <p></p>
           </div>
           <div className="ml-3">
             <div className="w-full max-w-sm min-w-[200px] relative">
@@ -94,70 +113,68 @@ export function InventoryDetailContent() {
           <table className="w-full text-left table-auto min-w-max">
             <thead>
               <tr className="bg-gray-400 text-black border-b border-slate-200 text-sm font-normal rounded-lg leading-none">
-                <th className="p-4 ">
-                  <p>Borrowing Id</p>
-                </th>
-                <th className="p-4">
-                  <p>Borrower Name</p>
-                </th>
-                <th className="p-4">
-                  <p>Organization Name</p>
-                </th>
-                <th className="p-4">
-                  <p>Condition</p>
-                </th>
-                <th className="p-4">
-                  <p>Time Stamp</p>
-                </th>
+                {tableHead.map((head) => (
+                  <th key={head.accessor} className="p-4 ">
+                    <p>{head.titleHead}</p>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              <tr className="hover:bg-slate-50 border-b border-slate-200">
-                <td className="p-4 py-5">
-                  <p className="block font-semibold text-sm text-slate-800">
-                    Borrowing Id
-                  </p>
-                </td>
-                <td className="p-4 py-5">
-                  <p className="text-sm text-slate-500">Borrower Name</p>
-                </td>
-                <td className="p-4 py-5">
-                  <p className="text-sm text-slate-500">Organization Name</p>
-                </td>
-                <td className="p-4 py-5">
-                  <p className="text-sm text-slate-500">
-                    {inventoryDetail.condition}
-                  </p>
-                </td>
-                <td className="p-4 py-5">
-                  <p className="text-sm text-slate-500">
-                    {createdAtDate.toLocaleDateString()}
-                  </p>
-                </td>
-              </tr>
+              {inventory.map((item: InventoryByBorrowingList, index) => {
+                const isLast = index === inventory.length - 1;
+                const classes = isLast
+                  ? "py-3 px-4"
+                  : "py-3 px-4 border-b border-blue-gray-50";
+
+                return (
+                  <tr
+                    key={item.id}
+                    onClick={() => {
+                      navigate(`/borrowing/${item.id}`);
+                    }}
+                    className="cursor-pointer hover:bg-slate-50 border-b border-slate-200"
+                  >
+                    <td className={classes}>
+                      <p className="block font-semibold text-sm text-slate-800">
+                        {item.invoiceNumber}
+                      </p>
+                    </td>
+                    <td className={classes}>
+                      <p className="text-sm text-slate-500">
+                        {item.borrowerName}
+                      </p>
+                    </td>
+                    <td className={classes}>
+                      <p className="text-sm text-slate-500">
+                        {item.organizationName}
+                      </p>
+                    </td>
+                    <td className={classes}>
+                      <p className="text-sm text-slate-500">{item.address}</p>
+                    </td>
+                    <td className={classes}>
+                      <p className="text-sm text-slate-500">{item.status}</p>
+                    </td>
+                    <td className={classes}>
+                      <p className="text-sm text-slate-500">
+                        {format(
+                          new Date(item.createdAt),
+                          "dd MMMM yyyy, hh:mm:ss",
+                        )}
+                      </p>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <div className="flex justify-between items-center px-4 py-3">
-            <div className="text-sm text-slate-500">
-              Showing <b>1-10</b>
-            </div>
-            <div className="flex space-x-1">
-              <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                Prev
-              </button>
-              <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-white bg-slate-800 border border-slate-800 rounded hover:bg-slate-600 hover:border-slate-600 transition duration-200 ease">
-                1
-              </button>
-              <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                2
-              </button>
-              <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                3
-              </button>
-              <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                Next
-              </button>
-            </div>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPage}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>

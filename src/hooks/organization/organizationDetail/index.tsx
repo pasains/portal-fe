@@ -19,6 +19,9 @@ export function useOrganizationDetail() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [deleteId, setDeletId] = useState(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [openAlert, setOpenAlert] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [organizationList, setOrganizationList] = useState<OrganizationList[]>(
     [],
@@ -97,13 +100,71 @@ export function useOrganizationDetail() {
       }
     };
     fetchItemData(page);
-  }, [page]);
+  };
+
+  const deleteBorrower = async (id: any) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/borrower/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        },
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        console.log(response);
+        setLoading(false);
+        setError(result.meta.message);
+      } else {
+        console.log(`Deleted borrower from organization:`, result);
+        setOrganizationList((borrower) =>
+          borrower.filter((item) => item.id !== id),
+        );
+        setSuccess(result.meta.message);
+      }
+    } catch (error: any) {
+      setError(`Deleting error: ${error}`);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = (id: any) => {
+    setOpenAlert(true);
+    setDeletId(id);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteId !== null) {
+      deleteBorrower(deleteId);
+    }
+    setOpenAlert(false);
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
   return {
     id,
     page,
     totalPage,
     setPage,
+    success,
+    handleDelete,
+    handleConfirmDelete,
+    handleCloseAlert,
+    openAlert,
     organizationList,
     organizationDetail,
     loading,

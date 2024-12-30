@@ -1,4 +1,4 @@
-import { Input, Typography, Chip } from "@material-tailwind/react";
+import { Input, Typography } from "@material-tailwind/react";
 import { useItemDetail } from "../../../hooks/item/itemDetail";
 
 export function BorrowingDetail() {
@@ -7,6 +7,22 @@ export function BorrowingDetail() {
   return (
     <div className="w-[520px] mx-auto items-center">
       <section className="p-5 mb-10 my-auto items-center border border-b rounded-lg">
+        <label>
+          <Typography className="mb-2" variant="h6">
+            Invoice Number
+          </Typography>
+          <Input
+            className="w-full uppercase"
+            color="orange"
+            label="Invoice Number"
+            type="string"
+            variant="outlined"
+            size="md"
+            disabled={true}
+            value={borrowingDetail.invoiceNumber}
+          />
+        </label>
+        <br />
         <label>
           <Typography className="mb-2" variant="h6">
             Borrower Name
@@ -150,7 +166,6 @@ export function BorrowingDetail() {
           />
         </label>
         <br />
-
       </section>
     </div>
   );

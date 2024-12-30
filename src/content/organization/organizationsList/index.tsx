@@ -7,12 +7,14 @@ import useOrganization, {
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
+import TimedAlert from "../../../container/alert";
 
 export function OrganizationContent() {
   const {
     organization,
     openAlert,
     page,
+    success,
     totalPage,
     setPage,
     handleDelete,
@@ -169,6 +171,11 @@ export function OrganizationContent() {
             })}
           </tbody>
         </table>
+        <div className="fixed z-9999 top-10 right-10">
+          {success && (
+            <TimedAlert message={success} duration={5000} color="green" />
+          )}
+        </div>
         <Pagination
           currentPage={page}
           totalPages={totalPage}

@@ -44,7 +44,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
     borrowerName: "",
     identityCard: "",
     identityNumber: "",
-    phoneNumber: "",
+    phoneNumber: "+62",
     organizationId: undefined,
     organizationName: "",
     address: "",
@@ -150,6 +150,10 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
   };
 
   useEffect(() => {
+    if (!Array.isArray(organization)) {
+      console.error("Organization is not an array:", organization);
+      return;
+    }
     const data = organization.map((org) => ({
       id: org.id,
       organizationName: org.organizationName,

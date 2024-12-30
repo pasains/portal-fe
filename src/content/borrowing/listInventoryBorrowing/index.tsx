@@ -9,26 +9,31 @@ import { InventoryList } from "../../../hooks/inventory/inventoryList";
 
 interface InventoryBorrowingContentProps {
   onItemsChange: (selectedItems: InventoryList[]) => void;
+  success?: any;
 }
 
 export function InventoryBorrowingContent({
   onItemsChange,
+  success,
 }: InventoryBorrowingContentProps) {
   const {
     borrowableInventory,
     pageBorrowableInventory,
     totalPageBorrowableInventory,
+    setBorrowableInventory,
     setPageBorrowableInventory,
   } = useBorrowableInventory();
   const [selectedItems, setSelectedItems] = useState<InventoryList[]>([]);
-
   const navigate = useNavigate();
+
   const tableHead = [
     { titleHead: "Reference Id", accessor: "refId" },
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "is Borrowable?", accessor: "isBorrowable" },
     { titleHead: "Description", accessor: "description" },
+    { titleHead: "Stock", accessor: "currentQuantity" },
+    { titleHead: "Quantity", accessor: "quantity" },
     { titleHead: "" },
   ];
 
@@ -46,6 +51,25 @@ export function InventoryBorrowingContent({
     console.log("Page changed to:", newPage);
     setPageBorrowableInventory(newPage);
   };
+
+  const handleQuantityInput = (id: number, quantity: number) => {
+    setBorrowableInventory((prev) =>
+      prev.map(
+        (itm) => (itm.id === id ? { ...itm, quantity } : itm), // Update the quantity for the selected item
+      ),
+    );
+  };
+
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPageBorrowableInventory(newPage);
+  };
+
+  useEffect(() => {
+    if (success) {
+      setSelectedItems([]);
+    }
+  }, [success]);
 
   useEffect(() => {
     onItemsChange(selectedItems);
@@ -154,6 +178,40 @@ export function InventoryBorrowingContent({
                       >
                         {item.description}
                       </Typography>
+                    </td>
+                    <td className={`${classes} bg-blue-gray-50/50`}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal text-center mx-auto"
+                      >
+                        {item.currentQuantity}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Input
+                        type="number"
+                        label="Quantity"
+                        value={item.quantity || ""}
+                        onChange={(e) => {
+                          const inputQuantity =
+                            parseInt(e.target.value, 10) || 0;
+                          if (inputQuantity <= item.currentQuantity) {
+                            handleQuantityInput(item.id, inputQuantity);
+                          } else {
+                            console.warn(
+                              `Quantity exceeds stock! Maximum available: ${item.currentQuantity}`,
+                            );
+                          }
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row navigation
+                          toggleItemSelection(item);
+                        }}
+                        className="border p-1 rounded"
+                        min={0}
+                        max={item.currentQuantity} // Restrict input to available stock
+                      />
                     </td>
                     <td className={`${classes} bg-blue-gray-50/50`}>
                       <div className="mx-auto text-center">

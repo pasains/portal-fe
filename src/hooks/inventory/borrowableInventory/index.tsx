@@ -45,7 +45,7 @@ export default function useBorrowableInventory() {
           setLoading(false);
           console.error(
             "Expected array borrowable inventory, got:",
-            json.data.inventory,
+            json.data.borrowableInventory,
           );
           setBorrowableInventory([]);
         }
@@ -63,6 +63,7 @@ export default function useBorrowableInventory() {
     pageBorrowableInventory,
     totalPageBorrowableInventory,
     setPageBorrowableInventory,
+    setBorrowableInventory,
     loading,
     error,
   };

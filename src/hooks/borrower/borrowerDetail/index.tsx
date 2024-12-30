@@ -7,12 +7,10 @@ export type BorrowerListDetailProps = {
   identityCard: string;
   identityNumber: string;
   phoneNumber: string;
-  borrowerOrganizationRel: {
-    organizatioName: string;
-    address: string;
-    organizationStatus: string;
-    note: string;
-  };
+  organizatioName: string;
+  address: string;
+  organizationStatus: string;
+  note: string;
 };
 
 type Params = {
