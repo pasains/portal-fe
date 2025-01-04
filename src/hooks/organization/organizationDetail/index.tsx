@@ -101,7 +101,7 @@ export function useOrganizationDetail() {
       }
     };
     fetchItemData(page);
-  }, [page]);
+  };
 
   const deleteBorrower = async (id: any) => {
     setLoading(true);

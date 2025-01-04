@@ -3,7 +3,7 @@ import { Checkbox, Chip, Input, Typography } from "@material-tailwind/react";
 import { Pagination } from "../../../container/pagination";
 import { Card } from "flowbite-react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useBorrowableInventory from "../../../hooks/inventory/borrowableInventory";
 import { InventoryList } from "../../../hooks/inventory/inventoryList";
 
@@ -46,6 +46,10 @@ export function InventoryBorrowingContent({
         return [...prev, item];
       }
     });
+  };
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPageBorrowableInventory(newPage);
   };
 
   const handleQuantityInput = (id: number, quantity: number) => {

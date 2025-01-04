@@ -151,6 +151,15 @@ export function InventoryTypeContent() {
                           </svg>
                         </span>
                       </button>
+                      <div className="fixed z-9999 top-10 right-10">
+                        {success && (
+                          <TimedAlert
+                            message={success}
+                            duration={5000}
+                            color="green"
+                          />
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
