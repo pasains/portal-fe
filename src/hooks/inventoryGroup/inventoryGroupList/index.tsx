@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 
 export type InventoryGroupProps = {
   id: number;
@@ -110,10 +111,35 @@ export default function useInventoryGroup() {
     setOpenAlert(false);
   };
 
+  //Download list data to xlsx
+  const handleDownload = async () => {
+    const response = await fetch(
+      `${REACT_APP_PORTAL_BE_URL}/api/inventorygroup`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      },
+    );
+    const json = await response.json();
+    const data = json.data.inventoryGroup;
+    // Convert JSON to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory Group");
+
+    // Export the workbook to an Excel file
+    XLSX.writeFile(workbook, "inventoryGroup_list.xlsx");
+  };
+
   return {
     inventoryGroup,
     page,
     totalPage,
+    handleDownload,
     setPage,
     openAlert,
     handleDelete,

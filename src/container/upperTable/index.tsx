@@ -6,6 +6,7 @@ const UpperTable = ({
   description,
   createTitle,
   createLink,
+  handleDownload,
 }: any) => {
   const navigate = useNavigate();
   return (
@@ -44,6 +45,7 @@ const UpperTable = ({
             <button
               className="flex select-none items-center w-fit gap-3 rounded-lg bg-gray-900 py-3 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
+              onClick={handleDownload}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

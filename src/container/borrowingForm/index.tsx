@@ -360,9 +360,6 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
     setBorrowerList([...dataBorrower]);
     setOrganizationList([...dataOrganization]);
   }, [borrower, organization]);
-  const COUNTRIES = ["Indonesia (+62)"];
-  const CODES = ["+62"];
-  const [country, setCountry] = React.useState(0);
 
   return (
     <div className="w-[520px] mx-auto items-center">
@@ -390,7 +387,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                   });
                 }}
               >
-                {borrowerList.map((type) => (
+                {borrowerList.slice(0, 10).map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}
@@ -402,7 +399,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                       setCreateNewBorrower(type.showCreateNew);
                     }}
                   >
-                    {type.displayName || ""}
+                    {type.displayName.trim() || ""}
                   </Option>
                 ))}
               </Select>
@@ -535,7 +532,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                   });
                 }}
               >
-                {organizationList.map((type) => (
+                {organizationList.slice(0, 10).map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}
@@ -546,7 +543,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                       setCreateNewOrganization(type.showCreateNew);
                     }}
                   >
-                    {type.displayName || ""}
+                    {type.displayName.trim() || ""}
                   </Option>
                 ))}
               </Select>

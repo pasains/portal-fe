@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 
 export type BorrowerProps = {
   id: number;
@@ -111,6 +112,27 @@ export default function useBorrower() {
     setOpenAlert(false);
   };
 
+  //Download list data to xlsx
+  const handleDownload = async () => {
+    const response = await fetch(`${REACT_APP_PORTAL_BE_URL}/api/borrower`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    const json = await response.json();
+    const data = json.data.borrower;
+    // Convert JSON to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Borrower");
+
+    // Export the workbook to an Excel file
+    XLSX.writeFile(workbook, "borrower_list.xlsx");
+  };
+
   return {
     borrower,
     page,
@@ -118,6 +140,7 @@ export default function useBorrower() {
     totalPage,
     setBorrower,
     openAlert,
+    handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,

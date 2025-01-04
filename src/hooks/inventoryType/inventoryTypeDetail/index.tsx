@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 import { useParams } from "react-router-dom";
 
 export type InventoryType = {
@@ -160,11 +161,36 @@ export function useInventoryTypeDetail() {
     setOpenAlert(false);
   };
 
+  //Download list data to xlsx
+  const handleDownload = async () => {
+    const response = await fetch(
+      `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryTypeId${id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      },
+    );
+    const json = await response.json();
+    const data = json.data.inventory;
+    // Convert JSON to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory");
+
+    // Export the workbook to an Excel file
+    XLSX.writeFile(workbook, "inventory.xlsx");
+  };
+
   return {
     id,
     page,
     totalPage,
     setPage,
+    handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,

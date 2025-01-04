@@ -14,6 +14,7 @@ export function OrganizationDetailContent() {
     organizationList,
     success,
     openAlert,
+    handleDownload,
     handleDelete,
     handleCloseAlert,
     handleConfirmDelete,
@@ -49,6 +50,7 @@ export function OrganizationDetailContent() {
               titleName="Organization Name :"
               name={organizationDetail.organizationName}
               titleAddress="Address :"
+              handleDownload={handleDownload}
               address={organizationDetail.address}
               titleStatus="Organization Status :"
               status={organizationDetail.organizationStatus}
