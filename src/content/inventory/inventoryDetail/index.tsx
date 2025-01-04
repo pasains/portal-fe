@@ -29,7 +29,7 @@ export function InventoryDetailContent() {
     <section className="py-16 px-8 place-items-center mx-auto w-full">
       <div
         key={inventoryDetail.id}
-        className="mx-auto container grid place-items-center grid-cols-1 md:grid-cols-2"
+        className="mx-auto container place-items-center grid grid-cols-1 md:grid-cols-2"
       >
         <img
           src={inventoryDetail.url}
@@ -43,11 +43,8 @@ export function InventoryDetailContent() {
           <Typography className="mb-4 text-sm">
             {inventoryDetail.inventoryTypeName}
           </Typography>
-          <Typography className="text-sm">
-            Current quantity: {inventoryDetail.currentQuantity}
-          </Typography>
-          <Typography className="text-sm">
-            Total Quantity: {inventoryDetail.totalQuantity}
+          <Typogr
+            Stock: {inventoryDetail.currentQuantity}
           </Typography>
           <Typography className="!mt-4 text-base font-normal leading-[27px] !text-gray-500">
             {inventoryDetail.description}
@@ -57,6 +54,19 @@ export function InventoryDetailContent() {
             <p className="text-slate-500 text-sm">
               {inventoryDetail.condition}
             </p>
+          </div>
+          <div className="mb-10">
+            <div className="font-bold text-md mb-2">Is Borrowable?</div>
+            <Button
+              size="sm"
+              className={`font-bold ${
+                inventoryDetail.isBorrowable
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-red-500 hover:bg-red-600"
+              }`}
+            >
+              {inventoryDetail.isBorrowable ? "TRUE" : "FALSE"}
+            </Button>
           </div>
           <div className="mb-4 flex w-full items-center gap-3 md:w-1/2 ">
             <Button

@@ -18,6 +18,7 @@ export function BorrowingContent() {
     totalPage,
     success,
     setPage,
+    handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -52,6 +53,7 @@ export function BorrowingContent() {
         description="List of borrowing."
         createTitle={"CREATE BORROWING"}
         createLink={`/borrowing/create`}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

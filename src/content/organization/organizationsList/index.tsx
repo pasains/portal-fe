@@ -18,6 +18,7 @@ export function OrganizationContent() {
     totalPage,
     setPage,
     handleDelete,
+    handleDownload,
     handleConfirmDelete,
     handleCloseAlert,
   } = useOrganization();
@@ -46,6 +47,7 @@ export function OrganizationContent() {
         description="List of organization."
         createTitle={"CREATE ORGANIZATION"}
         createLink={`/organization/create`}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

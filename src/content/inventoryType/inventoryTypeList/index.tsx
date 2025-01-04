@@ -19,6 +19,7 @@ export function InventoryTypeContent() {
     success,
     setPage,
     handleDelete,
+    handleDownload,
     handleConfirmDelete,
     handleCloseAlert,
   } = useInventoryType();
@@ -49,6 +50,7 @@ export function InventoryTypeContent() {
         description="List of inventory type."
         createTitle={"CREATE INVENTORY TYPE"}
         createLink={`/inventorytype/create`}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

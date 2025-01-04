@@ -17,6 +17,7 @@ export function InventoryContent() {
     success,
     loading,
     openAlert,
+    handleDownload,
     setPageInventory,
     handleConfirmDelete,
     handleDelete,
@@ -53,6 +54,7 @@ export function InventoryContent() {
         description="List of inventory."
         createTitle={"CREATE INVENTORY"}
         createLink={`/inventory/create`}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

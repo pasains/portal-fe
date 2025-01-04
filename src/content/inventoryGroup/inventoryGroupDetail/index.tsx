@@ -10,8 +10,13 @@ import useInventory from "../../../hooks/inventory/inventoryList";
 export function InventoryGroupDetailContent() {
   const { inventoryGroupDetail, inventoryItems, id, page, totalPage, setPage } =
     useInventoryGroupDetail();
-  const { handleDelete, openAlert, handleCloseAlert, handleConfirmDelete } =
-    useInventory();
+  const {
+    handleDelete,
+    handleDownload,
+    openAlert,
+    handleCloseAlert,
+    handleConfirmDelete,
+  } = useInventory();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
@@ -39,6 +44,7 @@ export function InventoryGroupDetailContent() {
           <div>
             <UpperTableDetail
               pageTitle={`Inventory list`}
+              handleDownload={handleDownload}
               titleName="Inventory Group Name :"
               name={inventoryGroupDetail.inventoryGroupName}
               titleDescription="Description :"

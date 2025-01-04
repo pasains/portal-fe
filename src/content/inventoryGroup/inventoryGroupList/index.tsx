@@ -18,6 +18,7 @@ export function InventoryGroupContent() {
     loading,
     setPage,
     openAlert,
+    handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
@@ -46,6 +47,7 @@ export function InventoryGroupContent() {
         createTitle={"CREATE INVENTORY GROUP"}
         description="List of inventory group."
         createLink={`/inventorygroup/create`}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

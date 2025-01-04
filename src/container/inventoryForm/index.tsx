@@ -347,7 +347,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                   });
                 }}
               >
-                {inventoryTypeList.map((type) => (
+                {inventoryTypeList.slice(0, 10).map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}
@@ -355,7 +355,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                       setCreateNewInventoryType(type.showCreateNew);
                     }}
                   >
-                    {type.displayName || ""}
+                    {type.displayName.trim() || ""}
                   </Option>
                 ))}
               </Select>

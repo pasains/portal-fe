@@ -333,7 +333,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
                   });
                 }}
               >
-                {organizationList.map((type) => (
+                {organizationList.slice(0, 10).map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}
@@ -341,7 +341,7 @@ const BorrowerForm: React.FC<BorrowerProps> = ({
                       setCreateNewOrganization(type.showCreateNew);
                     }}
                   >
-                    {type.displayName || ""}
+                    {type.displayName.trim() || ""}
                   </Option>
                 ))}
               </Select>

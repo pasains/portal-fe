@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 
 export enum Status {
   "DONE" = "DONE",
@@ -121,11 +122,33 @@ export default function useBorrowing() {
     setOpenAlert(false);
   };
 
+  //Download list data to xlsx
+  const handleDownload = async () => {
+    const response = await fetch(`${REACT_APP_PORTAL_BE_URL}/api/borrowing`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    const json = await response.json();
+    const data = json.data.borrowing;
+    // Convert JSON to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Borrowing");
+
+    // Export the workbook to an Excel file
+    XLSX.writeFile(workbook, "borrowing_list.xlsx");
+  };
+
   return {
     borrowing,
     openAlert,
     page,
     setPage,
+    handleDownload,
     totalPage,
     handleDelete,
     handleConfirmDelete,

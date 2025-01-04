@@ -18,6 +18,7 @@ export function InventoryTypeDetailContent() {
     success,
     loading,
     setPage,
+    handleDownload,
     handleDelete,
     handleCloseAlert,
     handleConfirmDelete,
@@ -54,6 +55,7 @@ export function InventoryTypeDetailContent() {
               description={inventoryTypeDetail.description}
               createTitle={"CREATE INVENTORY"}
               createLink={`/inventory/create`}
+              handleDownload={handleDownload}
             />
             <div className="h-full w-full overflow-scroll">
               {loading && <p className="text-center">Loading...</p>}
@@ -121,7 +123,7 @@ export function InventoryTypeDetailContent() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.inventoryTypeIdRel.inventoryTypeName}
+                          {items.inventoryTypeName}
                         </Typography>
                       </td>
                       <td
