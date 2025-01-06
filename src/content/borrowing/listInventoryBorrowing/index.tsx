@@ -17,6 +17,7 @@ export function InventoryBorrowingContent({
   success,
 }: InventoryBorrowingContentProps) {
   const {
+    handleSearch,
     borrowableInventory,
     pageBorrowableInventory,
     totalPageBorrowableInventory,
@@ -24,6 +25,7 @@ export function InventoryBorrowingContent({
     setPageBorrowableInventory,
   } = useBorrowableInventory();
   const [selectedItems, setSelectedItems] = useState<InventoryList[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const tableHead = [
@@ -36,6 +38,11 @@ export function InventoryBorrowingContent({
     { titleHead: "Quantity", accessor: "quantity" },
     { titleHead: "" },
   ];
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
 
   const toggleItemSelection = (item: InventoryList) => {
     setSelectedItems((prev) => {
@@ -92,6 +99,8 @@ export function InventoryBorrowingContent({
             <Input
               label="Search"
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
           </div>
         </div>
