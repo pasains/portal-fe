@@ -52,9 +52,9 @@ const CreateBorrowingContent = () => {
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <div className="flex flex-cols">
-        <div className="w-1/3 p-4">
-          <div className="mb-8 mt-2 ml-12">
+      <div className="flex lg:flex-row flex-col-reverse w-full px-4">
+        <section className="lg:w-1/3 w-full p-4">
+          <div className="mb-8 mt-2">
             <Typography variant="h5" color="blue-gray">
               Borrower detail
             </Typography>
@@ -69,10 +69,10 @@ const CreateBorrowingContent = () => {
             success={success}
             setBorrowerDetail={setBorrowerDetails}
           />
-        </div>
-        <div className="w-2/3 p-4">
+        </section>
+        <section className="lg:w-2/3 w-full p-4">
           <InventoryBorrowingContent onItemsChange={setSelectedItems} />
-        </div>
+        </section>
       </div>
 
       <div className="fixed z-9999 top-4 right-4">

@@ -16,15 +16,18 @@ export function InventoryTypeDetailContent() {
     totalPage,
     openAlert,
     success,
-    loading,
     setPage,
+    handleSearch,
     handleDownload,
     handleDelete,
     handleCloseAlert,
     handleConfirmDelete,
   } = useInventoryTypeDetail();
   const [isEditing, setIsEditing] = useState(false);
+  const [clicked, setClicked] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
   const tableHead = [
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Reference Id", accessor: "refId" },
@@ -33,6 +36,13 @@ export function InventoryTypeDetailContent() {
     { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "" },
   ];
+
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
+
   const handleEditClick = (inventoryTypeId: any) => {
     setIsEditing(true);
     navigate(`/inventory/update/${inventoryTypeId}`);
@@ -40,6 +50,12 @@ export function InventoryTypeDetailContent() {
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
     setPage(newPage);
+  };
+  const handleDownloadButton = async () => {
+    setClicked(true);
+    const result = await handleDownload();
+    window.location.reload();
+    console.log(result);
   };
 
   return (
@@ -49,16 +65,20 @@ export function InventoryTypeDetailContent() {
           <div>
             <UpperTableDetail
               pageTitle={`Inventory list`}
+              descriptionPageTitle={`
+                List of all inventory items associated with this inventory type.
+                `}
               titleName={`Inventory Type Name :`}
               name={inventoryTypeDetail.inventoryTypeName}
               titleDescription={`Description :`}
               description={inventoryTypeDetail.description}
               createTitle={"CREATE INVENTORY"}
               createLink={`/inventory/create`}
-              handleDownload={handleDownload}
+              handleDownload={handleDownloadButton}
+              handleInputSearch={handleSearchChange}
+              searchQuery={searchQuery}
             />
             <div className="h-full w-full overflow-scroll">
-              {loading && <p className="text-center">Loading...</p>}
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>

@@ -142,6 +142,23 @@ export default function useBorrowing() {
     // Export the workbook to an Excel file
     XLSX.writeFile(workbook, "borrowing_list.xlsx");
   };
+  const handleSearch = async (query: string) => {
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/borrowing?search=${query}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        },
+      );
+      const json = await response.json();
+      setBorrowing(json.data.borrowing); // Assuming the response has an `inventory` array
+    } catch (error) {
+      console.error("Error fetching borrowing:", error);
+    }
+  };
 
   return {
     borrowing,
@@ -149,6 +166,7 @@ export default function useBorrowing() {
     page,
     setPage,
     handleDownload,
+    handleSearch,
     totalPage,
     handleDelete,
     handleConfirmDelete,

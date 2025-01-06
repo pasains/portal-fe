@@ -18,18 +18,26 @@ export function InventoryGroupContent() {
     loading,
     setPage,
     openAlert,
+    handleSearch,
     handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
   } = useInventoryGroup();
   const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
     { titleHead: "Inventory Group Name", accessor: "inventoryGroupName" },
     { titleHead: "Description", accessor: "description" },
     { titleHead: "" },
   ];
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/inventorygroup/update/${id}`);
@@ -39,6 +47,12 @@ export function InventoryGroupContent() {
     console.log("Page changed to:", newPage);
     setPage(newPage);
   };
+  const handleDownloadButton = async () => {
+    setClicked(true);
+    const result = await handleDownload();
+    window.location.reload();
+    console.log(result);
+  };
   return (
     <section>
       {loading && <p className="text-center">Loading...</p>}
@@ -47,7 +61,9 @@ export function InventoryGroupContent() {
         createTitle={"CREATE INVENTORY GROUP"}
         description="List of inventory group."
         createLink={`/inventorygroup/create`}
-        handleDownload={handleDownload}
+        handleDownload={handleDownloadButton}
+        handleInputSearch={handleSearchChange}
+        searchQuery={searchQuery}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

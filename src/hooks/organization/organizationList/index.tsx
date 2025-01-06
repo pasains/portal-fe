@@ -132,6 +132,23 @@ export default function useOrganization() {
     // Export the workbook to an Excel file
     XLSX.writeFile(workbook, "organization_list.xlsx");
   };
+  const handleSearch = async (query: string) => {
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/organization?search=${query}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        },
+      );
+      const json = await response.json();
+      setOrganization(json.data.organization); // Assuming the response has an `inventory` array
+    } catch (error) {
+      console.error("Error fetching organization:", error);
+    }
+  };
 
   return {
     organization,
@@ -141,6 +158,7 @@ export default function useOrganization() {
     setPage,
     success,
     openAlert,
+    handleSearch,
     handleDelete,
     handleConfirmDelete,
     handleDownload,
