@@ -116,7 +116,6 @@ export default function useInventoryType() {
     const response = await fetch(
       `${REACT_APP_PORTAL_BE_URL}/api/inventorytype`,
       {
-        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,
@@ -135,23 +134,6 @@ export default function useInventoryType() {
     // Export the workbook to an Excel file
     XLSX.writeFile(workbook, "inventoryType_list.xlsx");
   };
-  const handleSearch = async (query: string) => {
-    try {
-      const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventorytype?search=${query}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        },
-      );
-      const json = await response.json();
-      setInventoryType(json.data.inventorytype); // Assuming the response has an `inventory` array
-    } catch (error) {
-      console.error("Error fetching inventory type:", error);
-    }
-  };
 
   return {
     inventoryType,
@@ -159,7 +141,6 @@ export default function useInventoryType() {
     page,
     totalPage,
     setPage,
-    handleSearch,
     handleDownload,
     handleDelete,
     handleConfirmDelete,

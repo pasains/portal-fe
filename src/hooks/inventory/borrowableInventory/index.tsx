@@ -58,26 +58,7 @@ export default function useBorrowableInventory() {
     fetchTitle(pageBorrowableInventory);
   }, [pageBorrowableInventory]);
 
-  const handleSearch = async (query: string) => {
-    try {
-      const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventory?search=${query}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        },
-      );
-      const json = await response.json();
-      setBorrowableInventory(json.data.borrowableInventory); // Assuming the response has an `inventory` array
-    } catch (error) {
-      console.error("Error fetching inventory:", error);
-    }
-  };
-
   return {
-    handleSearch,
     borrowableInventory,
     pageBorrowableInventory,
     totalPageBorrowableInventory,

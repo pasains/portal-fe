@@ -17,16 +17,13 @@ export function OrganizationContent() {
     success,
     totalPage,
     setPage,
-    handleSearch,
     handleDelete,
     handleDownload,
     handleConfirmDelete,
     handleCloseAlert,
   } = useOrganization();
   const [isEditing, setIsEditing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const [clicked, setClicked] = useState(false);
   const tableHead = [
     { titleHead: "Oragnization Name", accessor: "organizationName" },
     { titleHead: "Address", accessor: "address" },
@@ -34,11 +31,6 @@ export function OrganizationContent() {
     { titleHead: "Note", accessor: "note" },
     { titleHead: "" },
   ];
-  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
-  };
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/organization/update/${id}`);
@@ -48,13 +40,6 @@ export function OrganizationContent() {
     setPage(newPage);
   };
 
-  const handleDownloadButton = async () => {
-    setClicked(true);
-    const result = await handleDownload();
-    window.location.reload();
-    console.log(result);
-  };
-
   return (
     <section>
       <UpperTable
@@ -62,9 +47,7 @@ export function OrganizationContent() {
         description="List of organization."
         createTitle={"CREATE ORGANIZATION"}
         createLink={`/organization/create`}
-        handleDownload={handleDownloadButton}
-        handleInputSearch={handleSearchChange}
-        searchQuery={searchQuery}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

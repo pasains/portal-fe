@@ -13,7 +13,7 @@ export default function useCreateBorrower() {
     setSuccess(null);
     setError(null);
     try {
-      console.log("Borrower Data" + JSON.stringify(borrowerData));
+      console.log("SUSI 1 " + JSON.stringify(borrowerData));
       const response = await fetch(
         `${REACT_APP_PORTAL_BE_URL}/api/borrower/create`,
         {
