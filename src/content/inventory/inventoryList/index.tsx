@@ -115,7 +115,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryTypeIdRel.inventoryTypeName}
+                      {item.inventoryTypeName}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -133,7 +133,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
-                      {item.inventoryStockIdRel?.[0]?.currentQuantity ||
+                      {item.currentQuantity ||
                         undefined}
                     </Typography>
                   </td>
@@ -143,7 +143,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
-                      {item.inventoryStockIdRel?.[0]?.totalQuantity}
+                      {item.totalQuantity}
                     </Typography>
                   </td>
                   <td className={classes}>

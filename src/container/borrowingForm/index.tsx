@@ -6,10 +6,6 @@ import {
   Select,
   Option,
   Textarea,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
 } from "@material-tailwind/react";
 import useBorrower from "../../hooks/borrower/borrowersList";
 import useOrganization from "../../hooks/organization/organizationList";
@@ -245,7 +241,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
       borrowingData.borrowerName &&
       borrowingData.identityCard &&
       borrowingData.identityNumber &&
-      formattedPhoneNumber
+      borrowingData.phoneNumber
     ) {
       // Check if borrower already exist
       const existingBorrower = borrower.find(
@@ -258,7 +254,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           borrowerName: borrowingData.borrowerName,
           identityCard: borrowingData.identityCard,
           identityNumber: borrowingData.identityNumber,
-          phoneNumber: formattedPhoneNumber,
+          phoneNumber: borrowingData.phoneNumber,
         }));
       } else {
         // If borrower doesnt exists, create a new one
@@ -268,7 +264,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           borrowerName: borrowingData.borrowerName,
           identityCard: borrowingData.identityCard,
           identityNumber: borrowingData.identityNumber,
-          phoneNumber: formattedPhoneNumber,
+          phoneNumber: borrowingData.phoneNumber,
         }));
       }
       setBorrowerList([]);
@@ -485,7 +481,6 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                     }
                     required
                   />
-
                 </div>
               </form>
             )}

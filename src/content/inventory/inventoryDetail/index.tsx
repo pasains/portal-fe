@@ -43,9 +43,7 @@ export function InventoryDetailContent() {
           <Typography className="mb-4 text-sm">
             {inventoryDetail.inventoryTypeName}
           </Typography>
-          <Typogr
-            Stock: {inventoryDetail.currentQuantity}
-          </Typography>
+          <Typography>Stock: {inventoryDetail.currentQuantity}</Typography>
           <Typography className="!mt-4 text-base font-normal leading-[27px] !text-gray-500">
             {inventoryDetail.description}
           </Typography>

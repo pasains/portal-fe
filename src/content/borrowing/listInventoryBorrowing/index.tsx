@@ -47,10 +47,6 @@ export function InventoryBorrowingContent({
       }
     });
   };
-  const handlePageChange = (newPage: number) => {
-    console.log("Page changed to:", newPage);
-    setPageBorrowableInventory(newPage);
-  };
 
   const handleQuantityInput = (id: number, quantity: number) => {
     setBorrowableInventory((prev) =>
