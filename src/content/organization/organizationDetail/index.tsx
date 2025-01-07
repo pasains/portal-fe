@@ -14,6 +14,7 @@ export function OrganizationDetailContent() {
     organizationList,
     success,
     openAlert,
+    handleSearch,
     handleDownload,
     handleDelete,
     handleCloseAlert,
@@ -22,8 +23,9 @@ export function OrganizationDetailContent() {
     totalPage,
     setPage,
   } = useOrganizationDetail();
-
   const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
     { titleHead: "Borrower Name", accessor: "borrowerName" },
@@ -32,6 +34,11 @@ export function OrganizationDetailContent() {
     { titleHead: "Phone Number", accessor: "phoneNumber" },
     { titleHead: "" },
   ];
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
   const handleEditClick = (borrowerId: number) => {
     setIsEditing(true);
     navigate(`/borrower/update/${borrowerId}`);
@@ -39,6 +46,12 @@ export function OrganizationDetailContent() {
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
     setPage(newPage);
+  };
+  const handleDownloadButton = async () => {
+    setClicked(true);
+    const result = await handleDownload();
+    window.location.reload();
+    console.log(result);
   };
 
   return (
@@ -51,7 +64,7 @@ export function OrganizationDetailContent() {
               titleName="Organization Name :"
               name={organizationDetail.organizationName}
               titleAddress="Address :"
-              handleDownload={handleDownload}
+              handleDownload={handleDownloadButton}
               address={organizationDetail.address}
               titleStatus="Organization Status :"
               status={organizationDetail.organizationStatus}
@@ -59,6 +72,8 @@ export function OrganizationDetailContent() {
               note={organizationDetail.note}
               createTitle={"CREATE BORROWER"}
               createLink={`/borrower/create`}
+              handleInputSearch={handleSearchChange}
+              searchQuery={searchQuery}
             />
             <div className="h-full w-full overflow-scroll">
               <table className="w-full min-w-max table-auto text-left">

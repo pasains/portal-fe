@@ -18,12 +18,15 @@ export function BorrowingContent() {
     totalPage,
     success,
     setPage,
+    handleSearch,
     handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
   } = useBorrowing();
   const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
     { titleHead: "Borrower Name", accessor: "borrowerName" },
@@ -37,6 +40,12 @@ export function BorrowingContent() {
     { titleHead: "Due Date", accessor: "dueDate" },
     { titleHead: "" },
   ];
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
+
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/borrowing/${id}`);
@@ -44,6 +53,12 @@ export function BorrowingContent() {
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
     setPage(newPage);
+  };
+  const handleDownloadButton = async () => {
+    setClicked(true);
+    const result = await handleDownload();
+    window.location.reload();
+    console.log(result);
   };
 
   return (
@@ -53,7 +68,9 @@ export function BorrowingContent() {
         description="List of borrowing."
         createTitle={"CREATE BORROWING"}
         createLink={`/borrowing/create`}
-        handleDownload={handleDownload}
+        handleDownload={handleDownloadButton}
+        handleInputSearch={handleSearchChange}
+        searchQuery={searchQuery}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">
@@ -219,15 +236,6 @@ export function BorrowingContent() {
                           </svg>
                         </span>
                       </button>
-                      <div className="fixed z-9999 top-10 right-10">
-                        {success && (
-                          <TimedAlert
-                            message={success}
-                            duration={5000}
-                            color="green"
-                          />
-                        )}
-                      </div>
                     </div>
                   </td>
                 </tr>

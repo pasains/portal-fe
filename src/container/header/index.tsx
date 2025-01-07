@@ -9,23 +9,15 @@ import { useNavigate } from "react-router-dom";
 import { SidebarWithBurgerMenu } from "../sidebar";
 
 const Heading: React.FC = () => {
-  const  users  = {id: 1, userName:"Mecinsusi", role: "ADMIN"};
+  const  users  = {id: 1, userName:"mecinsusi", role: "ADMIN"};
   const navigate = useNavigate();
   return (
     <main className="bg-black w-full fixed top-0 z-9999">
       <main className="flex">
-        <section className="flex w-1/3 items-center p-4">
+        <section className="flex w-1/2 items-center p-4">
           <SidebarWithBurgerMenu />
         </section>
-        <section className="w-1/3 content-center p-4">
-          <Input
-            size="lg"
-            icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-            label="Search"
-            color="white"
-          />
-        </section>
-        <section className="flex w-1/3 justify-end p-4 items-center gap-6 text-white">
+        <section className="flex w-1/2 justify-end p-4 items-center gap-6 text-white">
           <div className="size-6">
             <EnvelopeIcon />
           </div>

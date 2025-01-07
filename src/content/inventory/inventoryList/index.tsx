@@ -17,6 +17,7 @@ export function InventoryContent() {
     success,
     loading,
     openAlert,
+    handleSearch,
     handleDownload,
     setPageInventory,
     handleConfirmDelete,
@@ -24,7 +25,9 @@ export function InventoryContent() {
     handleCloseAlert,
   } = useInventory();
   const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [clicked, setClicked] = useState(false);
   const tableHead = [
     { titleHead: "Reference Id", accessor: "refId" },
     { titleHead: "Inventory Name", accessor: "inventoryName" },
@@ -36,6 +39,12 @@ export function InventoryContent() {
     { titleHead: "" },
   ];
 
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
+
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/inventory/update/${id}`);
@@ -46,15 +55,23 @@ export function InventoryContent() {
     setPageInventory(newPage);
   };
 
+  const handleDownloadButton = async () => {
+    setClicked(true);
+    const result = await handleDownload();
+    window.location.reload();
+    console.log(result);
+  };
+
   return (
     <section>
-      {loading && <p className="text-center">Loading...</p>}
       <UpperTable
         pageTitle={"Inventory list"}
         description="List of inventory."
         createTitle={"CREATE INVENTORY"}
         createLink={`/inventory/create`}
-        handleDownload={handleDownload}
+        handleDownload={handleDownloadButton}
+        handleInputSearch={handleSearchChange}
+        searchQuery={searchQuery}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">
@@ -133,8 +150,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
-                      {item.currentQuantity ||
-                        undefined}
+                      {item.currentQuantity || undefined}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -201,15 +217,6 @@ export function InventoryContent() {
                           </svg>
                         </span>
                       </button>
-                      <div className="fixed z-9999 top-10 right-10">
-                        {success && (
-                          <TimedAlert
-                            message={success}
-                            duration={5000}
-                            color="green"
-                          />
-                        )}
-                      </div>
                     </div>
                   </td>
                 </tr>
