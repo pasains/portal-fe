@@ -15,7 +15,6 @@ export function InventoryContent() {
     pageInventory,
     totalPageInventory,
     success,
-    loading,
     openAlert,
     handleDownload,
     setPageInventory,
