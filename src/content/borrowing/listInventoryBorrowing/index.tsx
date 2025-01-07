@@ -63,6 +63,11 @@ export function InventoryBorrowingContent({
     );
   };
 
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    setPageBorrowableInventory(newPage);
+  };
+
   useEffect(() => {
     if (success) {
       setSelectedItems([]);
