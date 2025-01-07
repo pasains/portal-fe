@@ -19,11 +19,11 @@ const ItemBorrowing: React.FC = ({}) => {
   const {
     id,
     item,
-    setItem,
     borrowingDetail,
-    refreshData,
     page,
     totalPage,
+    refreshData,
+    setItem,
     setPage,
   } = useItemDetail();
   const { updateItem, setItemsUpdate, loading } = useUpdateItem();
