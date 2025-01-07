@@ -121,11 +121,29 @@ export function useInventoryGroupDetail() {
     // Export the workbook to an Excel file
     XLSX.writeFile(workbook, "inventory.xlsx");
   };
+  const handleSearch = async (query: string) => {
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/inventory?inventoryGroupId${id}&search=${query}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        },
+      );
+      const json = await response.json();
+      setInventoryItems(json.data.inventory); // Assuming the response has an `inventory` array
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+    }
+  };
 
   return {
     id,
     page,
     totalPage,
+    handleSearch,
     handleDownload,
     setPage,
     inventoryItems,
