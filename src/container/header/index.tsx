@@ -14,10 +14,18 @@ const Heading: React.FC = () => {
   return (
     <main className="bg-black w-full fixed top-0 z-9999">
       <main className="flex">
-        <section className="flex w-1/2 items-center p-4">
+        <section className="flex w-1/3 items-center p-4">
           <SidebarWithBurgerMenu />
         </section>
-        <section className="flex w-1/2 justify-end p-4 items-center gap-6 text-white">
+        <section className="w-1/3 content-center p-4">
+          <Input
+            size="lg"
+            icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+            label="Search"
+            color="white"
+          />
+        </section>
+        <section className="flex w-1/3 justify-end p-4 items-center gap-6 text-white">
           <div className="size-6">
             <EnvelopeIcon />
           </div>

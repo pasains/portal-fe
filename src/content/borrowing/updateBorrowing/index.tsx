@@ -16,11 +16,11 @@ const UpdateBorrowingContent = () => {
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <div className="flex lg:flex-row flex-col-reverse w-full px-4">
-        <div className="w-full lg:w-1/3 p-4">
+      <div className="flex flex-cols">
+        <div className="w-1/3 p-4">
           <BorrowingDetail />
         </div>
-        <div className="w-full lg:w-2/3 p-4">
+        <div className="w-2/3 p-4">
           <ItemBorrowing />
         </div>
       </div>

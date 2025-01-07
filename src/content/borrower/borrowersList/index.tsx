@@ -17,16 +17,13 @@ export function BorrowerContent() {
     totalPage,
     success,
     setPage,
-    handleSearch,
     handleDownload,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
   } = useBorrower();
   const [isEditing, setIsEditing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const [clicked, setClicked] = useState(false);
   const tableHead = [
     { titleHead: "Borrower Name", accessor: "borrowerName" },
     { titleHead: "Identity Card", accessor: "identityCard" },
@@ -37,12 +34,6 @@ export function BorrowerContent() {
     { titleHead: "Organization Status", accessor: "organizationStatus" },
     { titleHead: "" },
   ];
-
-  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
-  };
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/borrower/update/${id}`);
@@ -50,12 +41,6 @@ export function BorrowerContent() {
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
     setPage(newPage);
-  };
-  const handleDownloadButton = async () => {
-    setClicked(true);
-    const result = await handleDownload();
-    window.location.reload();
-    console.log(result);
   };
 
   return (
@@ -65,9 +50,7 @@ export function BorrowerContent() {
         description="List of borrower."
         createTitle={"CREATE BORROWER"}
         createLink={`/borrower/create`}
-        handleDownload={handleDownloadButton}
-        handleInputSearch={handleSearchChange}
-        searchQuery={searchQuery}
+        handleDownload={handleDownload}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

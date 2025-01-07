@@ -16,9 +16,9 @@ import {
   PresentationChartBarIcon,
   ShoppingBagIcon,
   UserCircleIcon,
+  Cog6ToothIcon,
   PowerIcon,
   EnvelopeIcon,
-  ArrowUpTrayIcon,
 } from "@heroicons/react/24/solid";
 import {
   ChevronDownIcon,
@@ -162,9 +162,9 @@ export function SidebarWithBurgerMenu() {
             </ListItem>
             <ListItem>
               <ListItemPrefix>
-                <ArrowUpTrayIcon className="h-5 w-5" />
+                <Cog6ToothIcon className="h-5 w-5" />
               </ListItemPrefix>
-              Post
+              Settings
             </ListItem>
             <ListItem
               onClick={() => {
