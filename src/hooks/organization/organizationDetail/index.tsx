@@ -179,30 +179,12 @@ export function useOrganizationDetail() {
     XLSX.writeFile(workbook, "borrower_list.xlsx");
   };
 
-  const handleSearch = async (query: string) => {
-    try {
-      const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/borrower?org${id}&search=${query}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        },
-      );
-      const json = await response.json();
-      setOrganizationList(json.data.borrower); // Assuming the response has an `inventory` array
-    } catch (error) {
-      console.error("Error fetching borrowing:", error);
-    }
-  };
   return {
     id,
     page,
     totalPage,
     setPage,
     success,
-    handleSearch,
     handleDownload,
     handleDelete,
     handleConfirmDelete,

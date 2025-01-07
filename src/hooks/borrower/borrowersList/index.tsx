@@ -133,23 +133,6 @@ export default function useBorrower() {
     XLSX.writeFile(workbook, "borrower_list.xlsx");
   };
 
-  const handleSearch = async (query: string) => {
-    try {
-      const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/borrower?search=${query}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        },
-      );
-      const json = await response.json();
-      setBorrower(json.data.borrower); // Assuming the response has an `inventory` array
-    } catch (error) {
-      console.error("Error fetching borrower:", error);
-    }
-  };
   return {
     borrower,
     page,
@@ -157,7 +140,6 @@ export default function useBorrower() {
     totalPage,
     setBorrower,
     openAlert,
-    handleSearch,
     handleDownload,
     handleDelete,
     handleConfirmDelete,
