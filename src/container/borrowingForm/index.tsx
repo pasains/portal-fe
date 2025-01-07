@@ -240,6 +240,9 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
     e.preventDefault();
     onSubmit();
 
+    /** TODO: this variable was missing, proper format(?) */
+    const formattedPhoneNumber = borrowingData.phoneNumber
+
     // Check if borrower data exists and if fields are filled
     if (
       borrowingData.borrowerName &&

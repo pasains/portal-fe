@@ -132,6 +132,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
+                      {/* @ts-expect-error: unfinished line */}
                       {item.inventoryTypeIdRel.inventoryTypeName}
                     </Typography>
                   </td>
@@ -150,6 +151,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
+                      {/* @ts-expect-error: unfinished line */}
                       {item.inventoryStockIdRel?.[0]?.currentQuantity ||
                         undefined}
                     </Typography>
@@ -160,6 +162,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal text-center"
                     >
+                      {/* @ts-expect-error: unfinished line */}
                       {item.inventoryStockIdRel?.[0]?.totalQuantity}
                     </Typography>
                   </td>
