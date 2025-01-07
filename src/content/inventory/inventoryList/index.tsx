@@ -47,7 +47,6 @@ export function InventoryContent() {
 
   return (
     <section>
-      {loading && <p className="text-center">Loading...</p>}
       <UpperTable
         pageTitle={"Inventory list"}
         description="List of inventory."
