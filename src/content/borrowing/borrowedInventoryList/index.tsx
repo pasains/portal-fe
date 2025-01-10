@@ -5,6 +5,8 @@ import {
   Typography,
   Button,
   Chip,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { Pagination } from "../../../container/pagination";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
@@ -15,7 +17,7 @@ import {
 } from "../../../hooks/item/itemDetail";
 import { useUpdateItem } from "../../../hooks/item/updateItem";
 
-const ItemBorrowing: React.FC = ({}) => {
+const BorrowedInventoryList: React.FC = ({}) => {
   const {
     id,
     item,
@@ -208,16 +210,18 @@ const ItemBorrowing: React.FC = ({}) => {
                       />
                     </td>
                     <td className={classes}>
-                      <select
-                        value={itm.status}
-                        onChange={(e: any) =>
-                          handleStatusChange(itm.id, e.target.value)
-                        }
-                        className="border p-1 rounded w-fit"
-                      >
-                        <option value={StatusItem.IN}>IN</option>
-                        <option value={StatusItem.OUT}>OUT</option>
-                      </select>
+                      <div className="w-fit">
+                        <select
+                          value={itm.status}
+                          onChange={(e: any) =>
+                            handleStatusChange(itm.id, e.target.value)
+                          }
+                          className="border p-1 rounded w-fit"
+                        >
+                          <option value={StatusItem.IN}>IN</option>
+                          <option value={StatusItem.OUT}>OUT</option>
+                        </select>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -247,4 +251,4 @@ const ItemBorrowing: React.FC = ({}) => {
     </Card>
   );
 };
-export default ItemBorrowing;
+export default BorrowedInventoryList;

@@ -3,8 +3,8 @@ import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../../container/alert";
 import BorrowingForm from "../../../container/borrowingForm";
 import useCreateBorrowing from "../../../hooks/borrowing/createBorrowing";
-import { InventoryBorrowingContent } from "../listInventoryBorrowing";
 import { InventoryList } from "../../../hooks/inventory/inventoryList";
+import { BorrowableInventoryList } from "../../../content/borrowing/borrowabelInventoryList";
 
 const CreateBorrowingContent = () => {
   const { createBorrowing, loading, error, success } = useCreateBorrowing();
@@ -71,7 +71,7 @@ const CreateBorrowingContent = () => {
           />
         </section>
         <section className="lg:w-2/3 w-full p-4">
-          <InventoryBorrowingContent onItemsChange={setSelectedItems} />
+          <BorrowableInventoryList onItemsChange={setSelectedItems} />
         </section>
       </div>
 

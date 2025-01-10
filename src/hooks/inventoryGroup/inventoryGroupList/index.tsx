@@ -146,7 +146,7 @@ export default function useInventoryGroup() {
         },
       );
       const json = await response.json();
-      setInventoryGroup(json.data.inventorygroup); // Assuming the response has an `inventory` array
+      setInventoryGroup(json.data.inventoryGroup); // Assuming the response has an `inventory` array
     } catch (error) {
       console.error("Error fetching inventory:", error);
     }

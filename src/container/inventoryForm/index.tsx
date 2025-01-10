@@ -63,7 +63,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         note: initialData.note || "",
         isBorrowable: initialData.isBorrowable || false,
         inventoryTypeName: initialData.inventoryTypeName || "",
-        inventoryTypeId: initialData.inventoryTypeId || undefined,
+        inventoryTypeId: initialData.inventoryTypeId || 0,
         descriptionInventoryType: initialData.descriptionInventoryType || "",
         url: initialData.url || "",
         currentQuantity: initialData.currentQuantity || 0,
@@ -121,6 +121,26 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     }
   };
 
+  //Handle single image  upload
+  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const url = URL.createObjectURL(file); // Temporary URL for preview
+      setInventoryData((prev) => ({
+        ...prev,
+        url: url,
+      }));
+    }
+  };
+
+  //Handle cancel image upload
+  const handleCancelImage = () => {
+    setInventoryData((prev) => ({
+      ...prev,
+      url: "",
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(inventoryData);
@@ -131,7 +151,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     ) {
       setInventoryType((prevData) => ({
         ...prevData,
-        inventoryTypeId: undefined,
+        inventoryTypeId: 0,
         inventoryTypeName: inventoryData.inventoryTypeName,
         description: inventoryData.descriptionInventoryType,
       }));
@@ -265,21 +285,31 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
           <br />
 
           <label>
-            <Typography className="mb-2" variant="h6">
-              Image URL:
-            </Typography>
-            <Input
-              className="w-full"
-              color="orange"
-              label="Image URL"
-              type="url"
-              name="url"
-              variant="outlined"
-              size="lg"
-              value={inventoryData.url || ""}
-              onChange={handleInputChange}
-              required
-            />
+            <Typography variant="h6">Image</Typography>
+            <div className="w-52 mt-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleUploadImage}
+                className="w-52"
+              />
+              {inventoryData.url && (
+                <div className="relative">
+                  <img
+                    src={inventoryData.url}
+                    alt="Preview"
+                    style={{ width: "200px" }}
+                    className="mt-2 h-auto border rounded shadow-lg"
+                  />
+                  <button
+                    onClick={handleCancelImage}
+                    className="absolute top-2 right-4 bg-red-700 text-white py-1 px-2 font-bold rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
           </label>
           <br />
 

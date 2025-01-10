@@ -18,6 +18,7 @@ export function InventoryTypeContent() {
     loading,
     success,
     setPage,
+    handleSearch,
     handleDelete,
     handleDownload,
     handleConfirmDelete,
@@ -25,11 +26,20 @@ export function InventoryTypeContent() {
   } = useInventoryType();
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const [clicked, setClicked] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const tableHead = [
     { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "Description", accessor: "description" },
     { titleHead: "" },
   ];
+
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    const result = await handleSearch(e.target.value);
+    console.log(result);
+  };
+
   const handleEditClick = (id: any) => {
     setIsEditing(true);
     navigate(`/inventorytype/update/${id}`);
@@ -37,6 +47,13 @@ export function InventoryTypeContent() {
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
     setPage(newPage);
+  };
+
+  const handleDownloadButton = async () => {
+    setClicked(true);
+    const result = await handleDownload();
+    window.location.reload();
+    console.log(result);
   };
   useEffect(() => {
     console.log(`SUCCESS`, success);
@@ -50,7 +67,9 @@ export function InventoryTypeContent() {
         description="List of inventory type."
         createTitle={"CREATE INVENTORY TYPE"}
         createLink={`/inventorytype/create`}
-        handleDownload={handleDownload}
+        handleDownload={handleDownloadButton}
+        handleInputSearch={handleSearchChange}
+        searchQuery={searchQuery}
       />
       <div className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

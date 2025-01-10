@@ -3,15 +3,15 @@ import { Button, Typography } from "@material-tailwind/react";
 import { useInventoryDetail } from "../../../hooks/inventory/inventoryDetail";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import useInventoryByBorrowing, {
-  InventoryByBorrowingList,
-} from "../../../hooks/inventory/inventoryByBorrowing";
 import { Pagination } from "../../../container/pagination";
+import useInventoryBorrowingHistoryList, {
+  InventoryBorrowingHistoryProps,
+} from "../../../hooks/inventory/inventoryBorrowingHistoryList";
 
 export function InventoryDetailContent() {
   const { inventoryDetail } = useInventoryDetail();
-  const { page, inventory, totalPage, setPage, loading } =
-    useInventoryByBorrowing();
+  const { page, inventory, totalPage, setPage } =
+    useInventoryBorrowingHistoryList();
   const navigate = useNavigate();
   const tableHead = [
     { titleHead: "Invoice Number", accessor: "invoiceNumber" },
@@ -131,7 +131,7 @@ export function InventoryDetailContent() {
               </tr>
             </thead>
             <tbody>
-              {inventory.map((item: InventoryByBorrowingList, index) => {
+              {inventory.map((item: InventoryBorrowingHistoryProps, index) => {
                 const isLast = index === inventory.length - 1;
                 const classes = isLast
                   ? "py-3 px-4"
