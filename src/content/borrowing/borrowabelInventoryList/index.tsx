@@ -7,15 +7,15 @@ import { useEffect, useRef, useState } from "react";
 import useBorrowableInventory from "../../../hooks/inventory/borrowableInventory";
 import { InventoryList } from "../../../hooks/inventory/inventoryList";
 
-interface InventoryBorrowingContentProps {
+interface BorrowableInventoryProps {
   onItemsChange: (selectedItems: InventoryList[]) => void;
   success?: any;
 }
 
-export function InventoryBorrowingContent({
+export function BorrowableInventoryList({
   onItemsChange,
   success,
-}: InventoryBorrowingContentProps) {
+}: BorrowableInventoryProps) {
   const {
     handleSearch,
     borrowableInventory,

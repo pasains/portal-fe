@@ -160,7 +160,11 @@ export function SidebarWithBurgerMenu() {
               </ListItemPrefix>
               Message
             </ListItem>
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                navigate(`/post`);
+              }}
+            >
               <ListItemPrefix>
                 <ArrowUpTrayIcon className="h-5 w-5" />
               </ListItemPrefix>

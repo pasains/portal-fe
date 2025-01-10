@@ -99,7 +99,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
       identityCard: "",
       identityNumber: "",
       status: "",
-      phoneNumber: "",
+      phoneNumber: "+62",
       organizationId: borrowingData.organizationId,
       organizationName: borrowingData.organizationName,
       address: borrowingData.address,

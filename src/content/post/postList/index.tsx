@@ -1,59 +1,51 @@
-import { Chip, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Typography } from "@material-tailwind/react";
 import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
-import useInventory, {
-  InventoryListDetailProps,
-} from "../../../hooks/inventory/inventoryList";
 import TimedAlert from "../../../container/alert";
+import usePost, { PostProps } from "../../../hooks/post/postList";
 
-export function InventoryContent() {
+export function PostContent() {
   const {
-    inventory,
-    pageInventory,
-    totalPageInventory,
-    success,
+    post,
     openAlert,
-    handleSearch,
+    page,
+    success,
+    totalPage,
+    setPage,
     handleDownload,
-    setPageInventory,
-    handleConfirmDelete,
+    handleSearch,
     handleDelete,
+    handleConfirmDelete,
     handleCloseAlert,
-  } = useInventory();
+  } = usePost();
   const [isEditing, setIsEditing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const [clicked, setClicked] = useState(false);
   const tableHead = [
-    { titleHead: "Reference Id", accessor: "refId" },
-    { titleHead: "Inventory Name", accessor: "inventoryName" },
-    { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
-    { titleHead: "is Borrowable?", accessor: "isBorrowable" },
-    { titleHead: "Current Quantity", accessor: "currentQuantity" },
-    { titleHead: "Total Quantity", accessor: "totalQuantity" },
-    { titleHead: "Description", accessor: "description" },
+    { titleHead: "Title", accessor: "title" },
+    { titleHead: "Type", accessor: "type" },
+    { titleHead: "Writer", accessor: "writer" },
+    { titleHead: "Date", accessor: "date" },
+    { titleHead: "Place", accessor: "place" },
     { titleHead: "" },
   ];
-
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     const result = await handleSearch(e.target.value);
     console.log(result);
   };
-
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/inventory/update/${id}`);
+    navigate(`/post/update/${id}`);
   };
-
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
-    setPageInventory(newPage);
+    setPage(newPage);
   };
-
   const handleDownloadButton = async () => {
     setClicked(true);
     const result = await handleDownload();
@@ -64,10 +56,10 @@ export function InventoryContent() {
   return (
     <section>
       <UpperTable
-        pageTitle={"Inventory list"}
-        description="List of inventory."
-        createTitle={"CREATE INVENTORY"}
-        createLink={`/inventory/create`}
+        pageTitle={"Post list"}
+        description="List of post."
+        createTitle={"CREATE POST"}
+        createLink={`/post/create`}
         handleDownload={handleDownloadButton}
         handleInputSearch={handleSearchChange}
         searchQuery={searchQuery}
@@ -93,8 +85,8 @@ export function InventoryContent() {
             </tr>
           </thead>
           <tbody>
-            {inventory.map((item: InventoryListDetailProps, index) => {
-              const isLast = index === inventory.length - 1;
+            {post.map((item: PostProps, index) => {
+              const isLast = index === post.length - 1;
               const classes = isLast
                 ? "py-3 px-4"
                 : "py-3 px-4 border-b border-blue-gray-50";
@@ -103,7 +95,7 @@ export function InventoryContent() {
                 <tr
                   key={item.id}
                   onClick={() => {
-                    navigate(`/inventory/${item.id}`);
+                    navigate(`/post/${item.id}`);
                   }}
                   className="cursor-pointer hover:bg-blue-gray-50"
                 >
@@ -113,7 +105,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.refId}
+                      {item.title}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
@@ -122,7 +114,7 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryName}
+                      {item.type}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -131,46 +123,28 @@ export function InventoryContent() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.inventoryTypeName}
+                      {item.writer}
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
-                    <Chip
-                      size="sm"
-                      variant="ghost"
-                      value={item.isBorrowable ? "Yes" : "No"}
-                      color={item.isBorrowable ? "green" : "red"}
-                      className="w-fit items-center mx-auto"
-                    />
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal text-center"
-                    >
-                      {item.currentQuantity || undefined}
-                    </Typography>
-                  </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal text-center"
-                    >
-                      {item.totalQuantity}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {item.description}
+                      {item.date}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={`${classes}`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.place}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
                     <div className="mx-auto text-center">
                       <button
                         onClick={(e) => {
@@ -229,8 +203,8 @@ export function InventoryContent() {
           )}
         </div>
         <Pagination
-          currentPage={pageInventory}
-          totalPages={totalPageInventory}
+          currentPage={page}
+          totalPages={totalPage}
           onPageChange={handlePageChange}
         />
         <DeleteAlert

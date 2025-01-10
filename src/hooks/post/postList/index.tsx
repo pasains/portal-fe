@@ -1,34 +1,55 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 
-export type InventoryTypeList = {
+export enum PostType {
+  "ARTICLE" = "ARTICLE",
+  "REPORT" = "TRIP REPORT",
+  "TRAINING" = "TRAINING",
+}
+export type PostProps = {
   id: number;
-  inventoryTypeName: string;
-  description: string;
+  title: string;
+  type: PostType;
+  headerPhoto: string;
+  writer: string;
+  date: string;
+  place: string;
+  generation: string;
+  firstParagraph: string;
+  secondParagraph: string;
+  thirdParagrap: string;
+  fourthParagrap: string;
+  firstImage?: string;
+  secondImage?: string;
+  thirdImage?: string;
+  captionFirstImage?: string;
+  captionSecondImage?: string;
+  captionThirdImage?: string;
+  photoCollage: string;
+  captionPhotoCollage: string;
+  quote: string;
 };
 
-export default function useInventoryType() {
-  const [inventoryType, setInventoryType] = useState<InventoryTypeList[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+export default function usePost() {
+  const [post, setPost] = useState<PostProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [deleteId, setDeletId] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
 
-  const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
   const token = localStorage.getItem("access_token");
+  const REACT_APP_PORTAL_BE_URL = process.env.REACT_APP_PORTAL_BE_URL;
 
-  // Fetch all inventory type
   useEffect(() => {
     setLoading(true);
     setError(null);
-
     async function fetchTitle(currentPage: number) {
       try {
         const response = await fetch(
-          `${REACT_APP_PORTAL_BE_URL}/api/inventorytype?page=${currentPage}&limit=10`,
+          `${REACT_APP_PORTAL_BE_URL}/api/post?page=${currentPage}&limit=10`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -41,35 +62,34 @@ export default function useInventoryType() {
           throw new Error("Not found!");
         }
         const json = await response.json();
-        if (Array.isArray(json.data.inventoryType)) {
+        if (Array.isArray(json.data.post)) {
           setLoading(false);
-          setInventoryType(json.data.inventoryType);
+          setPost(json.data.post);
           setTotalPage(json.data.totalPage);
         } else {
           setLoading(false);
-          console.error("Expected array inventory type, got:", json.data);
-          setInventoryType([]);
+          console.error("Expected array post, got:", json.data);
+          setPost([]);
         }
       } catch (error: any) {
         setError(`Fetch error: ${error}`);
-        setInventoryType([]);
+        setPost([]);
       }
     }
+
     fetchTitle(page);
   }, [page]);
 
-  const deleteInventoryType = async (id: any) => {
+  const deletedPost = async (id: any) => {
     setLoading(true);
     setError(null);
-    setSuccess(null);
-
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventorytype/delete/${id}`,
+        `${REACT_APP_PORTAL_BE_URL}/api/post/delete/${id}`,
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "aplication/json",
             Authorization: `${token}`,
           },
         },
@@ -80,13 +100,10 @@ export default function useInventoryType() {
         console.log(response);
         setLoading(false);
         setError(result.meta.message);
-      } else {
-        setInventoryType((inventoryType) =>
-          inventoryType.filter((item) => item.id !== id),
-        );
-        setSuccess(result.meta.message);
-        console.log("Delete inventory type:", result.meta.message);
       }
+      console.log("Delete post", result);
+      setPost((post) => post.filter((item) => item.id !== id));
+      setSuccess(result.meta.message);
     } catch (error: any) {
       setError(`Deleting error: ${error}`);
       setLoading(false);
@@ -102,7 +119,7 @@ export default function useInventoryType() {
 
   const handleConfirmDelete = () => {
     if (deleteId !== null) {
-      deleteInventoryType(deleteId);
+      deletedPost(deleteId);
     }
     setOpenAlert(false);
   };
@@ -113,32 +130,29 @@ export default function useInventoryType() {
 
   //Download list data to xlsx
   const handleDownload = async () => {
-    const response = await fetch(
-      `${REACT_APP_PORTAL_BE_URL}/api/inventorytype`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
+    const response = await fetch(`${REACT_APP_PORTAL_BE_URL}/api/inventory`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
       },
-    );
+    });
     const json = await response.json();
-    const data = json.data.inventoryType;
+    const data = json.data.inventory;
     // Convert JSON to a worksheet
     const worksheet = XLSX.utils.json_to_sheet(data);
 
     // Create a new workbook and append the worksheet
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory Type");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory");
 
     // Export the workbook to an Excel file
-    XLSX.writeFile(workbook, "inventoryType_list.xlsx");
+    XLSX.writeFile(workbook, "inventory_list.xlsx");
   };
+
   const handleSearch = async (query: string) => {
     try {
       const response = await fetch(
-        `${REACT_APP_PORTAL_BE_URL}/api/inventorytype?search=${query}`,
+        `${REACT_APP_PORTAL_BE_URL}/api/post?search=${query}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -147,26 +161,26 @@ export default function useInventoryType() {
         },
       );
       const json = await response.json();
-      setInventoryType(json.data.inventoryType); // Assuming the response has an `inventory` array
+      setPost(json.data.post); // Assuming the response has an `inventory` array
     } catch (error) {
-      console.error("Error fetching inventory type:", error);
+      console.error("Error fetching post:", error);
     }
   };
 
   return {
-    inventoryType,
-    openAlert,
+    post,
+    setPost,
     page,
     totalPage,
     setPage,
-    handleSearch,
     handleDownload,
+    success,
+    openAlert,
+    handleSearch,
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
-    setInventoryType,
     loading,
     error,
-    success,
   };
 }

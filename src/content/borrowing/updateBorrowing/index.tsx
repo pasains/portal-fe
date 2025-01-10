@@ -2,8 +2,8 @@ import React from "react";
 import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../../container/alert";
 import { BorrowingDetail } from "../getBorrowing";
-import ItemBorrowing from "../listUpdateBorrowing";
 import { useItemDetail } from "../../../hooks/item/itemDetail";
+import BorrowedInventoryList from "../../../content/borrowing/borrowedInventoryList";
 
 const UpdateBorrowingContent = () => {
   const { loading, error } = useItemDetail();
@@ -21,7 +21,7 @@ const UpdateBorrowingContent = () => {
           <BorrowingDetail />
         </div>
         <div className="w-full lg:w-2/3 p-4">
-          <ItemBorrowing />
+          <BorrowedInventoryList />
         </div>
       </div>
 

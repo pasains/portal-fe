@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Status } from "../../borrowing/borrowingList";
 import { Params, useParams } from "react-router-dom";
 
-export type InventoryByBorrowingList = {
+export type InventoryBorrowingHistoryProps = {
   id: number;
   borrowerName: string;
   organizationName: string;
@@ -12,9 +12,11 @@ export type InventoryByBorrowingList = {
   invoiceNumber: string;
 };
 
-export default function useInventoryByBorrowing() {
+export default function useInventoryBorrowingHistoryList() {
   const { id } = useParams<Params>();
-  const [inventory, setInventory] = useState<InventoryByBorrowingList[]>([]);
+  const [inventory, setInventory] = useState<InventoryBorrowingHistoryProps[]>(
+    [],
+  );
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
