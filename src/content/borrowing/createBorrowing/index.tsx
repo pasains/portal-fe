@@ -22,7 +22,7 @@ const CreateBorrowingContent = () => {
     const data = {
       ...combineData,
       items: selectedItems.map((item) => {
-        return { inventoryId: item.id, quantity: 1 };
+        return { inventoryId: item.id, quantity: item.quantity };
       }),
     };
     setCombineData(data);
@@ -52,16 +52,8 @@ const CreateBorrowingContent = () => {
 
       {loading && <p className="text-center">Loading...</p>}
 
-      <div className="flex lg:flex-row flex-col-reverse w-full px-4">
-        <section className="lg:w-1/3 w-full p-4">
-          <div className="mb-8 mt-2">
-            <Typography variant="h5" color="blue-gray">
-              Borrower detail
-            </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
-              Please fill the data.
-            </Typography>
-          </div>
+      <div className="flex md:flex-row flex-col-reverse w-full px-4">
+        <section className="md:w-1/3 w-full p-4">
           <BorrowingForm
             onSubmit={handleCreateBorrowing}
             isEditMode={false}
@@ -70,7 +62,7 @@ const CreateBorrowingContent = () => {
             setBorrowerDetail={setBorrowerDetails}
           />
         </section>
-        <section className="lg:w-2/3 w-full p-4">
+        <section className="md:w-2/3 w-full p-4">
           <BorrowableInventoryList onItemsChange={setSelectedItems} />
         </section>
       </div>

@@ -51,7 +51,7 @@ export function Pagination({
   };
 
   return (
-    <div className="flex mx-auto my-2 justify-center gap-4">
+    <div className="flex mx-auto my-2 justify-center place-items-center gap-4">
       <Button
         variant="text"
         className="flex items-center gap-2"

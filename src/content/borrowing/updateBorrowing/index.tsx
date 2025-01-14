@@ -1,9 +1,9 @@
 import React from "react";
-import { Typography } from "@material-tailwind/react";
 import TimedAlert from "../../../container/alert";
 import { BorrowingDetail } from "../getBorrowing";
 import { useItemDetail } from "../../../hooks/item/itemDetail";
 import BorrowedInventoryList from "../../../content/borrowing/borrowedInventoryList";
+import { Typography } from "@material-tailwind/react";
 
 const UpdateBorrowingContent = () => {
   const { loading, error } = useItemDetail();
@@ -11,10 +11,8 @@ const UpdateBorrowingContent = () => {
   return (
     <div>
       <Typography className="py-10 text-center" variant="h2">
-        Borrowing Detail
+        Update Borrowing
       </Typography>
-
-      {loading && <p className="text-center">Loading...</p>}
 
       <div className="flex lg:flex-row flex-col-reverse w-full px-4">
         <div className="w-full lg:w-1/3 p-4">

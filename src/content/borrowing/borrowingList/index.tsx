@@ -9,6 +9,7 @@ import UpperTable from "../../../container/upperTable";
 import { Pagination } from "../../../container/pagination";
 import DeleteAlert from "../../../container/deleteAlert";
 import TimedAlert from "../../../container/alert";
+import useDebounceRef from "../../../hooks/debounceRef";
 
 export function BorrowingContent() {
   const {
@@ -40,10 +41,14 @@ export function BorrowingContent() {
     { titleHead: "Due Date", accessor: "dueDate" },
     { titleHead: "" },
   ];
+  const debouncedSearch = useDebounceRef(async (query: string) => {
+    const result = await handleSearch(query);
+    console.log(result);
+  }, 500);
+
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
+    debouncedSearch(e.target.value);
   };
 
   const handleEditClick = (id: any) => {

@@ -6,6 +6,7 @@ import { useOrganizationDetail } from "../../../hooks/organization/organizationD
 import UpperTableDetail from "../../../container/upperTableDetail";
 import TimedAlert from "../../../container/alert";
 import DeleteAlert from "../../../container/deleteAlert";
+import useDebounceRef from "../../../hooks/debounceRef";
 
 export function OrganizationDetailContent() {
   const {
@@ -34,10 +35,13 @@ export function OrganizationDetailContent() {
     { titleHead: "Phone Number", accessor: "phoneNumber" },
     { titleHead: "" },
   ];
+  const debouncedSearch = useDebounceRef(async (query: string) => {
+    const result = await handleSearch(query);
+    console.log(result);
+  }, 500);
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
+    debouncedSearch(e.target.value);
   };
   const handleEditClick = (borrowerId: number) => {
     setIsEditing(true);

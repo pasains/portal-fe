@@ -93,6 +93,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     console.log(`INVENTORY_DATA_`, inventoryData);
   }, [inventoryData]);
 
+  // Handle input change
   const handleInputChange = (e: any): void => {
     const {
       name,

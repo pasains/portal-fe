@@ -26,8 +26,9 @@ import { CreateOrganization } from "./pages/organization/createOrganization";
 import { UpdateBorrowing } from "./pages/borrowing/updateBorrowing";
 import { LoginPage } from "./pages/login";
 import ProtectedRoutes from "./middleware";
-import { Post } from "./pages/post/createPost";
+import { CreatePost } from "./pages/post/createPost";
 import { PostList } from "./pages/post/postList";
+import { UpdatePost } from "./pages/post/updatePost";
 
 function App() {
   return (
@@ -36,7 +37,8 @@ function App() {
         //login
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/post/create" element={<Post />} />
+        <Route path="/post/create" element={<CreatePost />} />
+        <Route path="/post/update/:id" element={<UpdatePost />} />
         <Route path="/post" element={<PostList />} />
         <Route element={<ProtectedRoutes />}>
           //Home route

@@ -1,12 +1,15 @@
-import { Input, Typography } from "@material-tailwind/react";
+import { Card, Input, Typography } from "@material-tailwind/react";
 import { useItemDetail } from "../../../hooks/item/itemDetail";
 
 export function BorrowingDetail() {
   const { borrowingDetail } = useItemDetail();
 
   return (
-    <div className="w-[520px] mx-auto items-center">
-      <section className="p-5 mb-10 my-auto items-center border border-b rounded-lg">
+    <Card className="w-full h-full">
+      <section className="p-5">
+        <Typography className="mb-5" variant="h5" color="blue-gray">
+          Borrowing Detail
+        </Typography>
         <label>
           <Typography className="mb-2" variant="h6">
             Invoice Number
@@ -167,6 +170,6 @@ export function BorrowingDetail() {
         </label>
         <br />
       </section>
-    </div>
+    </Card>
   );
 }

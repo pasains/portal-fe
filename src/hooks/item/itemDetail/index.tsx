@@ -19,7 +19,7 @@ export type Items = {
   statusBorrowing: Status;
   quantity: number;
   preCondition: string;
-  postCondition: string;
+  postCondition: string | "";
 };
 
 type Params = {
@@ -107,11 +107,30 @@ export function useItemDetail() {
     fetchItemData(page);
   }, [id]);
 
+  const handleSearch = async (query: string) => {
+    try {
+      const response = await fetch(
+        `${REACT_APP_PORTAL_BE_URL}/api/item?borrowingId=${id}&search=${query}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        },
+      );
+      const json = await response.json();
+      setItem(json.data.item); // Assuming the response has an `inventory` array
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+    }
+  };
+
   return {
     id,
     item,
     setItem,
     page,
+    handleSearch,
     totalPage,
     setPage,
     refreshData: fetchData,

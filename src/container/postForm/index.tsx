@@ -63,7 +63,7 @@ const PostForm: React.FC<PostProps> = ({
         generation: initialData.generation || "",
         firstParagraph: initialData.firstParagraph || "",
         secondParagraph: initialData.secondParagraph || "",
-        thirdParagraph: initialData.thridParagraph || "",
+        thirdParagraph: initialData.thirdParagraph || "",
         fourthParagraph: initialData.fourthParagraph || "",
         firstImage: initialData.firstImage || "",
         secondImage: initialData.secondImage || "",
@@ -128,7 +128,6 @@ const PostForm: React.FC<PostProps> = ({
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
     let finalValue = type === "number" ? +value : value;
-
     setPostData({
       ...postData,
       [name]: finalValue,
@@ -571,7 +570,7 @@ const PostForm: React.FC<PostProps> = ({
                 type="text"
                 variant="outlined"
                 maxLength={50}
-                name="quoteName"
+                name="nameQuote"
                 value={postData.nameQuote || ""}
                 onChange={handleInputChange}
                 required
