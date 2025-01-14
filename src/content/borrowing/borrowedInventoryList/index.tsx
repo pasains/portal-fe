@@ -1,12 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Input,
   Card,
   Typography,
   Button,
   Chip,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import { Pagination } from "../../../container/pagination";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
@@ -16,6 +14,7 @@ import {
   useItemDetail,
 } from "../../../hooks/item/itemDetail";
 import { useUpdateItem } from "../../../hooks/item/updateItem";
+import useDebounceRef from "../../../hooks/debounceRef";
 
 const BorrowedInventoryList: React.FC = ({}) => {
   const {
@@ -24,11 +23,13 @@ const BorrowedInventoryList: React.FC = ({}) => {
     borrowingDetail,
     page,
     totalPage,
+    handleSearch,
     refreshData,
     setItem,
     setPage,
   } = useItemDetail();
-  const { updateItem, setItemsUpdate, loading } = useUpdateItem();
+  const { updateItem, setItemsUpdate, loading, success } = useUpdateItem();
+  const [searchQuery, setSearchQuery] = useState("");
   const tableHead = [
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Reference Id", accessor: "refId" },
@@ -41,6 +42,7 @@ const BorrowedInventoryList: React.FC = ({}) => {
 
   useEffect(() => {
     setItemsUpdate(item);
+    console.log(`ITEM`, item);
   }, [item]);
 
   const handlePageChange = (newPage: number) => {
@@ -48,21 +50,28 @@ const BorrowedInventoryList: React.FC = ({}) => {
     setPage(newPage);
   };
 
-  const debounceRef = useRef<Record<number, NodeJS.Timeout>>({});
-  const handlePostConditionInput = (id: number, value: string) => {
-    setItem((prev) => {
-      if (debounceRef.current[id]) {
-        clearTimeout(debounceRef.current[id]);
-      }
-      const updatedItems = prev.map((itm) =>
-        itm.id === id ? { ...itm, postCondition: value || "" } : itm,
-      );
-      debounceRef.current[id] = setTimeout(() => {
-        console.log("Updated Post Condition item (debounced):", updatedItems);
-      }, 500);
-      return updatedItems;
-    });
+  const debouncedSearch = useDebounceRef(async (query: string) => {
+    const result = await handleSearch(query);
+    console.log(result);
+  }, 500);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    debouncedSearch(e.target.value);
+    console.log(debouncedSearch(e.target.value));
   };
+
+  const handlePostConditionInput = useDebounceRef(
+    (id: number, value: string) => {
+      setItem((prev) => {
+        const updatedItems = prev.map((itm) =>
+          itm.id === id ? { ...itm, postCondition: value || "" } : itm,
+        );
+        return updatedItems;
+      });
+    },
+    500,
+  );
 
   const handleStatusChange = (id: number, value: string) => {
     setItem((prev) => {
@@ -121,6 +130,8 @@ const BorrowedInventoryList: React.FC = ({}) => {
             <Input
               label="Search"
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
           </div>
         </div>
@@ -227,12 +238,12 @@ const BorrowedInventoryList: React.FC = ({}) => {
                 );
               })}
             </tbody>
-            <Pagination
-              currentPage={page}
-              totalPages={totalPage}
-              onPageChange={handlePageChange}
-            />
           </table>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPage}
+            onPageChange={handlePageChange}
+          />
         </div>
         <div className="items-end mr-10 mx-auto">
           <Button

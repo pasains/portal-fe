@@ -6,6 +6,7 @@ import {
   Select,
   Option,
   Textarea,
+  Card,
 } from "@material-tailwind/react";
 import useBorrower from "../../hooks/borrower/borrowersList";
 import useOrganization from "../../hooks/organization/organizationList";
@@ -362,9 +363,17 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
   }, [borrower, organization]);
 
   return (
-    <div className="w-[520px] mx-auto items-center">
+    <Card className="h-full w-full">
       <form onSubmit={handleSubmit}>
-        <section className="p-5 mb-10 border border-b rounded-lg">
+        <section className="p-5">
+          <div className="mb-5">
+            <Typography variant="h5" color="blue-gray">
+              Borrower detail
+            </Typography>
+            <Typography color="gray" className="mt-1 font-normal">
+              Please fill the data.
+            </Typography>
+          </div>
           <label htmlFor="borrowerName">
             <Typography className="mb-2" variant="h6">
               Borrower Name:
@@ -666,11 +675,11 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
           <br />
         </section>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} className="m-5">
           {isEditMode ? "Update Borrowing" : "Create Borrowing"}
         </Button>
       </form>
-    </div>
+    </Card>
   );
 };
 export default BorrowingForm;

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useInventoryGroupDetail } from "../../../hooks/inventoryGroup/inventoryGroupDetail";
 import DeleteAlert from "../../../container/deleteAlert";
 import useInventory from "../../../hooks/inventory/inventoryList";
+import useDebounceRef from "../../../hooks/debounceRef";
 
 export function InventoryGroupDetailContent() {
   const { inventoryGroupDetail, inventoryItems, id, page, totalPage, setPage } =
@@ -32,10 +33,14 @@ export function InventoryGroupDetailContent() {
     { titleHead: "" },
   ];
 
+  const debouncedSearch = useDebounceRef(async (query: string) => {
+    const result = await handleSearch(query);
+    console.log(result);
+  }, 500);
+
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
+    debouncedSearch(e.target.value);
   };
   const handleEditClick = (inventoryGroupId: any) => {
     setIsEditing(true);
@@ -62,14 +67,14 @@ export function InventoryGroupDetailContent() {
               descriptionPageTitle={`
                 List of all inventory items associated with this inventory group.
                 `}
-              handleDownload={handleDownload}
+              handleDownload={handleDownloadButton}
               titleName="Inventory Group Name :"
               name={inventoryGroupDetail.inventoryGroupName}
               titleDescription="Description :"
               description={inventoryGroupDetail.description}
               createTitle={"CREATE INVENTORY"}
               createLink={`/inventory/create`}
-              handleInputSearch={handleDownloadButton}
+              handleInputSearch={handleSearchChange}
               searchQuery={searchQuery}
             />
             <div className="h-full w-full overflow-scroll">

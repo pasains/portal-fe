@@ -8,6 +8,7 @@ import UpperTable from "../../../container/upperTable";
 import DeleteAlert from "../../../container/deleteAlert";
 import { Pagination } from "../../../container/pagination";
 import TimedAlert from "../../../container/alert";
+import useDebounceRef from "../../../hooks/debounceRef";
 
 export function BorrowerContent() {
   const {
@@ -38,10 +39,14 @@ export function BorrowerContent() {
     { titleHead: "" },
   ];
 
+  const debouncedSearch = useDebounceRef(async (query: string) => {
+    const result = await handleSearch(query);
+    console.log(result);
+  }, 500);
+
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
+    debouncedSearch(e.target.value);
   };
   const handleEditClick = (id: any) => {
     setIsEditing(true);

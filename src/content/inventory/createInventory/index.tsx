@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import InventoryForm from "../../../container/inventoryForm";
 import useCreateInventory from "../../../hooks/inventory/createInventory";
@@ -12,9 +12,10 @@ const CreateInventoryContent = () => {
     setIsSubmitting(true);
     const result = await createInventory(inventoryData);
     console.log(result);
-    console.log("SUSI ", inventoryData);
     setIsSubmitting(false);
   };
+  useEffect(()=>{
+  })
 
   return (
     <div>

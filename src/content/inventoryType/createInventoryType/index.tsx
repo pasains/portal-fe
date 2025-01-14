@@ -13,7 +13,6 @@ const CreateInventoryTypeContent = () => {
     setIsSubmitting(true);
     const result = await createInventoryType(inventoryTypeData);
     console.log(result);
-    console.log("SUSI ", inventoryTypeData);
     setIsSubmitting(false);
   };
 

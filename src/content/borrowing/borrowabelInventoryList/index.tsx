@@ -6,6 +6,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 import useBorrowableInventory from "../../../hooks/inventory/borrowableInventory";
 import { InventoryList } from "../../../hooks/inventory/inventoryList";
+import useDebounceRef from "../../../hooks/debounceRef";
 
 interface BorrowableInventoryProps {
   onItemsChange: (selectedItems: InventoryList[]) => void;
@@ -38,10 +39,14 @@ export function BorrowableInventoryList({
     { titleHead: "Quantity", accessor: "quantity" },
     { titleHead: "" },
   ];
+  const debouncedSearch = useDebounceRef(async (query: string) => {
+    const result = await handleSearch(query);
+    console.log(result);
+  }, 500);
+
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    const result = await handleSearch(e.target.value);
-    console.log(result);
+    debouncedSearch(e.target.value);
   };
 
   const toggleItemSelection = (item: InventoryList) => {
@@ -58,6 +63,11 @@ export function BorrowableInventoryList({
   const handleQuantityInput = (id: number, quantity: number) => {
     setBorrowableInventory((prev) =>
       prev.map(
+        (itm) => (itm.id === id ? { ...itm, quantity } : itm), // Update the quantity for the selected item
+      ),
+    );
+    setSelectedItems(
+      selectedItems.map(
         (itm) => (itm.id === id ? { ...itm, quantity } : itm), // Update the quantity for the selected item
       ),
     );
@@ -125,7 +135,6 @@ export function BorrowableInventoryList({
                 const isSelected = selectedItems.some(
                   (selected) => selected.id === item.id,
                 );
-                console.log(`ITEM_ID`, item.id);
                 const isLast = index === borrowableInventory.length - 1;
                 const classes = isLast
                   ? "py-3 px-4"
@@ -197,7 +206,7 @@ export function BorrowableInventoryList({
                       <Input
                         type="number"
                         label="Quantity"
-                        value={item.quantity || ""}
+                        value={item.quantity}
                         onChange={(e) => {
                           const inputQuantity =
                             parseInt(e.target.value, 10) || 0;
