@@ -30,6 +30,13 @@ const UpdateInventoryContent = () => {
     }
   }, [inventoryDetail]);
 
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
+
   return (
     <div>
       <Typography className="py-10 text-center" variant="h3">

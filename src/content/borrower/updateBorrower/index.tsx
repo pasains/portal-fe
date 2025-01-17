@@ -18,6 +18,12 @@ const UpdateBorrowerContent = () => {
       console.log(result);
     }
   };
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   useEffect(() => {
     if (id) {

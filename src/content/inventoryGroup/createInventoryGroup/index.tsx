@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import useCreateInventoryGroup from "../../../hooks/inventoryGroup/createInventoryGroup";
 import TimedAlert from "../../../container/alert";
@@ -17,6 +17,12 @@ const CreateInventoryGroupContent = () => {
     setIsSubmitting(false);
   };
 
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
   return (
     <div>
       <Typography className="py-10 text-center" variant="h2">

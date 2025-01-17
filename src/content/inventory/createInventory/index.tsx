@@ -14,8 +14,14 @@ const CreateInventoryContent = () => {
     console.log(result);
     setIsSubmitting(false);
   };
-  useEffect(()=>{
-  })
+  useEffect(() => {});
+
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   return (
     <div>

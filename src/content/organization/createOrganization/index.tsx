@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import OrganizationForm from "../../../container/organizationForm";
 import TimedAlert from "../../../container/alert";
@@ -15,6 +15,12 @@ const CreateOrganizationContent = () => {
     console.log(result);
     setIsSubmitting(false);
   };
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   return (
     <div>
