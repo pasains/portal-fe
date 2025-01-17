@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Chip, Typography } from "@material-tailwind/react";
+
+import { Button, Chip, Typography } from "@material-tailwind/react";
 import useBorrowing, {
   BorrowingProps,
   Status,
@@ -30,6 +31,7 @@ export function BorrowingContent() {
   const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
   const tableHead = [
+    { titleHead: "Invoice Number", accessor: "invoiceNumber" },
     { titleHead: "Borrower Name", accessor: "borrowerName" },
     { titleHead: "Organization Name", accessor: "organizationName" },
     { titleHead: "Address", accessor: "address" },
@@ -53,7 +55,7 @@ export function BorrowingContent() {
 
   const handleEditClick = (id: any) => {
     setIsEditing(true);
-    navigate(`/borrowing/${id}`);
+    navigate(`/borrowing/update/${id}`);
   };
   const handlePageChange = (newPage: number) => {
     console.log("Page changed to:", newPage);
@@ -105,14 +107,17 @@ export function BorrowingContent() {
                 : "py-3 px-4 border-b border-blue-gray-50";
 
               return (
-                <tr
-                  key={item.id}
-                  onClick={() => {
-                    navigate(`/borrowing/${item.id}`);
-                  }}
-                  className="cursor-pointer hover:bg-blue-gray-50"
-                >
+                <tr key={item.id}>
                   <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.invoiceNumber}
+                    </Typography>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -121,7 +126,7 @@ export function BorrowingContent() {
                       {item.borrowerName}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -130,7 +135,7 @@ export function BorrowingContent() {
                       {item.organizationName}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -139,7 +144,7 @@ export function BorrowingContent() {
                       {item.address}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -148,7 +153,7 @@ export function BorrowingContent() {
                       {item.identityCard}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -157,7 +162,7 @@ export function BorrowingContent() {
                       {item.identityNumber}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -166,7 +171,7 @@ export function BorrowingContent() {
                       {item.phoneNumber}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Chip
                       size="sm"
                       variant="ghost"
@@ -175,7 +180,7 @@ export function BorrowingContent() {
                       className="w-fit items-center mx-auto"
                     ></Chip>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -184,7 +189,7 @@ export function BorrowingContent() {
                       {item.specialInstruction}
                     </Typography>
                   </td>
-                  <td className={`${classes}`}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -195,7 +200,7 @@ export function BorrowingContent() {
                         : "Invalid Date"}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={`${classes}`}>
                     <div className="mx-auto text-center">
                       <button
                         onClick={(e) => {
@@ -241,6 +246,16 @@ export function BorrowingContent() {
                           </svg>
                         </span>
                       </button>
+                      <Button
+                        onClick={() => {
+                          const url = `/borrowing/${item.id}`;
+                          window.open(url, "_blank"); // Opens the URL in a new tab
+                        }}
+                        formTarget="__blank"
+                        className="ml-2"
+                      >
+                        PRINT RECEIPT
+                      </Button>
                     </div>
                   </td>
                 </tr>

@@ -55,7 +55,7 @@ export function SidebarWithBurgerMenu() {
           className="h-[calc(100vh-2rem)] w-full p-4"
         >
           <div className="mb-2 flex items-center gap-4 p-4">
-            <Link to="/">
+            <Link to="/home">
               <img
                 src={require("../../image/logo-pasains.png")}
                 alt="logopasains"

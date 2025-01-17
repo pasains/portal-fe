@@ -32,9 +32,9 @@ export function InventoryTypeDetailContent() {
   const tableHead = [
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Reference Id", accessor: "refId" },
+    { titleHead: "Inventory Group Name", accessor: "inventoryGroupName" },
     { titleHead: "Description", accessor: "description" },
     { titleHead: "isBorrowable", accessor: "isBorrowable" },
-    { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
     { titleHead: "" },
   ];
   const debouncedSearch = useDebounceRef(async (query: string) => {
@@ -125,10 +125,19 @@ export function InventoryTypeDetailContent() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {items.description}
+                          {items.inventoryGroupName}
                         </Typography>
                       </td>
                       <td className={`px-4 py-3 bg-blue-gray-50/50`}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {items.description}
+                        </Typography>
+                      </td>
+                      <td className={`px-4 py-3`}>
                         <Chip
                           size="sm"
                           variant="ghost"
@@ -136,15 +145,6 @@ export function InventoryTypeDetailContent() {
                           color={items.isBorrowable ? "green" : "red"}
                           className="w-fit text-center mx-auto"
                         />
-                      </td>
-                      <td className={`px-4 py-3`}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {items.inventoryTypeName}
-                        </Typography>
                       </td>
                       <td
                         className={`px-4 py-3 border-b border-blu-gray-50 bg-blue-gray-50/50`}

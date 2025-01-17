@@ -6,7 +6,7 @@ import BorrowedInventoryList from "../../../content/borrowing/borrowedInventoryL
 import { Typography } from "@material-tailwind/react";
 
 const UpdateBorrowingContent = () => {
-  const { loading, error } = useItemDetail();
+  const { error } = useItemDetail();
 
   return (
     <div>

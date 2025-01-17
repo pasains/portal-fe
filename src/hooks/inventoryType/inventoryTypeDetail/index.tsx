@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { useParams } from "react-router-dom";
+import { InventoryGroup } from "../../inventoryGroup/inventoryGroupDetail";
 
 export type InventoryType = {
   id: number;
@@ -16,6 +17,9 @@ export type InventoryTypeDetail = {
   inventoryTypeIdRel: InventoryType;
   inventoryTypeId: number;
   inventoryTypeName: string;
+  inventoryGroupIdRel: InventoryGroup;
+  inventoryGroupId: number;
+  inventoryGroupName: string;
   isBorrowable: boolean;
 };
 

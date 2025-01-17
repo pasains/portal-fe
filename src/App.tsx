@@ -29,6 +29,7 @@ import ProtectedRoutes from "./middleware";
 import { CreatePost } from "./pages/post/createPost";
 import { PostList } from "./pages/post/postList";
 import { UpdatePost } from "./pages/post/updatePost";
+import ReceiptDownload from "./container/pdfReceipt";
 
 function App() {
   return (
@@ -98,7 +99,8 @@ function App() {
               path="/borrowing/create"
               element={<CreatedBorrowingInput />}
             />
-            <Route path="/borrowing/:id" element={<UpdateBorrowing />} />
+            <Route path="/borrowing/update/:id" element={<UpdateBorrowing />} />
+            <Route path="/borrowing/:id" element={<ReceiptDownload />} />
           </Route>
           //Borrower route
           <Route path="/borrower">
