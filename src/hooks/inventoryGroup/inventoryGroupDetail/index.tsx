@@ -12,6 +12,11 @@ export type InventoryGroupDetailProps = {
   inventoryTypeName: string;
   inventoryGroupName: string;
 };
+export type InventoryGroup = {
+  id: number;
+  inventoryGroupName: string;
+  description: string;
+};
 
 type Params = {
   id: string;

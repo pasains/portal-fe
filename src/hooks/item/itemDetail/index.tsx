@@ -12,8 +12,11 @@ export type Items = {
   inventoryId: number;
   inventoryName: string;
   refId: string;
+  description: string;
   inventoryTypeId: number;
   inventoryTypeName: string;
+  inventoryGroupId: number;
+  inventoryGroupName: string;
   borrowingId: number;
   status: StatusItem;
   statusBorrowing: Status;

@@ -7,6 +7,7 @@ export type InventoryListDetailProps = {
   refId: string;
   description: string;
   inventoryTypeName: string;
+  inventoryGroupName: string;
   currentQuantity: number;
   totalQuantity: number;
   isBorrowable: boolean;
@@ -19,6 +20,7 @@ export type InventoryList = {
   description: string;
   quantity: number;
   currentQuantity: number;
+  inventoryGroupName: string;
   inventoryTypeName: string;
   isBorrowable: boolean;
 };

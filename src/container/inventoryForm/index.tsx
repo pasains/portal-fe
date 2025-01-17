@@ -10,6 +10,7 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 import useInventoryType from "../../hooks/inventoryType/inventoryTypeList";
+import useInventoryGroup from "../../hooks/inventoryGroup/inventoryGroupList";
 
 interface InventoryFormProps {
   initialData?: any;
@@ -36,6 +37,9 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     inventoryTypeId: 0,
     inventoryTypeName: "",
     descriptionInventoryType: "",
+    inventoryGroupId: 0,
+    inventoryGroupName: "",
+    descriptionInventoryGroup: "",
     url: "",
     currentQuantity: 0,
   });
@@ -48,9 +52,20 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
       showCreateNew: boolean;
     }[]
   >();
+  const [inventoryGroupList, setInventoryGroupList] = useState<
+    {
+      id: number;
+      inventoryGroupName: string;
+      description: string;
+      displayName: string;
+      showCreateNew: boolean;
+    }[]
+  >();
   const { inventoryType, setInventoryType } = useInventoryType();
+  const { inventoryGroup, setInventoryGroup } = useInventoryGroup();
   const [currentQuantity, setCurrentQuantity] = useState<number | string>(0);
   const [createNewInventoryType, setCreateNewInventoryType] = useState(false);
+  const [createNewInventoryGroup, setCreateNewInventoryGroup] = useState(false);
   const totalQuantity = currentQuantity;
 
   useEffect(() => {
@@ -62,9 +77,12 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         condition: initialData.condition || "",
         note: initialData.note || "",
         isBorrowable: initialData.isBorrowable || false,
-        inventoryTypeName: initialData.inventoryTypeName || "",
         inventoryTypeId: initialData.inventoryTypeId || 0,
+        inventoryTypeName: initialData.inventoryTypeName || "",
         descriptionInventoryType: initialData.descriptionInventoryType || "",
+        inventoryGroupId: initialData.inventoryGroupId || 0,
+        inventoryGroupName: initialData.inventoryGroupName || "",
+        descriptionInventoryGroup: initialData.descriptionInventoryGroup || "",
         url: initialData.url || "",
         currentQuantity: initialData.currentQuantity || 0,
       });
@@ -80,9 +98,12 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         condition: "",
         note: "",
         isBorrowable: false,
-        inventoryTypeName: "",
         inventoryTypeId: 0,
+        inventoryTypeName: "",
         descriptionInventoryType: "",
+        inventoryGroupId: 0,
+        inventoryGroupName: "",
+        descriptionInventoryGroup: "",
         url: "",
         currentQuantity: 0,
       });
@@ -113,6 +134,14 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryTypeId: data?.id as any,
         inventoryTypeName: data?.inventoryTypeName as any,
         descriptionInventoryType: data?.description as any,
+      });
+    } else if (name === "inventoryGroupName") {
+      const data = inventoryGroup.find((element) => element.id == finalValue);
+      setInventoryData({
+        ...inventoryData,
+        inventoryGroupId: data?.id as any,
+        inventoryGroupName: data?.inventoryGroupName as any,
+        descriptionInventoryGroup: data?.description as any,
       });
     } else {
       setInventoryData({
@@ -156,22 +185,35 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         inventoryTypeName: inventoryData.inventoryTypeName,
         description: inventoryData.descriptionInventoryType,
       }));
+      if (
+        initialData.inventoryGroupName &&
+        inventoryData.descriptionInventoryGroup
+      ) {
+        setInventoryGroup((prevData) => ({
+          ...prevData,
+          inventoryGroupId: 0,
+          inventoryGroupName: inventoryData.inventoryGroupName,
+          description: inventoryData.descriptionInventoryGroup,
+        }));
 
-      setInventoryTypeList([]);
+        setInventoryTypeList([]);
+        setInventoryGroupList([]);
+      }
+      const parsedCurrentQuantity = Number(currentQuantity);
+
+      if (isNaN(parsedCurrentQuantity)) {
+        alert("Please enter a valid current quantity.");
+        return;
+      }
+
+      // totalQuantity is the same as currentQuantity for new inventory
+      const totalQuantity = parsedCurrentQuantity;
+      console.log(`TOTAL_QUANTITY`, totalQuantity);
+
+      setCurrentQuantity(0);
+      setCreateNewInventoryType(false);
+      setCreateNewInventoryGroup(false);
     }
-    const parsedCurrentQuantity = Number(currentQuantity);
-
-    if (isNaN(parsedCurrentQuantity)) {
-      alert("Please enter a valid current quantity.");
-      return;
-    }
-
-    // totalQuantity is the same as currentQuantity for new inventory
-    const totalQuantity = parsedCurrentQuantity;
-    console.log(`TOTAL_QUANTITY`, totalQuantity);
-
-    setCurrentQuantity(0);
-    setCreateNewInventoryType(false);
   };
 
   useEffect(() => {
@@ -191,6 +233,24 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     });
     setInventoryTypeList([...data]);
   }, [inventoryType]);
+
+  useEffect(() => {
+    const data = inventoryGroup.map((type) => ({
+      id: type.id,
+      inventoryGroupName: type.inventoryGroupName,
+      displayName: type.inventoryGroupName,
+      description: type.description,
+      showCreateNew: false,
+    }));
+    data.push({
+      id: 0,
+      inventoryGroupName: "",
+      displayName: "Create Inventory Group Name",
+      description: "",
+      showCreateNew: true,
+    });
+    setInventoryGroupList([...data]);
+  }, [inventoryGroup]);
 
   return (
     <div className="w-[520px] mx-auto items-center">
@@ -425,6 +485,107 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                       setInventoryData((prevData) => ({
                         ...prevData,
                         descriptionInventoryType: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+              </form>
+            )}
+          </label>
+          <br />
+
+          <label htmlFor="inventoryGroupName">
+            <Typography className="mb-2" variant="h6">
+              Inventory Group Name:
+            </Typography>
+            {inventoryGroupList && (
+              <Select
+                selected={() => {
+                  const data = inventoryGroupList.find(
+                    (item) =>
+                      item.displayName == inventoryData.inventoryGroupName,
+                  );
+                  if (data == undefined) {
+                    return;
+                  }
+                  return (
+                    <Option
+                      key={data.id}
+                      value={data.id.toString() || ""}
+                      className="custom-select bg-white hover:bg-white"
+                      onClick={() => {
+                        setCreateNewInventoryGroup(data.showCreateNew);
+                      }}
+                    >
+                      {data?.displayName.trim() || ""}
+                    </Option>
+                  );
+                }}
+                className="w-full"
+                color="orange"
+                variant="outlined"
+                size="lg"
+                label="Inventory Group Name"
+                name="inventoryGroupName"
+                value={inventoryData.inventoryGroupName || ""}
+                onChange={(e) => {
+                  handleInputChange({
+                    target: {
+                      name: "inventoryGroupName",
+                      value: e,
+                      type: "text",
+                    },
+                  });
+                }}
+              >
+                {inventoryGroupList.slice(0, 10).map((type) => (
+                  <Option
+                    key={type.id}
+                    value={type.id.toString()}
+                    onClick={() => {
+                      setCreateNewInventoryGroup(type.showCreateNew);
+                    }}
+                  >
+                    {type.displayName.trim() || ""}
+                  </Option>
+                ))}
+              </Select>
+            )}
+            {createNewInventoryGroup && (
+              <form onSubmit={handleSubmit}>
+                <Typography className="pt-5 pb-2" variant="h6" color="orange">
+                  Create Inventory Group Name:
+                </Typography>
+                <div className="space-y-3">
+                  <Input
+                    className="w-full"
+                    color="orange"
+                    label="Inventory Group Name"
+                    type="text"
+                    name="inventoryGroupName"
+                    variant="outlined"
+                    size="lg"
+                    value={inventoryData.inventoryGroupName || ""}
+                    onChange={(e) =>
+                      setInventoryData((prevData) => ({
+                        ...prevData,
+                        inventoryGroupName: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                  <Textarea
+                    className="w-full"
+                    color="orange"
+                    label="Description"
+                    variant="outlined"
+                    name="descriptionInventoryGroup"
+                    value={inventoryData.descriptionInventoryGroup || ""}
+                    onChange={(e) =>
+                      setInventoryData((prevData) => ({
+                        ...prevData,
+                        descriptionInventoryGroup: e.target.value,
                       }))
                     }
                     required

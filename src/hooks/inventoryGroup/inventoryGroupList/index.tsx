@@ -163,6 +163,7 @@ export default function useInventoryGroup() {
     handleDelete,
     handleConfirmDelete,
     handleCloseAlert,
+    setInventoryGroup,
     loading,
     error,
     success,

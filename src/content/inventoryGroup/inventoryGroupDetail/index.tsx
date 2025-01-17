@@ -142,7 +142,7 @@ export function InventoryGroupDetailContent() {
                           variant="ghost"
                           value={items.isBorrowable ? "Yes" : "No"}
                           color={items.isBorrowable ? "green" : "red"}
-                          className="w-fit"
+                          className="w-fit items-center mx-auto"
                         />
                       </td>
                       <td

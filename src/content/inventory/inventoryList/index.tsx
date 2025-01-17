@@ -32,6 +32,7 @@ export function InventoryContent() {
     { titleHead: "Reference Id", accessor: "refId" },
     { titleHead: "Inventory Name", accessor: "inventoryName" },
     { titleHead: "Inventory Type Name", accessor: "inventoryTypeName" },
+    { titleHead: "Inventory Group Name", accessor: "inventoryGroupName" },
     { titleHead: "is Borrowable?", accessor: "isBorrowable" },
     { titleHead: "Current Quantity", accessor: "currentQuantity" },
     { titleHead: "Total Quantity", accessor: "totalQuantity" },
@@ -139,6 +140,15 @@ export function InventoryContent() {
                     </Typography>
                   </td>
                   <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {item.inventoryGroupName}
+                    </Typography>
+                  </td>
+                  <td className={`${classes}`}>
                     <Chip
                       size="sm"
                       variant="ghost"
@@ -147,7 +157,7 @@ export function InventoryContent() {
                       className="w-fit items-center mx-auto"
                     />
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -156,7 +166,7 @@ export function InventoryContent() {
                       {item.currentQuantity || undefined}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -165,7 +175,7 @@ export function InventoryContent() {
                       {item.totalQuantity}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -174,7 +184,7 @@ export function InventoryContent() {
                       {item.description}
                     </Typography>
                   </td>
-                  <td className={`${classes} bg-blue-gray-50/50`}>
+                  <td className={classes}>
                     <div className="mx-auto text-center">
                       <button
                         onClick={(e) => {
