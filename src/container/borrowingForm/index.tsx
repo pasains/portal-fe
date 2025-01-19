@@ -399,7 +399,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                   });
                 }}
               >
-                {borrowerList.slice(0, 10).map((type) => (
+                {borrowerList.map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}
@@ -544,7 +544,7 @@ const BorrowingForm: React.FC<BorrowingProps> = ({
                   });
                 }}
               >
-                {organizationList.slice(0, 10).map((type) => (
+                {organizationList.map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}

@@ -25,6 +25,12 @@ const UpdateInventoryGroupContent = () => {
       console.log("id", id);
     }
   }, [id]);
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   return (
     <div>

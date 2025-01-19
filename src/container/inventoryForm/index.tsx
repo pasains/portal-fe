@@ -438,7 +438,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                   });
                 }}
               >
-                {inventoryTypeList.slice(0, 10).map((type) => (
+                {inventoryTypeList.map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}
@@ -539,7 +539,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
                   });
                 }}
               >
-                {inventoryGroupList.slice(0, 10).map((type) => (
+                {inventoryGroupList.map((type) => (
                   <Option
                     key={type.id}
                     value={type.id.toString()}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import BorrowerForm from "../../../container/borrowerForm";
 import TimedAlert from "../../../container/alert";
@@ -14,6 +14,12 @@ const CreateBorrowerContent = () => {
     console.log(result);
     setIsSubmitting(false);
   };
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   return (
     <div>

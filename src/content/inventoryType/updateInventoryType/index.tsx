@@ -4,7 +4,6 @@ import { useUpdateInventoryType } from "../../../hooks/inventoryType/updateInven
 import InventoryTypeForm from "../../../container/inventoryTypeForm";
 import TimedAlert from "../../../container/alert";
 
-
 const UpdateInventoryTypeContent = () => {
   const {
     updateInventoryType,
@@ -30,6 +29,12 @@ const UpdateInventoryTypeContent = () => {
       console.log("id", id);
     }
   }, [id]);
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   return (
     <div>

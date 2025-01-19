@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import useCreateInventoryType from "../../../hooks/inventoryType/createInventoryType";
 import InventoryTypeForm from "../../../container/inventoryTypeForm";
@@ -15,6 +15,12 @@ const CreateInventoryTypeContent = () => {
     console.log(result);
     setIsSubmitting(false);
   };
+  // Refresh page after success
+  useEffect(() => {
+    if (success) {
+      window.location.reload(); // Refresh the page
+    }
+  }, [success]);
 
   return (
     <div>
